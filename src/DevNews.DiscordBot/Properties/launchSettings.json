@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "DevNews.DiscordBot": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
