@@ -2,3 +2,15 @@ source https://api.nuget.org/v3/index.json
 
 storage: none
 framework: netcoreapp3.1, netstandard2.0, netstandard2.1
+
+nuget LanguageExt.Core
+nuget System.Linq.Async
+nuget Open.ChannelExtensions
+nuget System.Text.Json
+nuget HtmlAgilityPack
+nuget Microsoft.Extensions.Hosting
+
+nuget Microsoft.NET.Test.Sdk
+nuget xunit
+nuget xunit.runner.visualstudio
+nuget coverlet.collector
