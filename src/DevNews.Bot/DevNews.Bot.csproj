@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>dotnet-DevNews.DiscordBot-D4417E69-965C-4B6A-9278-5C99A3227853</UserSecretsId>
+    <RootNamespace>DevNews.DiscordBot</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

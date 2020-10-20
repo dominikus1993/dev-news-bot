@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CBEE5FE4-3765-4385-B348-66AFC3EE15B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.DiscordBot", "src\DevNews.DiscordBot\DevNews.DiscordBot.csproj", "{619F1881-AA7F-4C3C-BC2D-641E96DA3FB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Bot", "src\DevNews.Bot\DevNews.Bot.csproj", "{619F1881-AA7F-4C3C-BC2D-641E96DA3FB1}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DevNews.Shared", "src\DevNews.Shared\DevNews.Shared.fsproj", "{5E471C1A-0CB8-4D98-9B62-D2BE374698D4}"
 EndProject
