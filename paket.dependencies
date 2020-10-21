@@ -9,6 +9,7 @@ nuget Open.ChannelExtensions
 nuget System.Text.Json
 nuget HtmlAgilityPack
 nuget Microsoft.Extensions.Hosting
+nuget Discord.Net.Webhook
 
 nuget Microsoft.NET.Test.Sdk
 nuget xunit
