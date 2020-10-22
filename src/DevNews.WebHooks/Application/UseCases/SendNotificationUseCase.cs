@@ -6,7 +6,7 @@ namespace DevNews.WebHooks.Application.UseCases
     {
         public Task Execute()
         {
-            
+            return Task.CompletedTask;
         }
     }
 }
