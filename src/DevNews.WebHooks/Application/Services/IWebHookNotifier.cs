@@ -6,6 +6,6 @@ namespace DevNews.WebHooks.Application.Services
 {
     public interface IWebHookNotifier
     {
-        Task Notify(IList<Article> article);
+        Task Notify(IEnumerable<Article> article);
     }
 }

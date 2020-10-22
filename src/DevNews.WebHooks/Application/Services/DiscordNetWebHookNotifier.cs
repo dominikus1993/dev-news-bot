@@ -17,7 +17,7 @@ namespace DevNews.WebHooks.Application.Services
             _client = client;
         }
 
-        public async Task Notify(IList<Article> articles)
+        public async Task Notify(IEnumerable<Article> articles)
         {
             var embeds = articles.Select(article => new EmbedBuilder().WithUrl(article.Url).WithTitle(article.Title))
                 .Select(x => x.Build()).ToList();
