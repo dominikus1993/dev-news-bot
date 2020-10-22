@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using DevNews.Shared.Messages;
+using DevNews.Shared.Types;
 using Discord;
 using Discord.Webhook;
 
