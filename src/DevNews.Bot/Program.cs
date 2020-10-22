@@ -13,10 +13,7 @@ namespace DevNews.DiscordBot
     {
         public static async Task Main(string[] args)
         {
-            using var client = new DiscordWebhookClient(string.Empty);
-            var service = new DiscordNetWebHookNotifier(client);
-            await service.Notify();
-            //CreateHostBuilder(args).Build().Run();
+            await CreateHostBuilder(args).Build().RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

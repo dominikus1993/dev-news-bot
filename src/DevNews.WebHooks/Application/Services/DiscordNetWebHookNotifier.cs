@@ -19,7 +19,7 @@ namespace DevNews.WebHooks.Application.Services
 
         public async Task Notify(IList<Article> articles)
         {
-            var embeds = articles.Select(article => new EmbedBuilder() {Title = article.Title, Url = article.Url})
+            var embeds = articles.Select(article => new EmbedBuilder().WithUrl(article.Url).WithTitle(article.Title))
                 .Select(x => x.Build()).ToList();
             await _client.SendMessageAsync("Nowe newsy od HackerNews", false, embeds);
         }
