@@ -5,10 +5,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="HackerNews" />
+    <Folder Include="WebHooks" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DevNews.Akka.Messages\DevNews.Akka.Messages.fsproj" />
     <ProjectReference Include="..\DevNews.Application\DevNews.Application.csproj" />
-    <ProjectReference Include="..\DevNews.Shared\DevNews.Shared.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

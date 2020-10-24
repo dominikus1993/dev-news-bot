@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevNews.Shared.Types;
-using DevNews.WebHooks.Application.Services;
+using DevNews.Akka.Types;
+using DevNews.Application.Notifications.Services;
 
-namespace DevNews.WebHooks.Infrastructure.Services
+namespace DevNews.Infrastructure.WebHooks.Services
 {
     public class TeamsWebHookNotifier : INotifier
     {

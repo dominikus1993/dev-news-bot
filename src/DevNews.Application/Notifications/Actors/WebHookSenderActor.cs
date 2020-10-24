@@ -1,10 +1,10 @@
 ﻿using System;
 using Akka.Actor;
-using DevNews.Shared.Messages;
-using DevNews.WebHooks.Application.Services;
+using DevNews.Akka.Messages;
+using DevNews.Application.Notifications.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DevNews.WebHooks.Actors
+namespace DevNews.Application.Notifications.Actors
 {
     public class WebHookSenderActor : ReceiveActor
     {

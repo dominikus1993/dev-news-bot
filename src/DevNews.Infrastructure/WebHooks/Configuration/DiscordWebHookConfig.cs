@@ -1,4 +1,4 @@
-﻿namespace DevNews.WebHooks.Configuration
+﻿namespace DevNews.Infrastructure.WebHooks.Configuration
 {
     public class DiscordWebHookConfig
     {

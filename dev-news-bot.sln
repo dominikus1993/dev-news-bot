@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CBEE5FE4-376
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Bot", "src\DevNews.Bot\DevNews.Bot.csproj", "{619F1881-AA7F-4C3C-BC2D-641E96DA3FB1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DevNews.Shared", "src\DevNews.Shared\DevNews.Shared.fsproj", "{5E471C1A-0CB8-4D98-9B62-D2BE374698D4}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DevNews.Akka.Messages", "src\DevNews.Akka.Messages\DevNews.Akka.Messages.fsproj", "{5E471C1A-0CB8-4D98-9B62-D2BE374698D4}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DevNews.TwitterCrawler", "src\DevNews.TwitterCrawler\DevNews.TwitterCrawler.fsproj", "{B6066906-EEAD-4DA8-AC35-7D67E5364B1B}"
 EndProject

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevNews.Shared.Messages;
-using DevNews.Shared.Types;
+using DevNews.Akka.Types;
 
-namespace DevNews.WebHooks.Application.Services
+namespace DevNews.Application.Notifications.Services
 {
     public interface INotifier
     {

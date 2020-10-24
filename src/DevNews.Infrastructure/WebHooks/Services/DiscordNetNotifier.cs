@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DevNews.Shared.Types;
-using DevNews.WebHooks.Application.Services;
+using DevNews.Akka.Types;
+using DevNews.Application.Notifications.Services;
 using Discord;
 using Discord.Webhook;
 
-namespace DevNews.WebHooks.Infrastructure.Services
+namespace DevNews.Infrastructure.WebHooks.Services
 {
     public class DiscordNetWebHookNotifier : INotifier
     {

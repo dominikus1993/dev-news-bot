@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace DevNews.WebHooks.Application.UseCases
+namespace DevNews.Application.Notifications.UseCases
 {
     public class SendNotificationUseCase
     {

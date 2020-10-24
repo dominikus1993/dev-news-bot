@@ -4,3 +4,6 @@ Open.ChannelExtensions
 System.Text.Json
 Microsoft.Extensions.Hosting
 HtmlAgilityPack
+Discord.Net.Webhook
+Akka
+Microsoft.Extensions.DependencyInjection.Abstractions
