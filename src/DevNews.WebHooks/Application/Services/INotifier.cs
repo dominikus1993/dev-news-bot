@@ -5,7 +5,7 @@ using DevNews.Shared.Types;
 
 namespace DevNews.WebHooks.Application.Services
 {
-    public interface IWebHookNotifier
+    public interface INotifier
     {
         Task Notify(IEnumerable<Article> article);
     }

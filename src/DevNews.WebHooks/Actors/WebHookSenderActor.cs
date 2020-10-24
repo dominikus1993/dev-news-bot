@@ -8,10 +8,10 @@ namespace DevNews.WebHooks.Actors
 {
     public class WebHookSenderActor : ReceiveActor
     {
-        private IWebHookNotifier _webHookNotifier;
+        private INotifier _notifier;
         public WebHookSenderActor(IServiceProvider sp)
         {
-            _webHookNotifier = sp.GetService<IWebHookNotifier>();
+            _notifier = sp.GetService<INotifier>();
             Ready();
         }
 
@@ -19,7 +19,7 @@ namespace DevNews.WebHooks.Actors
         {
             ReceiveAsync<SendArticles>(async msg =>
             {
-                await _webHookNotifier.Notify(msg.Articles);
+                await _notifier.Notify(msg.Articles);
             });
         }
     }
