@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DevNews.HackerNews.Application.Dto;
+using DevNews.Application.HackerNews.Dto;
 
-namespace DevNews.HackerNews.Application.Servies
+namespace DevNews.Application.HackerNews.Servies
 {
     public interface IHackerNewsParser
     {

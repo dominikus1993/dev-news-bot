@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using DevNews.HackerNews.Application.Dto;
-using DevNews.HackerNews.Application.Servies;
+using DevNews.Application.HackerNews.Dto;
+using DevNews.Application.HackerNews.Servies;
 
-namespace DevNews.HackerNews.Application.UseCases
+namespace DevNews.Application.HackerNews.UseCases
 {
     public class ParseHackerNewsMainPageUseCase
     {

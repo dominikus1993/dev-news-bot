@@ -1,9 +1,9 @@
-﻿using DevNews.HackerNews.Application.Servies;
-using DevNews.HackerNews.Application.UseCases;
-using DevNews.HackerNews.Infrastructure.Services;
+﻿using DevNews.Application.HackerNews.Servies;
+using DevNews.Application.HackerNews.UseCases;
+using DevNews.Infrastructure.HackerNews.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DevNews.HackerNews.Infrastructure.DependencyInjection
+namespace DevNews.Infrastructure.HackerNews.DependencyInjection
 {
     public static class Extensions
     {

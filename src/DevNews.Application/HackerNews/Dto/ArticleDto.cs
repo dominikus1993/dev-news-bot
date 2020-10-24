@@ -1,4 +1,4 @@
-﻿namespace DevNews.HackerNews.Application.Dto
+﻿namespace DevNews.Application.HackerNews.Dto
 {
     public class ArticleDto
     {

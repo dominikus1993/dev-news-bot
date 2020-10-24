@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DevNews.HackerNews.Application.Dto;
-using DevNews.HackerNews.Application.Servies;
+using DevNews.Application.HackerNews.Dto;
+using DevNews.Application.HackerNews.Servies;
 using HtmlAgilityPack;
 
-namespace DevNews.HackerNews.Infrastructure.Services
+namespace DevNews.Infrastructure.HackerNews.Services
 {
     public class HtmlHackerNewsParser : IHackerNewsParser
     {
