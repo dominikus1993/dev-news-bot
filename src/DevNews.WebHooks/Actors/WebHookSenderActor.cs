@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Akka.Actor;
 using DevNews.Shared.Messages;
 using DevNews.WebHooks.Application.Services;
@@ -16,11 +15,11 @@ namespace DevNews.WebHooks.Actors
             Ready();
         }
 
-        public void Ready()
+        private void Ready()
         {
-            ReceiveAsync<SendArticles>(msg =>
+            ReceiveAsync<SendArticles>(async msg =>
             {
-                return Task.CompletedTask;
+                await _webHookNotifier.Notify(msg.Articles);
             });
         }
     }

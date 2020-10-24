@@ -1,1 +1,12 @@
 ﻿Akka
+
+Akka.Logger.Serilog
+Serilog.AspNetCore
+Serilog.Enrichers.Environment
+Serilog.Enrichers.Process
+Serilog.Enrichers.Thread
+Serilog.Exceptions
+Serilog.Sinks.Async
+Serilog.Sinks.Trace
+Serilog.Sinks.Seq
+Serilog.Formatting.Elasticsearch

@@ -13,6 +13,17 @@ nuget Microsoft.Extensions.Hosting
 nuget Discord.Net.Webhook
 nuget Microsoft.Extensions.DependencyInjection.Abstractions
 
+nuget Akka.Logger.Serilog
+nuget Serilog.AspNetCore
+nuget Serilog.Enrichers.Environment
+nuget Serilog.Enrichers.Process
+nuget Serilog.Enrichers.Thread
+nuget Serilog.Exceptions
+nuget Serilog.Sinks.Async
+nuget Serilog.Sinks.Trace
+nuget Serilog.Sinks.Seq
+nuget Serilog.Formatting.Elasticsearch
+
 nuget Microsoft.NET.Test.Sdk
 nuget xunit
 nuget xunit.runner.visualstudio
