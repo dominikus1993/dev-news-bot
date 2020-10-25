@@ -40,7 +40,7 @@ namespace DevNews.Application.Framework.DependencyInjection
         
         public static void AddApplication(this IServiceCollection services)
         {
-            services.AddSingleton<Actors>(sp =>
+            services.AddSingleton<SystemActors>(sp =>
             {
                 var system = ActorSystem.Create("bot", ConfigurationFactory.ParseString(Config));
                 var webhookActor = system.ActorOf(WebHookSenderActor.Create(sp),
@@ -48,7 +48,7 @@ namespace DevNews.Application.Framework.DependencyInjection
                 var hackernews = system.ActorOf(HackerNewsParserActor.Create(sp),
                     HackerNewsParserActor.HackerNewsParserActorPath.Name);
                 
-                return new Actors(system, webhookActor, hackernews);
+                return new SystemActors(system, webhookActor, hackernews);
             });
 
             services.AddSingleton<ParseHackerNewsMainPageAndNotifyUsersUseCase>();

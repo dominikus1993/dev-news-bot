@@ -8,9 +8,9 @@ namespace DevNews.Application.HackerNews.UseCases
     {
         private IActorRef _hackerNewsActor;
 
-        public ParseHackerNewsMainPageAndNotifyUsersUseCase(Framework.Akka.Actors actors)
+        public ParseHackerNewsMainPageAndNotifyUsersUseCase(Framework.Akka.SystemActors systemActors)
         {
-            _hackerNewsActor = actors.HackerNewsActor;
+            _hackerNewsActor = systemActors.HackerNewsActor;
         }
 
         public ValueTask Execute()

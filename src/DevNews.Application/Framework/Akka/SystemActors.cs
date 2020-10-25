@@ -2,9 +2,9 @@
 
 namespace DevNews.Application.Framework.Akka
 {
-    public class Actors
+    public class SystemActors
     {
-        public Actors(ActorSystem actorSystem, IActorRef hackerNewsActor, IActorRef webHookNotifierActor)
+        public SystemActors(ActorSystem actorSystem, IActorRef hackerNewsActor, IActorRef webHookNotifierActor)
         {
             HackerNewsActor = hackerNewsActor;
             WebHookNotifierActor = webHookNotifierActor;
