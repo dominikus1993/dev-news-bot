@@ -48,7 +48,7 @@ namespace DevNews.Application.Framework.DependencyInjection
                 var hackernews = system.ActorOf(HackerNewsParserActor.Create(sp),
                     HackerNewsParserActor.HackerNewsParserActorPath.Name);
                 
-                return new SystemActors(system, webhookActor, hackernews);
+                return new SystemActors(system, hackernews, webhookActor);
             });
 
             services.AddSingleton<ParseHackerNewsMainPageAndNotifyUsersUseCase>();
