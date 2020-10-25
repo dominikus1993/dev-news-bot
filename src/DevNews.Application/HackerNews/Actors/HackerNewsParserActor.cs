@@ -11,7 +11,7 @@ using Microsoft.FSharp.Core;
 
 namespace DevNews.Application.HackerNews.Actors
 {
-    public partial class HackerNewsParserActor
+    public partial class HackerNewsParserActor : ReceiveActor
     {
         public delegate IActorRef HackerNewsActorProvider();
         

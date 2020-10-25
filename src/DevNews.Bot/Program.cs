@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Akka.Actor;
 using DevNews.Application.Framework.DependencyInjection;
+using DevNews.DiscordBot.Infrastructure.Serilog;
 using DevNews.Infrastructure.HackerNews.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,6 +17,7 @@ namespace DevNews.DiscordBot
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseLogger("DevNews.Bot")
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddApplication();

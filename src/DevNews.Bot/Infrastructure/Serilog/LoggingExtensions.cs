@@ -16,7 +16,7 @@ namespace DevNews.DiscordBot.Infrastructure.Serilog
         {
             return hostBuilder.UseSerilog(((context, configuration) =>
             {
-                var serilogOptions = context.Configuration.GetSection("Serilog").Get<SerilogOptions>();
+                var serilogOptions = context.Configuration.GetSection("Serilog").Get<SerilogOptions>() ?? new SerilogOptions();
                 if (!Enum.TryParse<LogEventLevel>(serilogOptions.MinimumLevel, true, out var level))
                 {
                     level = LogEventLevel.Information;
