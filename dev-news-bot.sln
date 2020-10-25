@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Application", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Infrastructure", "src\DevNews.Infrastructure\DevNews.Infrastructure.csproj", "{7E5AEA5C-C84C-464B-AACD-2C3EE82FD42D}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DevNews.Domain", "src\DevNews.Domain\DevNews.Domain.fsproj", "{75BCD49A-9371-49CA-9B58-0067179606A4}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DevNews.Core", "src\DevNews.Core\DevNews.Core.fsproj", "{75BCD49A-9371-49CA-9B58-0067179606A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
