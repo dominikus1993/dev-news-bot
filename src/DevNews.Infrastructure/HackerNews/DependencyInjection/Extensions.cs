@@ -10,7 +10,6 @@ namespace DevNews.Infrastructure.HackerNews.DependencyInjection
         public static void AddHackerNews(this IServiceCollection services)
         {
             services.AddTransient<IHackerNewsParser, HtmlHackerNewsParser>();
-            services.AddScoped<ParseHackerNewsMainPageUseCase>();
         }
     }
 }

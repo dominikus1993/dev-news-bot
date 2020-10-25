@@ -1,26 +1,29 @@
 ﻿using System;
 using Akka.Actor;
+using Akka.Event;
 using DevNews.Akka.Messages;
-using DevNews.Application.Notifications.Services;
-using Microsoft.Extensions.DependencyInjection;
+using DevNews.Shared.Routing;
 
 namespace DevNews.Application.Notifications.Actors
 {
     public class WebHookSenderActor : ReceiveActor
     {
-        private INotifier _notifier;
         public WebHookSenderActor(IServiceProvider sp)
         {
-            _notifier = sp.GetService<INotifier>();
             Ready();
         }
 
         private void Ready()
         {
-            ReceiveAsync<SendArticles>(async msg =>
+            Receive<SendArticles>(msg =>
             {
-                await _notifier.Notify(msg.Articles);
+                Context.GetLogger().Info("Message send {msg}", msg);
             });
         }
+        
+        
+        public static ActorMetaData HackerNewsParserActorPath = ActorMetaDataModule.CreateTopLevel("notifier");
+
+        public static Props Create(IServiceProvider sp) => Props.Create(() => new WebHookSenderActor(sp));
     }
 }

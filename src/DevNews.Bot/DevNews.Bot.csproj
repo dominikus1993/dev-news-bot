@@ -10,6 +10,9 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.9" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DevNews.Application\DevNews.Application.csproj" />
+    <ProjectReference Include="..\DevNews.Core\DevNews.Core.fsproj" />
+    <ProjectReference Include="..\DevNews.Infrastructure\DevNews.Infrastructure.csproj" />
     <ProjectReference Include="..\DevNews.WebHooks\DevNews.WebHooks.csproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

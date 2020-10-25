@@ -1,2 +1,5 @@
 ﻿Akka
 Microsoft.Extensions.DependencyInjection.Abstractions
+System.Linq.Async
+Akka.Logger.Serilog
+Akka.Serialization.Hyperion

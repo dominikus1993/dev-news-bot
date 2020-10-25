@@ -1,21 +1,22 @@
-﻿using System.Collections.Generic;
-using DevNews.Application.HackerNews.Dto;
-using DevNews.Application.HackerNews.Servies;
+﻿using System.Threading.Tasks;
+using Akka.Actor;
+using DevNews.Application.HackerNews.Actors;
 
 namespace DevNews.Application.HackerNews.UseCases
 {
-    public class ParseHackerNewsMainPageUseCase
+    public class ParseHackerNewsMainPageAndNotifyUsersUseCase
     {
-        private IHackerNewsParser _hackerNewsParser;
+        private IActorRef _hackerNewsActor;
 
-        public ParseHackerNewsMainPageUseCase(IHackerNewsParser hackerNewsParser)
+        public ParseHackerNewsMainPageAndNotifyUsersUseCase(Framework.Akka.Actors actors)
         {
-            _hackerNewsParser = hackerNewsParser;
+            _hackerNewsActor = actors.HackerNewsActor;
         }
 
-        public IAsyncEnumerable<ArticleDto> Execute()
+        public ValueTask Execute()
         {
-            return _hackerNewsParser.Parse();
+            _hackerNewsActor.Tell(HackerNewsParserActor.ParseNewHackerNewsArticlesAndNotifyUsers.Instance);
+            return new ValueTask();
         }
     }
 }

@@ -4,6 +4,8 @@ storage: none
 framework: netcoreapp3.1, netstandard2.0, netstandard2.1
 
 nuget Akka
+nuget Akka.Logger.Serilog
+nuget Akka.Serialization.Hyperion
 nuget LanguageExt.Core
 nuget System.Linq.Async
 nuget Open.ChannelExtensions
@@ -13,7 +15,6 @@ nuget Microsoft.Extensions.Hosting
 nuget Discord.Net.Webhook
 nuget Microsoft.Extensions.DependencyInjection.Abstractions
 
-nuget Akka.Logger.Serilog
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.Environment
 nuget Serilog.Enrichers.Process
