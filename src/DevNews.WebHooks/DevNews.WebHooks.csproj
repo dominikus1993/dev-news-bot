@@ -8,7 +8,7 @@
     <Folder Include="Infrastructure" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DevNews.Akka.Messages\DevNews.Akka.Messages.fsproj" />
+    <ProjectReference Include="..\DevNews.Akka\DevNews.Akka.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

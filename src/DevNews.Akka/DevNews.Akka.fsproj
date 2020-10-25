@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Messages.fs" />
+    <Compile Include="Routing.fs" />
   </ItemGroup>
 
 </Project>

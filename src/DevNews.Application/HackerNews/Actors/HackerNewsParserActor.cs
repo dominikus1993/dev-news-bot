@@ -1,6 +1,9 @@
 ﻿using System;
 using Akka.Actor;
 using DevNews.Application.HackerNews.Servies;
+using DevNews.Shared.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.FSharp.Core;
 
 namespace DevNews.Application.HackerNews.Actors
 {
@@ -15,9 +18,9 @@ namespace DevNews.Application.HackerNews.Actors
     public partial class HackerNewsParserActor : ReceiveActor
     {
         private IHackerNewsParser _hackerNewsParser;
-        public HackerNewsParserActor(IServiceProvider sp, IHackerNewsParser hackerNewsParser)
+        public HackerNewsParserActor(IServiceProvider sp)
         {
-            _hackerNewsParser = hackerNewsParser;
+            _hackerNewsParser = sp.GetService<IHackerNewsParser>();
             Ready();
         }
 
@@ -28,5 +31,10 @@ namespace DevNews.Application.HackerNews.Actors
                 var result = _hackerNewsParser.Parse();
             });
         }
+
+        public static ActorMetaData HackerNewsParserActorPath = ActorMetaDataModule.CreateTopLevel("hacker_news");
+
+        public static Props Create(IServiceProvider sp) => Props.Create(() => new HackerNewsParserActor(sp));
+
     }
 }
