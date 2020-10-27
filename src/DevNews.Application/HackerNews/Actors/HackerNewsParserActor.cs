@@ -39,6 +39,15 @@ namespace DevNews.Application.HackerNews.Actors
         {
             ReceiveAsync<ParseNewHackerNewsArticlesAndNotifyUsers>(async msg =>
             {
+                Become();
+            });
+        }
+        
+        
+        private void Working()
+        {
+            ReceiveAsync<ParseNewHackerNewsArticlesAndNotifyUsers>(async msg =>
+            {
                 var result = await _hackerNewsParser.Parse().Select(x => new Article(x.Title, x.Link)).ToListAsync();
                 var notifier = Context.ActorSelection(WebHookSenderActor.HackerNewsParserActorPath.Path);
                 notifier.Tell(new SendArticles(result));
