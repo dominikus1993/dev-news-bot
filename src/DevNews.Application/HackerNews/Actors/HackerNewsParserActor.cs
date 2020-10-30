@@ -28,10 +28,12 @@ namespace DevNews.Application.HackerNews.Actors
     public partial class HackerNewsParserActor : ReceiveActor
     {
         private IHackerNewsParser _hackerNewsParser;
+        private IActorRef _parser = ActorRefs.Nobody;
 
         public HackerNewsParserActor(IServiceProvider sp)
         {
             _hackerNewsParser = sp.GetService<IHackerNewsParser>();
+            _parser = Source
             Ready();
         }
 

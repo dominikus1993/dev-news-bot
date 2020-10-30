@@ -1,4 +1,5 @@
 ﻿Akka
+Akka.Streams
 Microsoft.Extensions.DependencyInjection.Abstractions
 System.Linq.Async
 Akka.Logger.Serilog
