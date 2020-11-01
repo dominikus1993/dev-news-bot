@@ -3,6 +3,7 @@ using Akka.Actor;
 using DevNews.Application.Framework.DependencyInjection;
 using DevNews.DiscordBot.Infrastructure.Serilog;
 using DevNews.Infrastructure.HackerNews.DependencyInjection;
+using DevNews.Infrastructure.WebHooks.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -22,6 +23,7 @@ namespace DevNews.DiscordBot
                 {
                     services.AddApplication();
                     services.AddHackerNews();
+                    services.AddNotifier(hostContext.Configuration);
                     services.AddHostedService<Worker>();
                 });
     }

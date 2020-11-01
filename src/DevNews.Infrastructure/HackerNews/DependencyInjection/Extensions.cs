@@ -3,6 +3,7 @@ using DevNews.Application.HackerNews.UseCases;
 using DevNews.Core.HackerNews;
 using DevNews.Infrastructure.HackerNews.Repositories;
 using DevNews.Infrastructure.HackerNews.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DevNews.Infrastructure.HackerNews.DependencyInjection

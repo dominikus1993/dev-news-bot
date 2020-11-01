@@ -4,9 +4,6 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="WebHooks" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DevNews.Akka\DevNews.Akka.fsproj" />
     <ProjectReference Include="..\DevNews.Application\DevNews.Application.csproj" />
   </ItemGroup>
