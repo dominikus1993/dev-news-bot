@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using DevNews.Application.Notifications.Services;
 using Discord;
 using Discord.Webhook;
-using DevNews.Core.HackerNews;
 using DevNews.Core.Model;
 
 namespace DevNews.Infrastructure.WebHooks.Services
 {
     public class DiscordNetWebHookNotifier : INotifier
     {
-        private DiscordWebhookClient _client;
+        private readonly DiscordWebhookClient _client;
 
         public DiscordNetWebHookNotifier(DiscordWebhookClient client)
         {
