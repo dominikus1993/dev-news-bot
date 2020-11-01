@@ -5,7 +5,8 @@ using DevNews.Application.Notifications.Services;
 using Discord;
 using Discord.Webhook;
 using DevNews.Core.HackerNews;
-using  DevNews.Core.Model;
+using DevNews.Core.Model;
+
 namespace DevNews.Infrastructure.WebHooks.Services
 {
     public class DiscordNetWebHookNotifier : INotifier

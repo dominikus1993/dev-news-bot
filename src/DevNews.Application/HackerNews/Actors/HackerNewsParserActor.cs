@@ -44,9 +44,10 @@ namespace DevNews.Application.HackerNews.Actors
         {
             _hackerNewsParser = sp.GetService<IHackerNewsParser>();
             _hackerNewsRepository = sp.GetService<IHackerNewsRepository>();
-            var parser = Source.ActorRef<ParseNewHackerNewsArticlesAndNotifyUsers>(50, OverflowStrategy.DropNew)
+            _parser = Source.ActorRef<ParseNewHackerNewsArticlesAndNotifyUsers>(50, OverflowStrategy.DropNew)
                 .SelectAsync(Environment.ProcessorCount,
-                    async msg => { return await _hackerNewsParser.Parse().ToListAsync(); }).SelectAsync(1,
+                    async msg => await _hackerNewsParser.Parse().ToListAsync())
+                .SelectAsync(1,
                     async articles =>
                     {
                         return await _hackerNewsRepository.Exists(articles.Select(x =>
@@ -56,24 +57,18 @@ namespace DevNews.Application.HackerNews.Actors
                             .ToListAsync();
                     })
                 .Select(articles => new SendArticles(articles))
-                .To(Sink.ActorRef<SendArticles>(Self, CompleteParsingArticles.Instance));
-                
+                .To(Sink.ActorRef<SendArticles>(Self, CompleteParsingArticles.Instance)).Run(Context.Materializer());
+
             Ready();
         }
 
         private void Ready()
         {
-            ReceiveAsync<ParseNewHackerNewsArticlesAndNotifyUsers>(async msg => { });
-        }
-
-
-        private void Working()
-        {
-            ReceiveAsync<ParseNewHackerNewsArticlesAndNotifyUsers>(async msg =>
+            Receive<ParseNewHackerNewsArticlesAndNotifyUsers>(msg => { _parser.Forward(msg); });
+            Receive<SendArticles>(msg =>
             {
-                var result = await _hackerNewsParser.Parse().Select(x => new Article(x.Title, x.Link)).ToListAsync();
                 var notifier = Context.ActorSelection(WebHookSenderActor.HackerNewsParserActorPath.Path);
-                notifier.Tell(new SendArticles(result));
+                notifier.Tell(new SendArticles(msg.Articles));
             });
         }
     }
