@@ -1,3 +1,3 @@
-﻿namespace DevNews.Domain.Model
+﻿namespace DevNews.Core.Model
 
-type Article = { Title: string; Content: string }
+type Article = { Title: string; Link: string }

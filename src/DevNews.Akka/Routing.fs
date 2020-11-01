@@ -1,4 +1,4 @@
-﻿namespace DevNews.Shared.Routing
+﻿namespace DevNews.Akka.Routing
 
 type ActorMetaData  = { Name: string; Parent: ActorMetaData option; Path: string }
 

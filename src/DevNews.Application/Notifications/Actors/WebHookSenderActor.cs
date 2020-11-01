@@ -1,9 +1,8 @@
 ﻿using System;
 using Akka.Actor;
 using Akka.Event;
+using DevNews.Akka.Routing;
 using DevNews.Akka.Messages;
-using DevNews.Shared.Routing;
-
 namespace DevNews.Application.Notifications.Actors
 {
     public class WebHookSenderActor : ReceiveActor

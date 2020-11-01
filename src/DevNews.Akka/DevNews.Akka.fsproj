@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>DevNews.Shared</RootNamespace>
   </PropertyGroup>
 
@@ -9,6 +9,10 @@
     <Compile Include="Types.fs" />
     <Compile Include="Messages.fs" />
     <Compile Include="Routing.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevNews.Core\DevNews.Core.fsproj" />
   </ItemGroup>
 
 </Project>

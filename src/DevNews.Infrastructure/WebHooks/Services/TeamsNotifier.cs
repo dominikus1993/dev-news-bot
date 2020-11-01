@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevNews.Akka.Types;
 using DevNews.Application.Notifications.Services;
+using DevNews.Core.Model;
 
 namespace DevNews.Infrastructure.WebHooks.Services
 {

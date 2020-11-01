@@ -1,4 +1,4 @@
 ﻿namespace DevNews.Akka.Types
+open DevNews.Core.Model
 
-type Article = { Title: string; Url: string }
 type Articles = Article seq
