@@ -1,14 +1,36 @@
 ﻿using System;
+using System.Collections.Generic;
 using Akka.Actor;
 using Akka.Event;
 using DevNews.Akka.Routing;
 using DevNews.Akka.Messages;
+using DevNews.Application.Notifications.Services;
+using DevNews.Core.Model;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace DevNews.Application.Notifications.Actors
 {
-    public class WebHookSenderActor : ReceiveActor
+    public partial class WebHookSenderActor
     {
+        private class NotifyUser
+        {
+            public NotifyUser(IEnumerable<Article> article, INotifier notifier)
+            {
+                Articles = article;
+                Notifier = notifier;
+            }
+
+            public IEnumerable<Article> Articles { get; }
+            public INotifier Notifier { get;  }
+            
+        }
+    }
+    public partial class WebHookSenderActor : ReceiveActor
+    {
+        private IEnumerable<INotifier> _notifiers;
         public WebHookSenderActor(IServiceProvider sp)
         {
+            _notifiers = sp.GetServices<INotifier>();
             Ready();
         }
 
@@ -16,7 +38,15 @@ namespace DevNews.Application.Notifications.Actors
         {
             Receive<SendArticles>(msg =>
             {
-                Context.GetLogger().Info("Message send {msg}", msg);
+                foreach (var notifier in _notifiers)
+                {
+                    Context.Self.Tell(new NotifyUser(msg.Articles, notifier));
+                }
+            });
+            
+            ReceiveAsync<NotifyUser>(async msg =>
+            {
+                await msg.Notifier.Notify(msg.Articles);
             });
         }
         

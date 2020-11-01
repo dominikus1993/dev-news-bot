@@ -12,6 +12,7 @@ namespace DevNews.Infrastructure.WebHooks.DependencyInjection
         {
             services.AddSingleton(sp => new DiscordWebhookClient(configuration["Discord:WebhookUrl"]));
             services.AddTransient<INotifier, DiscordNetWebHookNotifier>();
+            services.AddTransient<DiscordNetWebHookNotifier>();
         }
     }
 }
