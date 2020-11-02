@@ -7,3 +7,5 @@ HtmlAgilityPack
 Discord.Net.Webhook
 Akka
 Microsoft.Extensions.DependencyInjection.Abstractions
+MongoDB.Driver.Core
+MongoDB.Driver

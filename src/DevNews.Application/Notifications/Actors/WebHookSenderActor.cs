@@ -27,7 +27,8 @@ namespace DevNews.Application.Notifications.Actors
     }
     public partial class WebHookSenderActor : ReceiveActor
     {
-        private IEnumerable<INotifier> _notifiers;
+        private readonly IEnumerable<INotifier> _notifiers;
+        
         public WebHookSenderActor(IServiceProvider sp)
         {
             _notifiers = sp.GetServices<INotifier>();
