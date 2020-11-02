@@ -15,6 +15,8 @@ nuget HtmlAgilityPack
 nuget Microsoft.Extensions.Hosting
 nuget Discord.Net.Webhook
 nuget Microsoft.Extensions.DependencyInjection.Abstractions
+nuget MongoDB.Driver.Core
+nuget MongoDB.Driver
 
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.Environment
