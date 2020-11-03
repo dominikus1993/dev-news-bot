@@ -29,7 +29,7 @@ namespace DevNews.DiscordBot
             {
                 await _parseHackerNewsMainPageAndNotifyUsersUseCase.Execute();
                 _logger.LogInformation("Message Send");
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
             }
         }
     }
