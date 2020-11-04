@@ -19,6 +19,7 @@ nuget Discord.Net.Webhook
 nuget Microsoft.Extensions.DependencyInjection.Abstractions
 nuget MongoDB.Driver.Core
 nuget MongoDB.Driver
+nuget TaskBuilder.fs
 
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.Environment

@@ -1,4 +1,5 @@
 namespace DevNews.Core.HackerNews
+open System.Threading.Tasks
 
 
 module Repositories =
@@ -13,6 +14,7 @@ module Repositories =
 
 module Services =
     open FSharp.Control
+    open FSharp.Control
     open HtmlAgilityPack
     open System.Linq
 
@@ -23,16 +25,31 @@ module Services =
 
     type ParseHackerNewsArticles = unit -> IAsyncEnumerable<ArticleDto>
 
-    let parse () =
-        asyncSeq {
+    type Notify = ArticleDto seq -> Task
+
+    let private parseHtml() =
+        async {
             let html = HtmlWeb()
             let! document = html.LoadFromWebAsync(HackerNewsUrl) |> Async.AwaitTask
-            let nodes = document.DocumentNode.SelectNodes("//*[@class=\"storylink\"]").Select(fun e -> {| link = e.GetAttributeValue("href", null); title = e.InnerText |})
+            return query {
+                for node in document.DocumentNode.SelectNodes("//*[@class=\"storylink\"]") do
+                    select {| link = node.GetAttributeValue("href", null); title = node.InnerText |}
+            } 
+        } 
+
+    let parse () =
+        asyncSeq {
+            let! nodes = parseHtml()
             for node in nodes do
                 yield { Title = node.title; Link = node.link }
-        }
+        } 
         
 
 module UseCases = 
-    let parseArticlesAndNotify = 
-        2
+    open FSharp.Control
+
+    let parseArticlesAndNotify(parse: Services.ParseHackerNewsArticles) (repo: Repositories.IHackerNewsRepository) (notifier) = 
+        parse()
+
+
+
