@@ -12,7 +12,16 @@ module Repositories =
     
     type InsertMany = Article seq -> Async<unit>
 
-
+    let fakeExists(article: Article) =
+        async {
+            return Some(article)
+        }
+        
+    let fakeInsertMany(articles: Article seq) =
+        async {
+            return ()
+        }
+        
 module Services =
     open FSharp.Control
     open FSharp.Control
@@ -41,18 +50,24 @@ module Services =
                 yield { Title = node.title; Link = node.link }
         } 
         
-    let getNewArticles (parse: ParseHackerNewsArticles) (getIfExists: Repositories.Exists) =
+    let getNewArticles (parse: ParseHackerNewsArticles) (getIfExists: Repositories.Exists)() =
         parse()
             |> AsyncSeq.map(fun x -> { Title = x.Title; Link = x.Link })
             |> AsyncSeq.mapAsyncParallel(fun x -> getIfExists(x))
             |> AsyncSeq.choose(id)
+            
+    let consoleNotifier(articles: Article seq) =
+        async {
+            printfn "%A" articles
+            return ()
+        }
    
 module UseCases = 
     open FSharp.Control
     
+    type ParseHackerNewsArticlesAndNotify = unit -> Async<unit>
     
-    
-    let parseArticlesAndNotify(getNewArticles: Services.GetNewArticles) (insertMany: Repositories.InsertMany)(notify: Services.Notify) =
+    let parseArticlesAndNotify(getNewArticles: Services.GetNewArticles) (insertMany: Repositories.InsertMany)(notify: Services.Notify)()=
         async {
             let! articles = getNewArticles() |> AsyncSeq.toArrayAsync
             do! insertMany articles

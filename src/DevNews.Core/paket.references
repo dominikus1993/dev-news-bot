@@ -3,3 +3,4 @@ FSharp.Control.AsyncSeq
 HtmlAgilityPack
 FSharp.Core
 TaskBuilder.fs
+Microsoft.Extensions.DependencyInjection.Abstractions
