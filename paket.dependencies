@@ -20,6 +20,9 @@ nuget Microsoft.Extensions.DependencyInjection.Abstractions
 nuget MongoDB.Driver.Core
 nuget MongoDB.Driver
 nuget TaskBuilder.fs
+nuget Saturn
+nuget Giraffe
+nuget FSharp.Core
 
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.Environment
