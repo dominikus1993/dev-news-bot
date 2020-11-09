@@ -17,7 +17,7 @@ module App =
                 task {
                     while not ct.IsCancellationRequested do
                     logger.LogInformation("Worker running at: {time}", System.DateTimeOffset.Now)
-                    do! useCase.Execute() |> Async.StartAsTask
+                    do! useCase.Execute()
                     do! Tasks.Task.Delay(10000, ct)
                 } :> Tasks.Task
     
