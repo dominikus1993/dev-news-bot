@@ -10,14 +10,15 @@ module App =
     open Saturn
     open DevNews.Core.HackerNews
     
-    type HackerNewsWorker(logger:ILogger<HackerNewsWorker>, useCase: UseCases.ParseHackerNewsArticlesAndNotify) =
+    type HackerNewsWorker(logger:ILogger<HackerNewsWorker>, useCase: UseCases.GetNewArticlesAndNotifyUseCase) =
         inherit BackgroundService()
         override __.ExecuteAsync(ct: CancellationToken) =
                 ct.Register(fun () -> logger.LogInformation("Worker canceled at: {time}", System.DateTimeOffset.Now)) |> ignore
                 task {
                     while not ct.IsCancellationRequested do
                     logger.LogInformation("Worker running at: {time}", System.DateTimeOffset.Now)
-                    do! (useCase() |> Async.StartAsTask)
+                    do! useCase.Execute() |> Async.StartAsTask
+                    do! Tasks.Task.Delay(10000, ct)
                 } :> Tasks.Task
     
     let configureServices (services: IServiceCollection) =
