@@ -17,6 +17,7 @@ nuget HtmlAgilityPack
 nuget Microsoft.Extensions.Hosting
 nuget Discord.Net.Webhook
 nuget Microsoft.Extensions.DependencyInjection.Abstractions
+nuget Microsoft.Extensions.Configuration.Abstractions
 nuget MongoDB.Driver.Core
 nuget MongoDB.Driver
 nuget TaskBuilder.fs

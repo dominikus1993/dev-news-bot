@@ -14,7 +14,6 @@ module IoC =
 
         services.AddScoped<IHackerNewsRepository, FakeHackerNewsRepository>() |> ignore
         services.AddScoped<IArticleParser, HtmlArticleParser>() |> ignore
-        services.AddScoped<INotifier, ConsoleNotifier>() |> ignore
         services.AddScoped<INewArticlesProvider, HtmlNewArticlesProvider>() |> ignore
         services.AddScoped<GetNewArticlesAndNotifyUseCase>() |> ignore
         services
