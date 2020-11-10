@@ -9,6 +9,7 @@ module App =
     open FSharp.Control.Tasks.V2.ContextInsensitive
     open System.Threading
     open Microsoft.Extensions.DependencyInjection
+    open DevNews.Infrastructure.Notifications.Discord
     open Saturn
     open DevNews.Core.HackerNews
     
@@ -25,6 +26,7 @@ module App =
     
     let configureServices (services: IServiceCollection) =
         services |> IoC.addHackerNews |> ignore
+        services |> IoC.addDiscord |> ignore
         services.AddHostedService<HackerNewsWorker>() |> ignore
         services
 

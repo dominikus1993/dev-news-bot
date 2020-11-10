@@ -1,3 +1,7 @@
 Saturn
 Giraffe
 FSharp.Core
+Microsoft.Extensions.Configuration
+Microsoft.Extensions.Configuration.EnvironmentVariables
+Microsoft.Extensions.Configuration.Json
+Microsoft.Extensions.Configuration.UserSecrets
