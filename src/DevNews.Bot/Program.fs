@@ -12,6 +12,7 @@ module App =
     open DevNews.Infrastructure.Notifications.Discord
     open Saturn
     open DevNews.Core.HackerNews
+    open Microsoft.Extensions.Configuration
     
     type HackerNewsWorker(logger:ILogger<HackerNewsWorker>, useCase: UseCases.GetNewArticlesAndNotifyUseCase) =
         inherit BackgroundService()
@@ -28,10 +29,12 @@ module App =
         services |> IoC.addHackerNews |> ignore
         services |> IoC.addDiscord |> ignore
         services.AddHostedService<HackerNewsWorker>() |> ignore
+        services.Add
         services
 
-//    let configureApp(app: IApplicationBuilder) =
-//        app.Add
+    let configureHost(host: IHostBuilder) =
+        host.ConfigureAppConfiguration(fun builder -> builder.AddJsonFile("appsettings.json", true, true).AddUserSecrets("caad687c-126f-440c-8dc2-c85d8ad6668a").AddEnvironmentVariables() |> ignore)
+        
     [<EntryPoint>]
     let main argv =
         let h =
@@ -39,6 +42,7 @@ module App =
                 no_webhost //Don't start default webhost
                 cli_arguments argv
                 service_config configureServices
+                host_config configureHost
             }
         run h
         0 // return an integer exit code
