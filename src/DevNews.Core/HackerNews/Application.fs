@@ -8,13 +8,13 @@ module Repositories =
     open System.Collections.Generic
     open System.Threading.Tasks
     open DevNews.Core.Model
-
-    type Exists = Article -> Async<Option<Article>>
+    
+    type CheckExistence = Article -> Async<Option<Article>>
 
     type InsertMany = Article seq -> Async<unit>
 
     type IHackerNewsRepository =
-        abstract Exists: Exists
+        abstract Exists: CheckExistence
         abstract InsertMany: InsertMany
 
     let private fakeExists (article: Article) = async { return Some(article) }
@@ -76,7 +76,7 @@ module Services =
                 yield { Title = node.title; Link = node.link }
         }
 
-    let private getNewArticles (parse: ParseHackerNewsArticles) (getIfExists: Exists) () =
+    let private getNewArticles (parse: ParseHackerNewsArticles) (getIfExists: CheckExistence) () =
         parse ()
         |> AsyncSeq.map (fun x -> { Title = x.Title; Link = x.Link })
         |> AsyncSeq.mapAsyncParallel (fun x -> getIfExists (x))
@@ -125,10 +125,13 @@ module UseCases =
                                        ()
                                        =
         async {
-            let! articles = getNewArticles () |> AsyncSeq.toArrayAsync
-            do! insertMany articles
-            do! notify articles
-            return ()
+            match! getNewArticles () |> AsyncSeq.toArrayAsync with
+            | [||] ->
+                return ()
+            | articles -> 
+                do! insertMany articles
+                do! notify articles
+                return ()
         }
 
     type GetNewArticlesAndNotifyUseCase(provider: INewArticlesProvider,

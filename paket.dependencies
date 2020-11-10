@@ -1,7 +1,7 @@
 source https://api.nuget.org/v3/index.json
 
 storage: none
-framework: netcoreapp3.1, netstandard2.0, netstandard2.1
+framework: net5.0, netstandard2.0, netstandard2.1
 
 nuget FSharp.Core
 nuget Akka
@@ -23,7 +23,6 @@ nuget MongoDB.Driver
 nuget TaskBuilder.fs
 nuget Saturn
 nuget Giraffe
-nuget FSharp.Core
 
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.Environment

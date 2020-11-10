@@ -1,5 +1,7 @@
 ﻿namespace DevNews.Bot
 
+open Microsoft.AspNetCore.Builder
+
 module App =
     
     open Microsoft.Extensions.Hosting
@@ -25,7 +27,9 @@ module App =
         services |> IoC.addHackerNews |> ignore
         services.AddHostedService<HackerNewsWorker>() |> ignore
         services
-    
+
+//    let configureApp(app: IApplicationBuilder) =
+//        app.Add
     [<EntryPoint>]
     let main argv =
         let h =
