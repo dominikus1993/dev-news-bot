@@ -1,5 +1,6 @@
 ﻿namespace DevNews.Bot
 
+open System
 open Microsoft.AspNetCore.Builder
 
 module App =
@@ -22,7 +23,7 @@ module App =
                     while not ct.IsCancellationRequested do
                     logger.LogInformation("Worker running at: {time}", System.DateTimeOffset.Now)
                     do! useCase.Execute()
-                    do! Tasks.Task.Delay(10000, ct)
+                    do! Tasks.Task.Delay(TimeSpan.FromHours(1.), ct)
                 } :> Tasks.Task
     
     let configureServices (services: IServiceCollection) =
