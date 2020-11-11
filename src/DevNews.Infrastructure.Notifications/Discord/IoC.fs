@@ -14,7 +14,7 @@ module IoC =
         
     let addDiscord (services: IServiceCollection) =
         services
-            |> addSingleton(fun sp -> new DiscordWebhookClient(sp.GetService<IConfiguration>().GetConnectionString("Discord")))
+            |> addSingleton(fun sp -> new DiscordWebhookClient("https://discordapp.com/api/webhooks/775805301873704991/4aKBJiLJXtQ6skHCnh0GDMdXMJo_yv7RVfNyJ9nxKANi9OFeHKyBPI_xgFdrA2oG9gBi"))
             |> ignore
             
         services.AddScoped<INotifier, DiscordWebHookNotifier>()

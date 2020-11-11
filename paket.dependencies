@@ -27,6 +27,7 @@ nuget MongoDB.Driver
 nuget TaskBuilder.fs
 nuget Saturn
 nuget Giraffe
+nuget FSharpx.Collections
 
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.Environment
@@ -42,3 +43,4 @@ nuget Microsoft.NET.Test.Sdk
 nuget xunit
 nuget xunit.runner.visualstudio
 nuget coverlet.collector
+nuget FsUnit.xUnit
