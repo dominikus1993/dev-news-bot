@@ -1,12 +1,13 @@
 namespace DevNews.Infrastructure.Persistence.HackerNews
 
 open DevNews.Core.Model
+open DevNews.Infrastructure.Persistence.HackerNews
 open MongoDB.Driver
-
+open MongoDB.Driver.Linq
 module Repositories =
     open DevNews.Core.HackerNews.Repositories
     
-    let checkExistence (mongo: IMongoClient) (article: Article) =
+    let checkExistence (col: IMongoCollection<MongoArticle>) (art: Article) =
         async {
-            let db 
+            return! col.AsQueryable().AnyAsync(fun x -> x.Title = art.Title) |> Async.AwaitTask
         }
