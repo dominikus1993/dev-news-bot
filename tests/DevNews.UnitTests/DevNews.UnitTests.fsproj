@@ -7,8 +7,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Tests.fs" />
-    <Compile Include="Program.fs" />
     <Compile Include="SeqTests.fs" />
+    <Compile Include="Program.fs" />
+    <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DevNews.Utils\DevNews.Utils.fsproj" />
