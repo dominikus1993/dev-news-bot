@@ -23,7 +23,6 @@ module App =
                     while not ct.IsCancellationRequested do
                     logger.LogInformation("Worker running at: {time}", System.DateTimeOffset.Now)
                     do! useCase.Execute()
-                    printfn "Koniec"
                     do! Tasks.Task.Delay(TimeSpan.FromHours(1.), ct)
                 } :> Tasks.Task
     
