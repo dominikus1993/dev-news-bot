@@ -1,6 +1,7 @@
 ﻿namespace DevNews.Bot
 
 open System
+open DevNews.Infrastructure.Persistence
 open Microsoft.AspNetCore.Builder
 
 module App =
@@ -29,6 +30,7 @@ module App =
     let configureServices (services: IServiceCollection) =
         services |> IoC.addHackerNews |> ignore
         services |> IoC.addDiscord |> ignore
+        services |> IoC.addPersistenceInfrastructure |> ignore
         services.AddHostedService<HackerNewsWorker>() |> ignore
         services
 

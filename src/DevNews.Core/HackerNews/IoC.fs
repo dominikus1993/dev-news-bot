@@ -11,8 +11,6 @@ module IoC =
         services.AddTransient<'a>(Func<IServiceProvider, 'a>(provider))
 
     let addHackerNews (services: IServiceCollection) =
-
-        services.AddScoped<IHackerNewsRepository, FakeHackerNewsRepository>() |> ignore
         services.AddScoped<IArticleParser, HtmlArticleParser>() |> ignore
         services.AddScoped<INewArticlesProvider, HtmlNewArticlesProvider>() |> ignore
         services.AddScoped<INotificationBroadcaster, Broadcaster>() |> ignore
