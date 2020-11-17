@@ -11,6 +11,7 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Dockerfile" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevNews.Core\DevNews.Core.fsproj" />
