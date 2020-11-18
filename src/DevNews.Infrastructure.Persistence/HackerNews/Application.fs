@@ -3,6 +3,7 @@ namespace DevNews.Infrastructure.Persistence.HackerNews
 open System
 open DevNews.Core.Model
 open DevNews.Infrastructure.Persistence.HackerNews
+open FSharp.Control
 open MongoDB.Driver
 open MongoDB.Driver.Linq
 module internal Repositories =
@@ -21,10 +22,11 @@ module internal Repositories =
                 return Some(art)
         }
         
-    let private insertArticles (col: IMongoCollection<MongoArticle>) (art: Article seq) =
+    let private insertArticles (col: IMongoCollection<MongoArticle>) (articles: Article seq) : InsertManyResult =
         async {
-            let writeMode = art |> Seq.map(fun x -> InsertOneModel<MongoArticle>({ Link = x.Link; Title = x.Title; CrawledAt = DateTime.UtcNow }) :>  WriteModel<MongoArticle>)
+            let writeMode = articles |> Seq.map(fun x -> InsertOneModel<MongoArticle>({ Link = x.Link; Title = x.Title; CrawledAt = DateTime.UtcNow }) :>  WriteModel<MongoArticle>)
             do! col.BulkWriteAsync(writeMode) |> Async.AwaitTask |> Async.Ignore
+            return Ok(articles)
         }
         
     let private getDb(client: IMongoClient) =

@@ -2,6 +2,7 @@ namespace DevNews.Core.HackerNews
 
 open System.Threading.Tasks
 open DevNews.Core.Model
+open FSharp.Control
 
 
 module Repositories =
@@ -9,22 +10,15 @@ module Repositories =
     open System.Threading.Tasks
     open DevNews.Core.Model
 
-    type CheckExistence = Article -> Async<Option<Article>>
+    type InsertManyResult = Async<Result<Article seq, ApplicationError>>
 
-    type InsertMany = Article seq -> Async<unit>
+    type GetIfNotExists = Article -> Async<Option<Article>>
+
+    type InsertMany = Article seq -> InsertManyResult
 
     type IHackerNewsRepository =
-        abstract Exists: CheckExistence
+        abstract Exists: GetIfNotExists
         abstract InsertMany: InsertMany
-
-    let private fakeExists (article: Article) = async { return Some(article) }
-
-    let private fakeInsertMany (articles: Article seq) = async { return () }
-
-    type FakeHackerNewsRepository() =
-        interface IHackerNewsRepository with
-            member this.Exists = fakeExists
-            member this.InsertMany = fakeInsertMany
 
 module Services =
     open FSharp.Control
@@ -76,10 +70,10 @@ module Services =
                 yield { Title = node.title; Link = node.link }
         }
 
-    let private getNewArticles (parse: ParseHackerNewsArticles) (getIfExists: CheckExistence) () =
+    let private getNewArticles (parse: ParseHackerNewsArticles) (getIfNotExists: GetIfNotExists) () =
         parse ()
         |> AsyncSeq.map (fun x -> { Title = x.Title; Link = x.Link })
-        |> AsyncSeq.mapAsyncParallel (fun x -> getIfExists (x))
+        |> AsyncSeq.mapAsyncParallel (getIfNotExists)
         |> AsyncSeq.choose (id)
 
     let private consoleNotifier (articles: Article seq) =
@@ -127,15 +121,19 @@ module UseCases =
             | articles -> return Some(articles)
         }
 
+    let private insert (insertMany: InsertMany) (articles: Article array) = articles |> insertMany
+
+    let private notifyUsers (notify: Broadcast) (insertRes: InsertManyResult) = insertRes |> AsyncResult.map (notify)
+
     let private insertAndNotifyUser (insertMany: InsertMany) (notify: Broadcast) (articles: Article array) =
-        async {
-            do! insertMany articles
-            do! notify articles
-        }
+        articles
+        |> insert (insertMany)
+        |> notifyUsers (notify)
+        |> Async.Ignore
 
     let private parseArticlesAndNotify (getNewArticles: GetNewArticles) (insertMany: InsertMany) (notify: Broadcast) () =
         parseArticles (getNewArticles)
-            |> AsyncOption.ifSome (insertAndNotifyUser insertMany notify)
+        |> AsyncOption.ifSome (insertAndNotifyUser insertMany notify)
 
     type GetNewArticlesAndNotifyUseCase(provider: INewArticlesProvider,
                                         repo: IHackerNewsRepository,
