@@ -10,5 +10,8 @@
     <Compile Include="HackerNews\IoC.fs" />
     <Content Include="paket.references" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DevNews.Utils\DevNews.Utils.fsproj" />
+  </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

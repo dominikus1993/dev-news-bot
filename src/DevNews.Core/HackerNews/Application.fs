@@ -8,7 +8,7 @@ module Repositories =
     open System.Collections.Generic
     open System.Threading.Tasks
     open DevNews.Core.Model
-    
+
     type CheckExistence = Article -> Async<Option<Article>>
 
     type InsertMany = Article seq -> Async<unit>
@@ -39,7 +39,7 @@ module Services =
     type ParseHackerNewsArticles = unit -> AsyncSeq<Article>
 
     type Notify = Article seq -> Async<unit>
-    
+
     type Broadcast = Article seq -> Async<unit>
 
     type GetNewArticles = unit -> AsyncSeq<Article>
@@ -116,23 +116,26 @@ module UseCases =
     open FSharp.Control
     open Repositories
     open Services
+    open DevNews.Utils
 
     type ParseHackerNewsArticlesAndNotify = unit -> Async<unit>
 
-    let private parseArticlesAndNotify (getNewArticles: GetNewArticles)
-                                       (insertMany: InsertMany)
-                                       (notify: Broadcast)
-                                       ()
-                                       =
+    let private parseArticles (getNewArticles: GetNewArticles) =
         async {
             match! getNewArticles () |> AsyncSeq.toArrayAsync with
-            | [||] ->
-                return ()
-            | articles -> 
-                do! insertMany articles
-                do! notify articles
-                return ()
+            | [||] -> return None
+            | articles -> return Some(articles)
         }
+
+    let private insertAndNotifyUser (insertMany: InsertMany) (notify: Broadcast) (articles: Article array) =
+        async {
+            do! insertMany articles
+            do! notify articles
+        }
+
+    let private parseArticlesAndNotify (getNewArticles: GetNewArticles) (insertMany: InsertMany) (notify: Broadcast) () =
+        parseArticles (getNewArticles)
+            |> AsyncOption.ifSome (insertAndNotifyUser insertMany notify)
 
     type GetNewArticlesAndNotifyUseCase(provider: INewArticlesProvider,
                                         repo: IHackerNewsRepository,
