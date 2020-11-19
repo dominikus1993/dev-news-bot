@@ -6,12 +6,13 @@
     <UserSecretsId>caad687c-126f-440c-8dc2-c85d8ad6668a</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Program.fs" />
     <Content Include="paket.references" />
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Dockerfile" />
+    <Compile Include="Bots\HackerNews.fs" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevNews.Core\DevNews.Core.fsproj" />

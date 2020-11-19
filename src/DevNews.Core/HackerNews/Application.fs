@@ -1,5 +1,7 @@
 namespace DevNews.Core.HackerNews
 
+open System
+open System.Threading
 open System.Threading.Tasks
 open DevNews.Core.Model
 open FSharp.Control
@@ -113,7 +115,7 @@ module UseCases =
     open DevNews.Utils
 
     type ParseHackerNewsArticlesAndNotify = unit -> Async<unit>
-
+    type CheckPossibilityOfParsingArticles = DateTime -> Async<bool>
     let private parseArticles (getNewArticles: GetNewArticles) =
         async {
             match! getNewArticles () |> AsyncSeq.toArrayAsync with
@@ -127,14 +129,15 @@ module UseCases =
 
     let private insertAndNotifyUser (insertMany: InsertMany) (notify: Broadcast) (articles: Article array) =
         articles
-        |> insert (insertMany)
-        |> notifyUsers (notify)
-        |> Async.Ignore
+            |> insert (insertMany)
+            |> notifyUsers (notify)
+            |> Async.Ignore
 
     let private parseArticlesAndNotify (getNewArticles: GetNewArticles) (insertMany: InsertMany) (notify: Broadcast) () =
         parseArticles (getNewArticles)
         |> AsyncOption.ifSome (insertAndNotifyUser insertMany notify)
-
+    
+   
     type GetNewArticlesAndNotifyUseCase(provider: INewArticlesProvider,
                                         repo: IHackerNewsRepository,
                                         notifier: INotificationBroadcaster) =

@@ -1,0 +1,2 @@
+namespace DevNews.Bot.HackerNews
+
