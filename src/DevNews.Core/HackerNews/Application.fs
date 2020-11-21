@@ -1,16 +1,11 @@
 namespace DevNews.Core.HackerNews
 
 open System
-open System.Threading
-open System.Threading.Tasks
 open DevNews.Core.Model
 open FSharp.Control
 
 
 module Repositories =
-    open System.Collections.Generic
-    open System.Threading.Tasks
-    open DevNews.Core.Model
 
     type InsertManyResult = Async<Result<Article seq, ApplicationError>>
 
@@ -23,10 +18,7 @@ module Repositories =
         abstract InsertMany: InsertMany
 
 module Services =
-    open FSharp.Control
-    open FSharp.Control
     open HtmlAgilityPack
-    open System.Linq
     open Repositories
 
     [<Literal>]
@@ -38,7 +30,7 @@ module Services =
 
     type Broadcast = Article seq -> Async<unit>
 
-    type GetNewArticles = unit -> AsyncSeq<Article>
+    type GetNewArticles = unit -> Async<Option<Article seq>>
 
     type IArticleParser =
         abstract Parse: ParseHackerNewsArticles
@@ -50,8 +42,8 @@ module Services =
         abstract Broadcast: Article seq -> Async<unit>
 
     type INewArticlesProvider =
-        abstract Provide: GetNewArticles
-
+        abstract ProvideNewArticles: GetNewArticles
+        
     let private parse () =
         asyncSeq {
             let html = HtmlWeb()
@@ -73,10 +65,16 @@ module Services =
         }
 
     let private getNewArticles (parse: ParseHackerNewsArticles) (getIfNotExists: GetIfNotExists) () =
-        parse ()
-        |> AsyncSeq.map (fun x -> { Title = x.Title; Link = x.Link })
-        |> AsyncSeq.mapAsyncParallel (getIfNotExists)
-        |> AsyncSeq.choose (id)
+        async {
+            let result = parse ()
+                            |> AsyncSeq.map (fun x -> { Title = x.Title; Link = x.Link })
+                            |> AsyncSeq.mapAsyncParallel (getIfNotExists)
+                            |> AsyncSeq.choose (id)
+                            |> AsyncSeq.toArrayAsync
+            match! result with
+            | [||] -> return None
+            | articles -> return Some(articles |> Array.toSeq)
+        }
 
     let private consoleNotifier (articles: Article seq) =
         async {
@@ -105,36 +103,29 @@ module Services =
 
     type HtmlNewArticlesProvider(repo: IHackerNewsRepository, parser: IArticleParser) =
         interface INewArticlesProvider with
-            member this.Provide =
+            member this.ProvideNewArticles =
                 getNewArticles (parser.Parse) (repo.Exists)
 
 module UseCases =
-    open FSharp.Control
     open Repositories
     open Services
     open DevNews.Utils
 
     type ParseHackerNewsArticlesAndNotify = unit -> Async<unit>
     type CheckPossibilityOfParsingArticles = DateTime -> Async<bool>
-    let private parseArticles (getNewArticles: GetNewArticles) =
-        async {
-            match! getNewArticles () |> AsyncSeq.toArrayAsync with
-            | [||] -> return None
-            | articles -> return Some(articles)
-        }
 
-    let private insert (insertMany: InsertMany) (articles: Article array) = articles |> insertMany
+    let private insert (insertMany: InsertMany) (articles: Article seq) = articles |> insertMany
 
     let private notifyUsers (notify: Broadcast) (insertRes: InsertManyResult) = insertRes |> AsyncResult.map (notify)
 
-    let private insertAndNotifyUser (insertMany: InsertMany) (notify: Broadcast) (articles: Article array) =
+    let private insertAndNotifyUser (insertDb: InsertMany) (notify: Broadcast) (articles: Article seq) =
         articles
-            |> insert (insertMany)
+            |> insert (insertDb)
             |> notifyUsers (notify)
             |> Async.Ignore
 
     let private parseArticlesAndNotify (getNewArticles: GetNewArticles) (insertMany: InsertMany) (notify: Broadcast) () =
-        parseArticles (getNewArticles)
+        getNewArticles()
         |> AsyncOption.ifSome (insertAndNotifyUser insertMany notify)
     
    
@@ -142,4 +133,7 @@ module UseCases =
                                         repo: IHackerNewsRepository,
                                         notifier: INotificationBroadcaster) =
         member this.Execute =
-            parseArticlesAndNotify (provider.Provide) (repo.InsertMany) (notifier.Broadcast)
+            parseArticlesAndNotify
+                (provider.ProvideNewArticles)
+                (repo.InsertMany)
+                (notifier.Broadcast)

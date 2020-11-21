@@ -4,10 +4,7 @@ storage: none
 framework: net5.0
 
 nuget FSharp.Core
-nuget Akka
-nuget Akka.Streams
-nuget Akka.Logger.Serilog
-nuget Akka.Serialization.Hyperion
+nuget Argu 
 nuget LanguageExt.Core
 nuget System.Linq.Async
 nuget FSharp.Control.AsyncSeq

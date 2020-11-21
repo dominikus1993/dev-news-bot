@@ -11,4 +11,6 @@ type private MongoArticle =
       [<BsonElement>]
       Link: string
       [<BsonElement; BsonDateTimeOptions(Kind = DateTimeKind.Utc)>]
-      CrawledAt: DateTime }
+      CrawledAt: DateTime
+      [<BsonElement>]
+      PublishedAt: Nullable<DateTime> }
