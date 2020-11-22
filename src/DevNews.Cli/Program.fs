@@ -1,10 +1,20 @@
 ﻿// Learn more about F# at http://docs.microsoft.com/dotnet/fsharp
 
 open System
+open Argu
 
-// Define a function to construct a message to print
-let from whom =
-    sprintf "from %s" whom
+type CliError =
+    | ArgumentsNotSpecified of msg: string
+
+type CmdArgs =
+    | [<AltCommandLine("-hacker-news")>] Confirm of discordWebHook: int
+
+with
+    interface IArgParserTemplate with
+        member this.Usage =
+            match this with
+            | Confirm _ -> "Confirm by workerid"
+            | ConfirmAuth -> "Confirm by windows auth"
 
 [<EntryPoint>]
 let main argv =
