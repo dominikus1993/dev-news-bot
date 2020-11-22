@@ -12,6 +12,7 @@
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DevNews.Core\DevNews.Core.fsproj" />
     <ProjectReference Include="..\..\src\DevNews.Utils\DevNews.Utils.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
