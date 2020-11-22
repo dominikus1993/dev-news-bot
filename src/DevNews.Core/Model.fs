@@ -3,4 +3,4 @@
 type ApplicationError =
     | InsertError
 
-type Article = { Title: string; Link: string }
+type Article = { Title: string; Link: string; Source: string }
