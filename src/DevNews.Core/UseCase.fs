@@ -6,6 +6,5 @@ module UseCase =
     
     type ParseHackerNewsArticlesAndNotify = unit -> Async<unit>
     type CheckPossibilityOfParsingArticles = DateTime -> Async<bool>
-    
-    let parseArticlesAndNotify (articleProviders: I) =
+   
         

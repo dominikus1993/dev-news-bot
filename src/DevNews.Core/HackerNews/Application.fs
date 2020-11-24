@@ -61,13 +61,12 @@ module Services =
                 }
 
             for node in nodes do
-                yield { Title = node.title; Link = node.link }
+                yield { Title = node.title; Link = node.link; Source = "HackerNews" }
         }
 
     let private getNewArticles (parse: ParseHackerNewsArticles) (getIfNotExists: GetIfNotExists) () =
         async {
             let result = parse ()
-                            |> AsyncSeq.map (fun x -> { Title = x.Title; Link = x.Link })
                             |> AsyncSeq.mapAsyncParallel (getIfNotExists)
                             |> AsyncSeq.choose (id)
                             |> AsyncSeq.toArrayAsync
