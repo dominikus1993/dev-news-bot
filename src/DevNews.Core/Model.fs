@@ -1,6 +1,7 @@
 ﻿namespace DevNews.Core.Model
 
 type ApplicationError =
-    | InsertError
+    | InsertArticleError
+    | NotifyUserError
 
 type Article = { Title: string; Link: string; Source: string }
