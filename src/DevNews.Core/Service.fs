@@ -9,6 +9,7 @@ module Service =
    
     type ParseArticles = unit -> AsyncSeq<Article>
     type ProvideNewArticles = unit -> AsyncSeq<Article>
+    type Notify = Article seq -> Async<unit>
     
     let private getArticleIfNotExists(checkArticleExistence: CheckArticleExistence)(article: Article) =
         async {
