@@ -13,10 +13,10 @@ module CompositionRoot =
     
     type T = { ParseHackerNewsArticlesAndNotify: ParseHackerNewsArticlesAndNotify }
     
-    let mongoClient (connectionString: string) =
+    let private mongoClient (connectionString: string) =
         new MongoClient(connectionString)
     
-    let discordClient(url: string) = new DiscordWebhookClient(url)
+    let private discordClient(url: string) = new DiscordWebhookClient(url)
     
     let private parseArticles = Services.parse
     
