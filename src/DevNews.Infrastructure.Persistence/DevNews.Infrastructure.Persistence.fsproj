@@ -4,10 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HackerNews\Model.fs" />
-    <Compile Include="HackerNews\Application.fs" />
-    <Compile Include="HackerNews\IoC.fs" />
-    <Compile Include="IoC.fs" />
+    <Compile Include="Model.fs" />
+    <Compile Include="Repository.fs" />
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@ module DiscordWebHooks =
     
     let private options = RequestOptions(Timeout = Nullable(15000))
         
-    let private notify(client: DiscordWebhookClient)(articles: Article seq) =
+    let notify(client: DiscordWebhookClient)(articles: Article seq) =
         async {
             let tasks = articles
                             |> Seq.map(fun article -> EmbedBuilder().WithUrl(article.Link).WithTitle(article.Title))
@@ -21,7 +21,4 @@ module DiscordWebHooks =
                             |> Seq.toArray
             do! tasks |> Async.Parallel |> Async.Ignore             
         }    
-    type DiscordWebHookNotifier(client: DiscordWebhookClient) =
-        interface INotifier with
-            member this.Notify = notify(client)
 

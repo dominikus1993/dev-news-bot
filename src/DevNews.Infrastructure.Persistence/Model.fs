@@ -1,4 +1,4 @@
-namespace DevNews.Infrastructure.Persistence.HackerNews
+namespace DevNews.Infrastructure.Persistence
 
 open System
 open MongoDB.Bson.Serialization.Attributes

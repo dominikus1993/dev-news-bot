@@ -16,22 +16,7 @@ module App =
     open DevNews.Core.HackerNews
     open Microsoft.Extensions.Configuration
     
-    type HackerNewsWorker(logger:ILogger<HackerNewsWorker>, useCase: UseCases.GetNewArticlesAndNotifyUseCase) =
-        inherit BackgroundService()
-        override __.ExecuteAsync(ct: CancellationToken) =
-                ct.Register(fun () -> logger.LogInformation("Worker canceled at: {time}", System.DateTimeOffset.Now)) |> ignore
-                task {
-                    while not ct.IsCancellationRequested do
-                    logger.LogInformation("Worker running at: {time}", System.DateTimeOffset.Now)
-                    do! useCase.Execute()
-                    do! Tasks.Task.Delay(TimeSpan.FromHours(1.), ct)
-                } :> Tasks.Task
-    
     let configureServices (services: IServiceCollection) =
-        services |> IoC.addHackerNews |> ignore
-        services |> IoC.addDiscord |> ignore
-        services |> IoC.addPersistenceInfrastructure |> ignore
-        services.AddHostedService<HackerNewsWorker>() |> ignore
         services
 
     let configureHost(host: IHostBuilder) =
