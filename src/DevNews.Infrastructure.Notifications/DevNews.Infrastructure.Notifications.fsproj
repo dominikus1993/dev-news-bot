@@ -5,7 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Discord\WebHookNotifier.fs" />
-    <Compile Include="Discord\IoC.fs" />
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ module Services =
     [<Literal>]
     let private HackerNewsUrl = "https://news.ycombinator.com/"
         
-    let private parse () =
+    let parse () =
         asyncSeq {
             let html = HtmlWeb()
 

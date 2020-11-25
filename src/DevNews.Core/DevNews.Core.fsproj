@@ -10,7 +10,6 @@
     <Compile Include="UseCase.fs" />
     <Compile Include="HackerNews/Domain.fs" />
     <Compile Include="HackerNews/Application.fs" />
-    <Compile Include="HackerNews\IoC.fs" />
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
