@@ -9,12 +9,13 @@ module UseCase =
     open DevNews.Core.Service
     open DevNews.Core.Repository
     
-    type ParseHackerNewsArticlesAndNotify = unit -> Async<Result<unit, ApplicationError>>
+    type ParseHackerNewsArticlesAndNotify = unit -> Async<unit>
     type CheckPossibilityOfParsingArticles = DateTime -> Async<bool>
 
     let private getNewArticles (provideNewArticles: ProvideNewArticles)() =
         async {
-            let result = provideNewArticles () |> AsyncSeq.toArrayAsync
+            let result = provideNewArticles ()
+                            |> AsyncSeq.toArrayAsync
             match! result with
             | [||] -> return None
             | articles -> return Some(articles |> Array.toSeq)

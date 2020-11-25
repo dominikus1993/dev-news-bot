@@ -1,12 +1,37 @@
 namespace DevNews.Cli.Articles
 
+open DevNews.Core.HackerNews
+open DevNews.Core.Service
+open DevNews.Core.UseCase
+open Discord.Webhook
 open MongoDB.Driver
 
-module CompostionRoot =
+module CompositionRoot =
     open DevNews.Core
+    open DevNews.Infrastructure.Persistence
+    open DevNews.Infrastructure.Notifications
     
-    let mongoClient () = new MongoClient()
+    type T = { ParseHackerNewsArticlesAndNotify: ParseHackerNewsArticlesAndNotify }
     
-    let private providerArticles = HackerNews.Services.parse
+    let mongoClient (connectionString: string) =
+        new MongoClient(connectionString)
     
-    let parseArticleAndNotify () = UseCase.parseArticlesAndNotify (providerArticles)
+    let discordClient(url: string) = new DiscordWebhookClient(url)
+    
+    let private parseArticles = Services.parse
+    
+    let private providerArticles(parse: ParseArticles)= Service.provideNewArticles(parse)
+    
+    let private insertMany client = Repository.insertArticles client
+ 
+    let private checkExistence client = Repository.checkArticleExistence client
+    
+    let private notify (discordClient: DiscordWebhookClient) = DiscordWebHooks.notify discordClient
+    
+    let private parseArticleAndNotify (client: MongoClient) (discordClient: DiscordWebhookClient) =
+        UseCase.parseArticlesAndNotify (providerArticles(parseArticles)(checkExistence(client))) (insertMany client) (notify discordClient)
+        
+    let create(mongoConnectionString: string, discordWebHookUrl: string) =
+        let client = mongoClient mongoConnectionString
+        let discord = discordClient discordWebHookUrl
+        { ParseHackerNewsArticlesAndNotify = fun () -> parseArticleAndNotify(client)(discord) }

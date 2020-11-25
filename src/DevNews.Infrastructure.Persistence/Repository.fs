@@ -15,10 +15,7 @@ module Repository =
                     for article in col.AsQueryable() do
                         exists (article.Title = art.Title)
                 }
-            if exists then
-                return None
-            else
-                return Some(art)
+            return exists
         }
         
     let private insertArticlesToDb (col: IMongoCollection<MongoArticle>) (articles: Article seq) : InsertManyResult =
