@@ -14,4 +14,3 @@ module Seq =
                     current.Add(enumerator.Current)
                 yield current.AsEnumerable()
         }
-

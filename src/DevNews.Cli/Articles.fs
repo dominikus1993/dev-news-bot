@@ -11,7 +11,7 @@ module CompositionRoot =
     open DevNews.Infrastructure.Persistence
     open DevNews.Infrastructure.Notifications
     
-    type T = { ParseHackerNewsArticlesAndNotify: ParseHackerNewsArticlesAndNotify }
+    type T = { ParseArticlesAndNotify: ParseArticlesAndNotify }
     
     let private mongoClient (connectionString: string) =
         new MongoClient(connectionString)
@@ -34,4 +34,4 @@ module CompositionRoot =
     let create(mongoConnectionString: string, discordWebHookUrl: string) =
         let client = mongoClient mongoConnectionString
         let discord = discordClient discordWebHookUrl
-        { ParseHackerNewsArticlesAndNotify = fun () -> parseArticleAndNotify(client)(discord) }
+        { ParseArticlesAndNotify = parseArticleAndNotify(client)(discord) }

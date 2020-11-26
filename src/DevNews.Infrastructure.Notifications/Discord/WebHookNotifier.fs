@@ -17,7 +17,7 @@ module DiscordWebHooks =
                             |> Seq.map(fun article -> EmbedBuilder().WithUrl(article.Link).WithTitle(article.Title))
                             |> Seq.map(fun x -> x.Build())
                             |> Seq.paged 10
-                            |> Seq.map(fun embds -> client.SendMessageAsync("Nowe newsy od HackerNews", embeds =  embds, options = options) |> Async.AwaitTask)
+                            |> Seq.map(fun embds -> client.SendMessageAsync("Elo nowe newsy", embeds =  embds, options = options) |> Async.AwaitTask)
                             |> Seq.toArray
             do! tasks |> Async.Parallel |> Async.Ignore             
         }    

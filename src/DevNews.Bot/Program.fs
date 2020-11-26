@@ -11,7 +11,6 @@ module App =
     open FSharp.Control.Tasks.V2.ContextInsensitive
     open System.Threading
     open Microsoft.Extensions.DependencyInjection
-    open DevNews.Infrastructure.Notifications.Discord
     open Saturn
     open DevNews.Core.HackerNews
     open Microsoft.Extensions.Configuration

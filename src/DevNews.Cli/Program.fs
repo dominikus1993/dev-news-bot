@@ -22,7 +22,7 @@ let parse (mongoConnection:string, discordWebHookUrl: string) =
     printfn $"{mongoConnection} {discordWebHookUrl}"
     let useCase = Articles.CompositionRoot.create (mongoConnection, discordWebHookUrl)
     async { 
-        do! useCase.ParseHackerNewsArticlesAndNotify()
+        do! useCase.ParseArticlesAndNotify({ ArticlesQuantity = 5 })
         return Ok(());
     }
 
