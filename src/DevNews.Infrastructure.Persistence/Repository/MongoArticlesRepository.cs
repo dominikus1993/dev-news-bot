@@ -15,8 +15,8 @@ namespace DevNews.Infrastructure.Persistence.Repository
     public class MongoArticlesRepository : IArticlesRepository
     {
         private IMongoClient _client;
-        private IMongoDatabase _database;
-        private IMongoCollection<MongoArticle> _articles;
+        private readonly IMongoDatabase _database;
+        private readonly IMongoCollection<MongoArticle> _articles;
 
         public MongoArticlesRepository(IMongoClient client)
         {
