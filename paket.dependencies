@@ -7,7 +7,7 @@ nuget FSharp.Core
 nuget Argu 
 nuget LanguageExt.Core
 nuget System.Linq.Async
-nuget FSharp.Control.AsyncSeq
+nuget FluentAssertions
 nuget Open.ChannelExtensions
 nuget System.Text.Json
 nuget HtmlAgilityPack
@@ -21,10 +21,6 @@ nuget Microsoft.Extensions.Configuration.Json
 nuget Microsoft.Extensions.Configuration.UserSecrets
 nuget MongoDB.Driver.Core
 nuget MongoDB.Driver
-nuget TaskBuilder.fs
-nuget Saturn
-nuget Giraffe
-nuget FSharpx.Collections
 
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.Environment
