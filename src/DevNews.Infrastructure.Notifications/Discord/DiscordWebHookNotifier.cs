@@ -10,7 +10,7 @@ namespace DevNews.Infrastructure.Notifications.Discord
 {
     public class DiscordWebHookNotifier : INotifier
     {
-        private DiscordWebhookClient _discordWebhookClient;
+        private readonly DiscordWebhookClient _discordWebhookClient;
 
         public DiscordWebHookNotifier(DiscordWebhookClient discordWebhookClient)
         {
