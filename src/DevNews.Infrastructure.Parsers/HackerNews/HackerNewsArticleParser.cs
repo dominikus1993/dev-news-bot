@@ -4,7 +4,7 @@ using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
 using HtmlAgilityPack;
 
-namespace DevNews.Core.Parsers.HackerNews
+namespace DevNews.Infrastructure.Parsers.HackerNews
 {
     public class HackerNewsArticlesParser : IArticlesParser
     {

@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using DevNews.Core.Parsers.HackerNews;
+using DevNews.Infrastructure.Parsers.HackerNews;
 using FluentAssertions;
 using Xunit;
 

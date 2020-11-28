@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Infrastructure.Pars
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Infrastructure.Persistence", "src\DevNews.Infrastructure.Persistence\DevNews.Infrastructure.Persistence.csproj", "{BDDA4E65-CEB8-4BFE-974D-9192D8BF4BF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Infrastructure.Parsers.UnitTests", "tests\DevNews.Infrastructure.Parsers.UnitTests\DevNews.Infrastructure.Parsers.UnitTests.csproj", "{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,7 @@ Global
 		{4FDA75AA-0CB3-4B5A-92F0-B7DEFA525942} = {93F0838E-B38F-4821-866A-964E5CDF781D}
 		{9D7EAF03-8EC9-4C7A-9403-8940838C426F} = {93F0838E-B38F-4821-866A-964E5CDF781D}
 		{BDDA4E65-CEB8-4BFE-974D-9192D8BF4BF6} = {93F0838E-B38F-4821-866A-964E5CDF781D}
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C} = {152813B7-DF24-4443-942C-CD2955C61CA9}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{104B95DB-F722-4E44-8E94-E283E8B1312C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -97,5 +100,17 @@ Global
 		{BDDA4E65-CEB8-4BFE-974D-9192D8BF4BF6}.Release|x64.Build.0 = Release|Any CPU
 		{BDDA4E65-CEB8-4BFE-974D-9192D8BF4BF6}.Release|x86.ActiveCfg = Release|Any CPU
 		{BDDA4E65-CEB8-4BFE-974D-9192D8BF4BF6}.Release|x86.Build.0 = Release|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Debug|x64.Build.0 = Debug|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Debug|x86.Build.0 = Debug|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Release|x64.ActiveCfg = Release|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Release|x64.Build.0 = Release|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Release|x86.ActiveCfg = Release|Any CPU
+		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
