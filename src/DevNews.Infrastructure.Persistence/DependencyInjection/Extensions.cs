@@ -11,7 +11,7 @@ namespace DevNews.Infrastructure.Persistence.DependencyInjection
     {
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IMongoClient>(_ => new MongoClient(configuration.GetConnectionString("Mongo")));
+            services.AddSingleton<IMongoClient>(_ => new MongoClient(configuration.GetConnectionString("Articles")));
             services.AddTransient<IArticlesRepository, MongoArticlesRepository>();
             return services;
         }

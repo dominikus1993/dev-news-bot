@@ -30,7 +30,7 @@ namespace DevNews.Cli
                 })
                 .RunAsync<Program>(args);
 
-        public static async Task
+        public async Task
             ProduceNews([FromService] ParseArticlesAndSendItUseCase parseArticlesAndSendItUseCase) =>
             await parseArticlesAndSendItUseCase.Execute(new ParseArticlesAndSendItParam(5));
     }
