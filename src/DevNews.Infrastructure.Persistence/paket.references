@@ -1,3 +1,4 @@
+Microsoft.Extensions.Configuration.Abstractions
 Microsoft.Extensions.DependencyInjection.Abstractions
 MongoDB.Driver.Core
 MongoDB.Driver
