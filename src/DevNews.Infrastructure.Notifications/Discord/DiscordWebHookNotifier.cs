@@ -20,8 +20,7 @@ namespace DevNews.Infrastructure.Notifications.Discord
         public async Task Notify(IEnumerable<Article> articles)
         {
             var embeds = articles
-                .Select(article => new EmbedBuilder().WithUrl(article.Link).WithTitle(article.Tile))
-                .Select(builder => builder.Build())
+                .Select(article => article.CreateEmbed())
                 .ToList();
             await _discordWebhookClient.SendMessageAsync("Witam serdecznie nowe newsy", embeds: embeds);
         }
