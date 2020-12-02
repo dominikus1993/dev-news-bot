@@ -29,10 +29,10 @@ namespace DevNews.Infrastructure.Parsers.Dotnetomaniak
         {
             var titleNode = nodes.First(div => div.HasClass("title"));
             var href = titleNode.ChildNodes.FindFirst("a").GetAttributeValue("href", null);
-            var link = new Uri(DotnetoManiakUri, href);
-            var descElement = nodes.First(div => div.HasClass("description"));
-            var description = descElement.ChildNodes.FindFirst("span").InnerText;
-            return new Article(titleNode.InnerHtml, description, link.AbsoluteUri);
+            var link = new Uri(DotnetoManiakUri, href).AbsoluteUri;
+            var description = nodes.First(div => div.HasClass("description")).ChildNodes.FindFirst("span").InnerText;;
+            var title = titleNode.InnerText;
+            return new Article(title, description, link);
         }
     }
 }
