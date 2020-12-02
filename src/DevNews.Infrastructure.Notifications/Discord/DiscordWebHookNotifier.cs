@@ -22,7 +22,7 @@ namespace DevNews.Infrastructure.Notifications.Discord
             var embeds = articles
                 .Select(article => article.CreateEmbed())
                 .ToList();
-            await _discordWebhookClient.SendMessageAsync("Witam serdecznie nowe newsy", embeds: embeds);
+            await _discordWebhookClient.SendMessageAsync("Witam serdecznie, oto nowe newsy", embeds: embeds);
         }
     }
 }
