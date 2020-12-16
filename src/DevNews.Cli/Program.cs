@@ -7,11 +7,19 @@ using DevNews.Infrastructure.Notifications.DependencyInjection;
 using DevNews.Infrastructure.Parsers.DependencyInjection;
 using DevNews.Infrastructure.Persistence.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace DevNews.Cli
 {
-    class Program
+    public class Program
     {
+        private ILogger<Program> _logger;
+
+        public Program(ILogger<Program> logger)
+        {
+            _logger = logger;
+        }
+
         static async Task Main(string[] args) =>
             await CoconaApp.Create()
                 .UseLogger("DevNews.Cli")
@@ -31,7 +39,11 @@ namespace DevNews.Cli
                 .RunAsync<Program>(args);
 
         public async Task
-            ProduceNews(int articleQuantity, [FromService] ParseArticlesAndSendItUseCase parseArticlesAndSendItUseCase) =>
+            ProduceNews(int articleQuantity, [FromService] ParseArticlesAndSendItUseCase parseArticlesAndSendItUseCase)
+        {
+            _logger.LogInformation("Start Producing News");
             await parseArticlesAndSendItUseCase.Execute(new ParseArticlesAndSendItParam(articleQuantity));
+            _logger.LogInformation("Finish Producing News");
+        }
     }
 }

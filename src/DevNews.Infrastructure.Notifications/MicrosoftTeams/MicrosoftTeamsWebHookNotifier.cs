@@ -28,7 +28,7 @@ namespace DevNews.Infrastructure.Notifications.MicrosoftTeams
         public async Task Notify(IEnumerable<Article> articles)
         {
             var msg = CreateMicrosoftTeamsMessage(articles);
-            using var request = new HttpRequestMessage(HttpMethod.Post, "");
+            using var request = new HttpRequestMessage(HttpMethod.Post, string.Empty);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
             request.Content = new StringContent(await _teamsMessageSerializer.Serialize(msg), Encoding.UTF8, "application/json");
             var response = await _client.SendAsync(request);
