@@ -8,7 +8,7 @@ using Discord.Webhook;
 
 namespace DevNews.Infrastructure.Notifications.Discord
 {
-    public class DiscordWebHookNotifier : INotifier
+    internal class DiscordWebHookNotifier : INotifier
     {
         private readonly DiscordWebhookClient _discordWebhookClient;
 

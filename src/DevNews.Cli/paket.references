@@ -8,3 +8,5 @@ Serilog.Sinks.Trace
 Serilog.Sinks.Seq
 Serilog.Formatting.Elasticsearch
 Serilog.AspNetCore
+Microsoft.Extensions.Http
+Microsoft.AspNetCore.Http.Features
