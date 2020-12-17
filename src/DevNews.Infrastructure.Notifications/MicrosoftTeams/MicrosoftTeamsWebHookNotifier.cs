@@ -30,7 +30,8 @@ namespace DevNews.Infrastructure.Notifications.MicrosoftTeams
             var msg = CreateMicrosoftTeamsMessage(articles);
             using var request = new HttpRequestMessage(HttpMethod.Post, string.Empty);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
-            request.Content = new StringContent(await _teamsMessageSerializer.Serialize(msg), Encoding.UTF8, "application/json");
+            var json = await _teamsMessageSerializer.Serialize(msg);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _client.SendAsync(request);
             response.EnsureSuccessStatusCode();
         }

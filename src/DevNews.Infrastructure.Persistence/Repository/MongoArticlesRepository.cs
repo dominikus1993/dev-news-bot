@@ -35,7 +35,11 @@ namespace DevNews.Infrastructure.Persistence.Repository
                     {Link = article.Link, Title = article.Tile, CrawledAt = DateTime.UtcNow})
                 .Select(article => new InsertOneModel<MongoArticle>(article))
                 .ToList();
-            await _articles.BulkWriteAsync(writes);
+            if (writes.Any())
+            {
+                await _articles.BulkWriteAsync(writes);
+            }
+
             return Right(Unit.Default);
         }
 

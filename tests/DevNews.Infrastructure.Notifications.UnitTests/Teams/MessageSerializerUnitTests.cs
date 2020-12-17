@@ -21,7 +21,7 @@ namespace DevNews.Infrastructure.Notifications.UnitTests.Teams
             var serializer = new JsonTeamsMessageSerializer();
             var msg = new MicrosoftTeamsMessage(new []{att});
             var subject = await serializer.Serialize(msg);
-            
+            subject.Should().Contain("adssssssssssssssssssssssssssssssssss");
         }
     }
 }

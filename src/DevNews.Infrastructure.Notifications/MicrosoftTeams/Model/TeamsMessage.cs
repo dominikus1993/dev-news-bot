@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace DevNews.Infrastructure.Notifications.MicrosoftTeams.Model
 {
@@ -25,6 +26,7 @@ namespace DevNews.Infrastructure.Notifications.MicrosoftTeams.Model
 
     public record MicrosoftTeamsMessageContent(IEnumerable<IMicrosoftTeamsMessageContentBody> Body)
     {
+        [JsonPropertyName("$schema")]
         public string Schema { get; } = "http://adaptivecards.io/schemas/adaptive-card.json";
         public string Type { get; } = "AdaptiveCard";
         public string Version { get; } = "1.2";
