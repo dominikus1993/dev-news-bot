@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using DevNews.Core.Abstractions;
+using DevNews.Core.Extensions;
 using DevNews.Core.Model;
 using DevNews.Core.Repository;
 using Open.ChannelExtensions;
@@ -24,7 +25,8 @@ namespace DevNews.Core.Providers
         {
             var reader = StartProducing(_articlesParsers);
             return reader.ReadAllAsync()
-                .WhereAwait(async article => await NotExists(_articlesRepository, article));
+                .WhereAwait(async article => await NotExists(_articlesRepository, article))
+                .Select(article => article with { Tile = article.Tile.TrimEntersAndSpaces()});
         }
 
         private async Task<bool> NotExists(IArticlesRepository repository, Article article)
@@ -32,7 +34,7 @@ namespace DevNews.Core.Providers
             return !await repository.Exists(article);
         }
 
-        private ChannelReader<Article> StartProducing(IEnumerable<IArticlesParser> articlesParsers)
+        private static ChannelReader<Article> StartProducing(IEnumerable<IArticlesParser> articlesParsers)
         {
             var channel = Channel.CreateUnbounded<Article>();
             var parsers = articlesParsers.Select(parser => Produce(parser, channel.Writer));
