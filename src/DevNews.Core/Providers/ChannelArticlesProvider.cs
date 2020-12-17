@@ -36,7 +36,7 @@ namespace DevNews.Core.Providers
 
         private static ChannelReader<Article> StartProducing(IEnumerable<IArticlesParser> articlesParsers)
         {
-            var channel = Channel.CreateUnbounded<Article>();
+            var channel = Channel.CreateUnbounded<Article>(new UnboundedChannelOptions() { SingleReader = true, SingleWriter = false });
             var parsers = articlesParsers.Select(parser => Produce(parser, channel.Writer));
 
             Task.Run(async () =>
