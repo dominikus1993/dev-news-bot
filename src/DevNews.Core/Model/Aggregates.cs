@@ -1,3 +1,4 @@
+using System;
 using DevNews.Core.Extensions;
 
 namespace DevNews.Core.Model
@@ -6,6 +7,12 @@ namespace DevNews.Core.Model
     {
         public Article(string title, string link) : this(title, null, link)
         {
+        }
+
+        public bool IsValidArticle()
+        {
+            return Uri.TryCreate(Link, UriKind.Absolute, out var result)
+                   && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
     }
 }
