@@ -7,14 +7,14 @@ namespace DevNews.Infrastructure.Persistence.Model
     public class MongoArticle
     {
         [BsonId, BsonRepresentation(BsonType.String)]
-        public string Title { get; set; }
+        public string Title { get; init; }
 
-        [BsonElement] public string Link { get; set; }
-
-        [BsonElement, BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-        public DateTime CrawledAt { get; set; }
+        [BsonElement] public string Link { get; init; }
 
         [BsonElement, BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-        public DateTime? PublishedAt { get; set; }
+        public DateTime CrawledAt { get; init; }
+
+        [BsonElement, BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+        public DateTime? PublishedAt { get; init; }
     }
 }
