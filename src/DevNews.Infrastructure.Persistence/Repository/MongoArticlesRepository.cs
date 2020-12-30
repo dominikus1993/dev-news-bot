@@ -31,8 +31,7 @@ namespace DevNews.Infrastructure.Persistence.Repository
         public async Task<Either<Exception, Unit>> InsertMany(IEnumerable<Article> articles)
         {
             var writes = articles
-                .Select(article => new MongoArticle()
-                    {Link = article.Link, Title = article.Title, CrawledAt = DateTime.UtcNow})
+                .Select(article => new MongoArticle(article))
                 .Select(article => new InsertOneModel<MongoArticle>(article))
                 .ToList();
             if (writes.Any())
