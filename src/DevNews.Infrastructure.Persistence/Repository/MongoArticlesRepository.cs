@@ -26,13 +26,13 @@ namespace DevNews.Infrastructure.Persistence.Repository
         }
 
         public async Task<bool> Exists(Article article) =>
-            await _articles.AsQueryable().Where(x => x.Title == article.Tile).AnyAsync();
+            await _articles.AsQueryable().Where(x => x.Title == article.Title).AnyAsync();
 
         public async Task<Either<Exception, Unit>> InsertMany(IEnumerable<Article> articles)
         {
             var writes = articles
                 .Select(article => new MongoArticle()
-                    {Link = article.Link, Title = article.Tile, CrawledAt = DateTime.UtcNow})
+                    {Link = article.Link, Title = article.Title, CrawledAt = DateTime.UtcNow})
                 .Select(article => new InsertOneModel<MongoArticle>(article))
                 .ToList();
             if (writes.Any())

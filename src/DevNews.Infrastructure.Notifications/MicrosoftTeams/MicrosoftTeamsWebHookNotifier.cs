@@ -40,7 +40,7 @@ namespace DevNews.Infrastructure.Notifications.MicrosoftTeams
         {
             var text = new MicrosoftTeamsTextBlock("Witam serdecznie, oto nowe newsy");
             var links = articles.Select(article =>
-                new MicrosoftTeamsAction(Guid.NewGuid().ToString(), article.Tile, article.Link)).ToList();
+                new MicrosoftTeamsAction(Guid.NewGuid().ToString(), article.Title, article.Link)).ToList();
             var action = new MicrosoftTeamsActionSet(Guid.NewGuid().ToString(), links);
             var content = new MicrosoftTeamsMessageContent(new IMicrosoftTeamsMessageContentBody[] {text, action});
             var att = new MicrosoftTeamsAttachment(content);

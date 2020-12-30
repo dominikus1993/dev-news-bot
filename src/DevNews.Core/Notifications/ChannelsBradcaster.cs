@@ -8,7 +8,7 @@ namespace DevNews.Core.Notifications
 {
     public class ChannelsNotificationBroadcaster : INotificationBroadcaster
     {
-        private IEnumerable<INotifier> _notifiers;
+        private readonly IEnumerable<INotifier> _notifiers;
 
         public ChannelsNotificationBroadcaster(IEnumerable<INotifier> notifiers)
         {

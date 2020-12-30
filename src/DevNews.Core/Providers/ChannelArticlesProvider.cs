@@ -26,11 +26,11 @@ namespace DevNews.Core.Providers
             var reader = StartProducing(_articlesParsers);
             return reader.ReadAllAsync()
                 .Where(article => article.IsValidArticle())
-                .WhereAwait(async article => await NotExists(_articlesRepository, article))
-                .Select(article => article with { Tile = article.Tile.TrimEntersAndSpaces()});
+                .Select(article => article with { Title = article.Title.TrimEntersAndSpaces()})
+                .WhereAwait(async article => await NotExists(_articlesRepository, article));
         }
 
-        private async Task<bool> NotExists(IArticlesRepository repository, Article article)
+        private static async Task<bool> NotExists(IArticlesRepository repository, Article article)
         {
             return !await repository.Exists(article);
         }
