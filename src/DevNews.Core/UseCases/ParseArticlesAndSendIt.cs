@@ -24,7 +24,9 @@ namespace DevNews.Core.UseCases
 
         public async Task Execute(ParseArticlesAndSendItParam param)
         {
-            var articles = await _articlesProvider.Provide().OrderBy(_ => Guid.NewGuid()).Take(param.ArticleQuantity)
+            var articles = await _articlesProvider.Provide()
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(param.ArticleQuantity)
                 .ToListAsync();
             await _articlesRepository.InsertMany(articles);
             await _notificationBroadcaster.Broadcast(articles);

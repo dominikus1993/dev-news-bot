@@ -25,8 +25,8 @@ namespace DevNews.Core.Providers
         {
             var reader = StartProducing(_articlesParsers);
             return reader.ReadAllAsync()
-                .Where(article => article.IsValidArticle())
-                .Select(article => article with { Title = article.Title.TrimEntersAndSpaces()})
+                .Where(static article => article.IsValidArticle())
+                .Select(static article => article.WithTrimmedTitle())
                 .WhereAwait(async article => await NotExists(_articlesRepository, article));
         }
 

@@ -16,7 +16,7 @@ namespace DevNews.Infrastructure.Parsers.HackerNews
             var document = await html.LoadFromWebAsync(HackerNewsUrl);
             
             var nodes = document.DocumentNode.SelectNodes("//*[@class=\"storylink\"]")
-                .Select(node => new Article(node.InnerText, node.GetAttributeValue("href", null)));
+                .Select(static node => new Article(node.InnerText, node.GetAttributeValue("href", null)));
             
             foreach (var article in nodes)
             {

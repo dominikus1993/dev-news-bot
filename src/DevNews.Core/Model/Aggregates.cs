@@ -9,6 +9,8 @@ namespace DevNews.Core.Model
         {
         }
 
+        public Article WithTrimmedTitle() => this with { Title = Title.TrimEntersAndSpaces()};
+
         public bool IsValidArticle()
         {
             return Uri.TryCreate(Link, UriKind.Absolute, out var result)

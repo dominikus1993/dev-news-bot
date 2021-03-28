@@ -9,8 +9,9 @@ namespace DevNews.Infrastructure.Parsers.Dotnetomaniak
 {
     public class DotnetomaniakArticlesParser : IArticlesParser
     {
-        public const string DotnetoManiakUrl = "https://dotnetomaniak.pl/";
+        private const string DotnetoManiakUrl = "https://dotnetomaniak.pl/";
         private static readonly Uri DotnetoManiakUri = new(DotnetoManiakUrl);
+        
         public async IAsyncEnumerable<Article> Parse()
         {
             var html = new HtmlWeb();

@@ -34,6 +34,7 @@ namespace DevNews.Infrastructure.Persistence.Repository
                 .Select(article => new MongoArticle(article))
                 .Select(article => new InsertOneModel<MongoArticle>(article))
                 .ToList();
+            
             if (writes.Any())
             {
                 await _articles.BulkWriteAsync(writes);
@@ -42,12 +43,12 @@ namespace DevNews.Infrastructure.Persistence.Repository
             return Right(Unit.Default);
         }
 
-        private IMongoDatabase GetDatabase(IMongoClient client)
+        private static IMongoDatabase GetDatabase(IMongoClient client)
         {
             return client.GetDatabase("Articles");
         }
 
-        private IMongoCollection<MongoArticle> GetCollection(IMongoDatabase db)
+        private static IMongoCollection<MongoArticle> GetCollection(IMongoDatabase db)
         {
             return db.GetCollection<MongoArticle>("articles");
         }
