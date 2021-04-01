@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
+using Open.ChannelExtensions;
 
 namespace DevNews.Infrastructure.Parsers.Reddit
 {
     internal class RedditParser : IArticlesParser
     {
-        private RedditConfiguration _redditConfiguration;
-        private SubRedditParser _subRedditParser;
+        private readonly RedditConfiguration _redditConfiguration;
+        private readonly SubRedditParser _subRedditParser;
 
         public RedditParser(RedditConfiguration redditConfiguration, SubRedditParser subRedditParser)
         {
@@ -25,10 +26,12 @@ namespace DevNews.Infrastructure.Parsers.Reddit
             {
                 throw new AggregateException(nameof(_redditConfiguration.SubReddits));
             }
+            
+            var subRedditPostsChannel = subs.ToChannel()
+                .TaskPipeAsync(Environment.ProcessorCount, async sub => await _subRedditParser.Parse(sub))
+                .Join();
 
-            var articles = await Task.WhenAll(subs.Select(sub => _subRedditParser.Parse(sub)));
-
-            foreach (var article in articles.SelectMany(x => x))
+            await foreach (var article in subRedditPostsChannel.ReadAllAsync())
             {
                 yield return article;
             }
