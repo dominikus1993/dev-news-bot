@@ -9,12 +9,15 @@ namespace DevNews.Core.Model
         {
         }
 
-        public Article WithTrimmedTitle() => this with { Title = Title.TrimEntersAndSpaces()};
+        public Article WithTrimmedTitle() => this with {Title = Title.TrimEntersAndSpaces()};
 
         public bool IsValidArticle()
         {
             var contentIsValid = Content is null || Content.Length < 2048;
-            return contentIsValid && Uri.TryCreate(Link, UriKind.Absolute, out var result)
+            var titleIsValid = !string.IsNullOrEmpty(Title);
+            var linkIsValid = !string.IsNullOrEmpty(Link);
+            return contentIsValid && titleIsValid && linkIsValid &&
+                   Uri.TryCreate(Link, UriKind.Absolute, out var result)
                    && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
     }

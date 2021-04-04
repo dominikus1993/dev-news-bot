@@ -16,6 +16,24 @@ namespace DevNews.Core.UnitTests.Model
         }
         
         [Fact]
+        public void TestArticleValidationWhenTileIsEmpty()
+        {
+            var article = new Article("", "notlink");
+            var subject = article.IsValidArticle();
+
+            subject.Should().BeFalse();
+        }
+        
+        [Fact]
+        public void TestArticleValidationWhenLinkIsEmpty()
+        {
+            var article = new Article("cdasdsa", "");
+            var subject = article.IsValidArticle();
+
+            subject.Should().BeFalse();
+        }
+        
+        [Fact]
         public void TestArticleValidationWhenUrlIsCorrect()
         {
             var article = new Article("test", "https://scienceintegritydigest.com/2020/12/20/paper-about-herbalife-related-patient-death-removed-after-company-threatens-to-sue-the-journal/");
