@@ -1,7 +1,7 @@
 namespace DevNews.Infrastructure.Parsers.Reddit
 {
-    public class RedditConfiguration
+    internal class RedditConfiguration
     {
-        public string[]? SubReddits { get; init; } 
+        public string[]? SubReddits { get; set; }
     }
 }

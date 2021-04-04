@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
 using HtmlAgilityPack;
 
+[assembly: InternalsVisibleTo("DevNews.Infrastructure.Parsers.UnitTests")]
 namespace DevNews.Infrastructure.Parsers.Dotnetomaniak
 {
-    public class DotnetomaniakArticlesParser : IArticlesParser
+    internal class DotnetomaniakArticlesParser : IArticlesParser
     {
         private const string DotnetoManiakUrl = "https://dotnetomaniak.pl/";
         private static readonly Uri DotnetoManiakUri = new(DotnetoManiakUrl);
@@ -18,11 +20,11 @@ namespace DevNews.Infrastructure.Parsers.Dotnetomaniak
             var document = await html.LoadFromWebAsync(DotnetoManiakUrl);
 
             var nodes = document.DocumentNode.SelectNodes("//*[@class=\"article\"]")
-                .Select(x => x.ChildNodes).Select(static n => CreateArticle(n));
+                .Select(x => x.ChildNodes);
 
-            foreach (var article in nodes)
+            foreach (var node in nodes)
             {
-                yield return article;
+                yield return CreateArticle(node);
             }
         }
 
@@ -31,7 +33,7 @@ namespace DevNews.Infrastructure.Parsers.Dotnetomaniak
             var titleNode = nodes.First(div => div.HasClass("title"));
             var href = titleNode.ChildNodes.FindFirst("a").GetAttributeValue("href", null);
             var link = new Uri(DotnetoManiakUri, href).AbsoluteUri;
-            var description = nodes.First(div => div.HasClass("description")).ChildNodes.FindFirst("span").InnerText;;
+            var description = nodes.First(div => div.HasClass("description")).ChildNodes.FindFirst("span").InnerText;
             var title = titleNode.InnerText;
             return new Article(title, description, link);
         }

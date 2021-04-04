@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
+using LanguageExt;
 using Open.ChannelExtensions;
 
+[assembly: InternalsVisibleTo("DevNews.Infrastructure.Parsers.UnitTests")]
 namespace DevNews.Infrastructure.Parsers.Reddit
 {
     internal class RedditParser : IArticlesParser
@@ -26,9 +28,10 @@ namespace DevNews.Infrastructure.Parsers.Reddit
             {
                 throw new AggregateException(nameof(_redditConfiguration.SubReddits));
             }
-            
+
             var subRedditPostsChannel = subs.ToChannel()
                 .TaskPipeAsync(Environment.ProcessorCount, async sub => await _subRedditParser.Parse(sub))
+                .Pipe(static articlesOption => articlesOption.IfNone(static () => Array.Empty<Article>()))
                 .Join();
 
             await foreach (var article in subRedditPostsChannel.ReadAllAsync())

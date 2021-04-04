@@ -1,2 +1,5 @@
 HtmlAgilityPack
 Microsoft.Extensions.DependencyInjection.Abstractions
+Microsoft.Extensions.Configuration.Abstractions
+Microsoft.Extensions.Configuration.Binder
+Microsoft.Extensions.Http

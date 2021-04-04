@@ -13,7 +13,8 @@ namespace DevNews.Core.Model
 
         public bool IsValidArticle()
         {
-            return Uri.TryCreate(Link, UriKind.Absolute, out var result)
+            var contentIsValid = Content is null || Content.Length < 2048;
+            return contentIsValid && Uri.TryCreate(Link, UriKind.Absolute, out var result)
                    && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
     }

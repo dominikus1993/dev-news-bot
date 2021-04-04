@@ -16,6 +16,7 @@ nuget Discord.Net.Webhook
 nuget Microsoft.Extensions.DependencyInjection.Abstractions
 nuget Microsoft.Extensions.Configuration.Abstractions
 nuget Microsoft.Extensions.Configuration
+nuget Microsoft.Extensions.Configuration.Binder 
 nuget Microsoft.Extensions.Configuration.EnvironmentVariables
 nuget Microsoft.Extensions.Configuration.Json
 nuget Microsoft.Extensions.Configuration.UserSecrets

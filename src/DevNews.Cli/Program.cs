@@ -25,9 +25,10 @@ namespace DevNews.Cli
                 .UseLogger("DevNews.Cli")
                 .ConfigureServices((ctx, services) =>
                 {
-                    services.AddPersistence(ctx.Configuration);
-                    services.AddNotifiers(ctx.Configuration);
-                    services.AddParsers();
+                    var configuration = ctx.Configuration;
+                    services.AddPersistence(configuration);
+                    services.AddNotifiers(configuration);
+                    services.AddParsers(configuration);
                     services.AddCore();
                 })
                 .ConfigureAppConfiguration(builder =>
