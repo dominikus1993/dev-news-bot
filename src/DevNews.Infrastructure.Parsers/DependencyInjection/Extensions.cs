@@ -5,7 +5,6 @@ using DevNews.Infrastructure.Parsers.HackerNews;
 using DevNews.Infrastructure.Parsers.Reddit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Reddit;
 
 namespace DevNews.Infrastructure.Parsers.DependencyInjection
 {

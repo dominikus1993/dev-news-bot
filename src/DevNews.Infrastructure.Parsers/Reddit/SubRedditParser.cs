@@ -1,25 +1,37 @@
+using System;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using DevNews.Core.Model;
-using Reddit;
+using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace DevNews.Infrastructure.Parsers.Reddit
 {
     internal sealed class SubRedditParser
     {
-        private const int PostToDownload = 10;
-        private readonly RedditClient _client;
+        private const string PostToDownload = "10";
+        private readonly HttpClient _client;
 
-        public SubRedditParser(RedditClient client)
+        public SubRedditParser(HttpClient client)
         {
             _client = client;
         }
 
-        public ValueTask<Article[]> Parse(string name)
+        public async Task<Option<Article[]>> Parse(string name)
         {
-            return new(_client.Subreddit(name).Posts.New.Take(PostToDownload)
-                .Select(post => new Article(post.Title, post.Permalink))
-                .ToArray());
+            var url = $"r/{name}/top/.json?limit={PostToDownload}";
+            var result = await _client.GetFromJsonAsync<Subreddit>(url);
+            if (result?.Data?.Posts is null)
+            {
+                return None;
+            }
+
+            return result.Data.Posts
+                .Where(x => x.Post is not null)
+                .Select(x => new Article(x.Post.Title, x.Post.Content, x.Post.Url))
+                .ToArray();
         }
     }
 }

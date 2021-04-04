@@ -22,7 +22,6 @@ nuget Microsoft.Extensions.Configuration.Json
 nuget Microsoft.Extensions.Configuration.UserSecrets
 nuget MongoDB.Driver.Core
 nuget MongoDB.Driver
-nuget Reddit
 nuget Microsoft.Extensions.Http
 nuget Microsoft.AspNetCore.Http.Features
 nuget Microsoft.Extensions.Logging.Abstractions

@@ -1,7 +1,7 @@
 using System;
+using DevNews.Core.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Reddit;
 
 namespace DevNews.Infrastructure.Parsers.Reddit
 {
@@ -9,14 +9,12 @@ namespace DevNews.Infrastructure.Parsers.Reddit
     {
         internal static void AddReddit(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<RedditConfiguration>(configuration.GetSection("Reddit").Get<RedditConfiguration>());
-            services.AddTransient<RedditClient>(sp =>
+            services.AddSingleton(configuration.GetSection("Reddit").Get<RedditConfiguration>());
+            services.AddHttpClient<SubRedditParser>(client =>
             {
-                var cfg = sp.GetService<RedditConfiguration>() ?? throw new ArgumentNullException(nameof(RedditConfiguration));
-                return new RedditClient(cfg.AppId, appSecret: cfg.Secret);
+                client.BaseAddress = new Uri("https://www.reddit.com/");
             });
-            services.AddTransient<SubRedditParser>();
-            services.AddTransient<RedditParser>();
+            services.AddTransient<IArticlesParser, RedditParser>();
         }
     }
 }
