@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <AnalysisLevel>latest</AnalysisLevel>
+    <UserSecretsId>34d628c9-a3dc-4fd4-9842-3a74e7396cf9</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevNews.Core\DevNews.Core.csproj" />
