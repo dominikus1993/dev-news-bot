@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
 using Open.ChannelExtensions;
 
+[assembly: InternalsVisibleTo("DevNews.Infrastructure.Parsers.UnitTests")]
 namespace DevNews.Infrastructure.Parsers.Reddit
 {
     internal class RedditParser : IArticlesParser

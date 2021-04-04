@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
 using HtmlAgilityPack;
 
+[assembly: InternalsVisibleTo("DevNews.Infrastructure.Parsers.UnitTests")]
 namespace DevNews.Infrastructure.Parsers.Dotnetomaniak
 {
-    public class DotnetomaniakArticlesParser : IArticlesParser
+    internal class DotnetomaniakArticlesParser : IArticlesParser
     {
         private const string DotnetoManiakUrl = "https://dotnetomaniak.pl/";
         private static readonly Uri DotnetoManiakUri = new(DotnetoManiakUrl);

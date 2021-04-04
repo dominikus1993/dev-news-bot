@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
 using HtmlAgilityPack;
 
+[assembly: InternalsVisibleTo("DevNews.Infrastructure.Parsers.UnitTests")]
 namespace DevNews.Infrastructure.Parsers.HackerNews
 {
-    public class HackerNewsArticlesParser : IArticlesParser
+    internal class HackerNewsArticlesParser : IArticlesParser
     {
         private const string HackerNewsUrl = "https://news.ycombinator.com/";
         
