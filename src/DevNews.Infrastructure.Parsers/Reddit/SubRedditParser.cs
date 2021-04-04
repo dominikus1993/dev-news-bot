@@ -1,23 +1,25 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DevNews.Core.Model;
-using HtmlAgilityPack;
+using Reddit;
 
 namespace DevNews.Infrastructure.Parsers.Reddit
 {
-    public class SubRedditParser
+    internal sealed class SubRedditParser
     {
+        private const int PostToDownload = 10;
+        private readonly RedditClient _client;
 
-        public Task<Article[]> Parse(string name)
+        public SubRedditParser(RedditClient client)
         {
-            var url = $"https://www.reddit.com/r/{name}";
-            var html = new HtmlWeb();
-            var document = await html.LoadFromWebAsync(url);
-            
-            var nodes = document.DocumentNode.SelectNodes("//*[@class=\"storylink\"]")
-                .Select(static node => new Article(node.InnerText, node.GetAttributeValue("href", null)));
-            
+            _client = client;
+        }
+
+        public ValueTask<Article[]> Parse(string name)
+        {
+            return new(_client.Subreddit(name).Posts.New.Take(PostToDownload)
+                .Select(post => new Article(post.Title, post.Permalink))
+                .ToArray());
         }
     }
 }
