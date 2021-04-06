@@ -30,7 +30,7 @@ namespace DevNews.Infrastructure.Parsers.Reddit
 
             return result.Data.Posts
                 .Where(x => x.Post is not null)
-                .Select(x => new Article(x.Post?.Title ?? "", x.Post?.Content, x.Post?.Url ?? ""))
+                .Select(x => new Article(x.Post.Title ?? "", x.Post.Content, x.Post.Url ?? ""))
                 .ToArray();
         }
     }
