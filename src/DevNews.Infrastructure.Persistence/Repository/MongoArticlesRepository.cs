@@ -14,33 +14,36 @@ namespace DevNews.Infrastructure.Persistence.Repository
 {
     public class MongoArticlesRepository : IArticlesRepository
     {
-        private IMongoClient _client;
-        private readonly IMongoDatabase _database;
         private readonly IMongoCollection<MongoArticle> _articles;
 
         public MongoArticlesRepository(IMongoClient client)
         {
-            _client = client;
-            _database = GetDatabase(client);
-            _articles = GetCollection(_database);
+            _articles = GetCollection(GetDatabase(client));
         }
 
         public async Task<bool> Exists(Article article) =>
-            await _articles.AsQueryable().Where(x => x.Title == article.Title).AnyAsync();
+            await _articles.AsQueryable().AnyAsync(x => x.Title == article.Title);
 
         public async Task<Either<Exception, Unit>> InsertMany(IEnumerable<Article> articles)
         {
-            var writes = articles
-                .Select(article => new MongoArticle(article))
-                .Select(article => new InsertOneModel<MongoArticle>(article))
-                .ToList();
-            
-            if (writes.Any())
+            try
             {
-                await _articles.BulkWriteAsync(writes);
-            }
+                var writes = articles
+                    .Select(article => new MongoArticle(article))
+                    .Select(article => new InsertOneModel<MongoArticle>(article))
+                    .ToList();
 
-            return Right(Unit.Default);
+                if (writes.Any())
+                {
+                    await _articles.BulkWriteAsync(writes);
+                }
+
+                return Right(Unit.Default);
+            }
+            catch (Exception e)
+            {
+                return Left(e);
+            }
         }
 
         private static IMongoDatabase GetDatabase(IMongoClient client)

@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0.201 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0.202 AS build
 WORKDIR /src
 COPY . .
 RUN dotnet tool restore

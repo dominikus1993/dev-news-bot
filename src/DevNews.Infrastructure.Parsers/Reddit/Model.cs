@@ -14,7 +14,7 @@ namespace DevNews.Infrastructure.Parsers.Reddit
         public Post? Post { get; init; }
     }
 
-    public class Post
+    internal class Post
     {
         [JsonPropertyName("title")] 
         public string? Title { get; init; }   
