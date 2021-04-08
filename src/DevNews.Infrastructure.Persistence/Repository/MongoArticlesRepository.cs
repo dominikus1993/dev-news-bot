@@ -46,6 +46,33 @@ namespace DevNews.Infrastructure.Persistence.Repository
             }
         }
 
+        public async IAsyncEnumerable<Article> Get(int page, int pageSize)
+        {
+            if (page <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(page));
+            }
+
+            if (pageSize <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pageSize));
+            }
+
+            var skip = (page - 1) * pageSize;
+
+            var result = await _articles.AsQueryable().OrderBy(x => x.CrawledAt).Skip(skip).Take(pageSize)
+                .ToListAsync();
+            if (result is null)
+            {
+                yield break;
+            }
+
+            foreach (var mongoArticle in result)
+            {
+                yield return mongoArticle.AsArticle();
+            }
+        }
+
         private static IMongoDatabase GetDatabase(IMongoClient client)
         {
             return client.GetDatabase("Articles");

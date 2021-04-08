@@ -11,22 +11,33 @@ namespace DevNews.Infrastructure.Persistence.Model
         public string? Title { get; init; }
 
         [BsonElement] public string? Link { get; init; }
+        
+        [BsonElement] public string? Content { get; init; }
 
         [BsonElement, BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime CrawledAt { get; init; }
 
         [BsonElement, BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime? PublishedAt { get; init; }
-        
-        public MongoArticle() {}
+
+        public MongoArticle()
+        {
+            
+        }
 
         public MongoArticle(Article article)
         {
-            var (title, _, link) = article;
+            var (title, content, link) = article;
             Title = title;
             Link = link;
+            Content = content;
             CrawledAt = DateTime.UtcNow;
             PublishedAt = DateTime.UtcNow;
+        }
+
+        public Article AsArticle()
+        {
+            return new(Title ?? "", Content, Link ?? "");
         }
     }
 }

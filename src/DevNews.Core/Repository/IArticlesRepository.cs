@@ -10,5 +10,7 @@ namespace DevNews.Core.Repository
     {
         Task<bool> Exists(Article article);
         Task<Either<Exception, Unit>> InsertMany(IEnumerable<Article> articles);
+
+        IAsyncEnumerable<Article> Get(int page, int pageSize);
     }
 }
