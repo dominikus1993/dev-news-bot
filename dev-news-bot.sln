@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Cli", "src\DevNews.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Infrastructure.Notifications.UnitTests", "tests\DevNews.Infrastructure.Notifications.UnitTests\DevNews.Infrastructure.Notifications.UnitTests.csproj", "{747B0D0B-DDA4-4B0E-A599-CF753326589E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.WebApp", "src\DevNews.WebApp\DevNews.WebApp.csproj", "{5B637787-1285-4552-A777-635632F6B6AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,7 @@ Global
 		{1885D88D-0ED0-401A-8678-BDCAECA6CF8C} = {152813B7-DF24-4443-942C-CD2955C61CA9}
 		{524117F9-B49E-4AFF-9873-4C4B1B6AFC3C} = {93F0838E-B38F-4821-866A-964E5CDF781D}
 		{747B0D0B-DDA4-4B0E-A599-CF753326589E} = {152813B7-DF24-4443-942C-CD2955C61CA9}
+		{5B637787-1285-4552-A777-635632F6B6AC} = {93F0838E-B38F-4821-866A-964E5CDF781D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{104B95DB-F722-4E44-8E94-E283E8B1312C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -142,5 +145,17 @@ Global
 		{747B0D0B-DDA4-4B0E-A599-CF753326589E}.Release|x64.Build.0 = Release|Any CPU
 		{747B0D0B-DDA4-4B0E-A599-CF753326589E}.Release|x86.ActiveCfg = Release|Any CPU
 		{747B0D0B-DDA4-4B0E-A599-CF753326589E}.Release|x86.Build.0 = Release|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Debug|x64.Build.0 = Debug|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Debug|x86.Build.0 = Debug|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Release|x64.ActiveCfg = Release|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Release|x64.Build.0 = Release|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Release|x86.ActiveCfg = Release|Any CPU
+		{5B637787-1285-4552-A777-635632F6B6AC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
