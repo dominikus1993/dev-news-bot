@@ -11,7 +11,7 @@ namespace DevNews.Core.UseCases
     
     public class GetArticles
     {
-        private IArticlesRepository _articlesRepository;
+        private readonly IArticlesRepository _articlesRepository;
 
         public GetArticles(IArticlesRepository articlesRepository)
         {
