@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Infrastructure.Noti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.WebApp", "src\DevNews.WebApp\DevNews.WebApp.csproj", "{7E1CE898-544A-44F2-9BCD-D6265F975A0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.WebApp.Tests", "tests\DevNews.WebApp.Tests\DevNews.WebApp.Tests.csproj", "{5376EC5C-151B-4D27-8BB7-FBD71F83CE02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevNews.Persistence.UnitTests", "tests\DevNews.Persistence.UnitTests\DevNews.Persistence.UnitTests.csproj", "{5376EC5C-151B-4D27-8BB7-FBD71F83CE02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

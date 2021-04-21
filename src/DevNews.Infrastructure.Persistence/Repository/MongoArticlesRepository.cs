@@ -60,7 +60,10 @@ namespace DevNews.Infrastructure.Persistence.Repository
 
             var skip = (page - 1) * pageSize;
 
-            var result = await _articles.AsQueryable().OrderBy(x => x.CrawledAt).Skip(skip).Take(pageSize)
+            var result = await _articles.AsQueryable()
+                .OrderBy(x => x.CrawledAt)
+                .Skip(skip)
+                .Take(pageSize)
                 .ToListAsync();
             if (result is null)
             {

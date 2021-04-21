@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DevNews.Infrastructure.Parsers\DevNews.Infrastructure.Parsers.csproj" />
+    <ProjectReference Include="..\..\src\DevNews.Infrastructure.Persistence\DevNews.Infrastructure.Persistence.csproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
