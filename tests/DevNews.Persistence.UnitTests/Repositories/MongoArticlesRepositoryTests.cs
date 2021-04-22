@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DevNews.Core.Model;
 using DevNews.Core.Repository;
 using DevNews.Infrastructure.Persistence.Repository;
+using FluentAssertions;
 using MongoDB.Driver;
 using Xunit;
 
@@ -11,17 +13,18 @@ namespace DevNews.WebApp.Tests.Repositories
     public class MongoDbFixture : IDisposable
     {
         public IArticlesRepository Repository { get; }
+        public IMongoClient Client { get; }
 
         public MongoDbFixture()
         {
-            var client = new MongoClient(Environment.GetEnvironmentVariable("TST_DEVNEWS_DATABASE") ?? "mongodb://root:rootpassword@127.0.0.1:27017");
-            Repository = new MongoArticlesRepository(client);
+            Client = new MongoClient(Environment.GetEnvironmentVariable("TST_DEVNEWS_DATABASE") ?? "mongodb://root:rootpassword@127.0.0.1:27017");
+            Repository = new MongoArticlesRepository(Client);
         }
 
 
         public void Dispose()
         {
-            Console.WriteLine("XDDD");
+            Client.DropDatabase(MongoArticlesRepository.ArticlesDatabase);
         }
     }
     
@@ -57,5 +60,69 @@ namespace DevNews.WebApp.Tests.Repositories
         }
         
         
+        [Fact]
+        public async Task GetArticlesWhenCollectionIsEmpty()
+        {
+            await MongoArticlesRepository.GetDatabase(_mongoDbFixture.Client)
+                .DropCollectionAsync(MongoArticlesRepository.ArticlesCollection);
+
+            var result = await _mongoDbFixture.Repository.Get(1, 10).ToListAsync();
+
+            result.Should().BeEmpty();
+        }
+        
+        [Fact]
+        public async Task GetArticlesWhenCollectionIsNotEmpty()
+        {
+            
+            await MongoArticlesRepository.GetDatabase(_mongoDbFixture.Client)
+                .DropCollectionAsync(MongoArticlesRepository.ArticlesCollection);
+
+            await _mongoDbFixture.Repository.InsertMany(Enumerable.Range(1, 20)
+                .Select(x => new Article($"xDD {x}", "xD", $"http://www.xD.com/{x}")));
+
+            // TEST
+            var subject = await _mongoDbFixture.Repository.Get(1, 10).ToListAsync();
+
+            subject.Should().HaveCount(10);
+            
+            subject = await _mongoDbFixture.Repository.Get(2, 10).ToListAsync();
+            
+            subject.Should().HaveCount(10);
+        }
+        
+        
+        [Fact]
+        public async Task CheckExistenceWhenArticleNotExists()
+        {
+            
+            await MongoArticlesRepository.GetDatabase(_mongoDbFixture.Client)
+                .DropCollectionAsync(MongoArticlesRepository.ArticlesCollection);
+
+            await _mongoDbFixture.Repository.InsertMany(Enumerable.Range(1, 20)
+                .Select(x => new Article($"xDD {x}", "xD", $"http://www.xD.com/{x}")));
+
+            // TEST
+            var subject = await _mongoDbFixture.Repository.Exists(new Article("xDD", "www.xD.com"));
+
+            subject.Should().BeFalse();
+        }
+        
+        
+        [Fact]
+        public async Task CheckExistenceWhenArticleExists()
+        {
+            
+            await MongoArticlesRepository.GetDatabase(_mongoDbFixture.Client)
+                .DropCollectionAsync(MongoArticlesRepository.ArticlesCollection);
+
+            await _mongoDbFixture.Repository.InsertMany(Enumerable.Range(1, 20)
+                .Select(x => new Article($"xDD {x}", "xD", $"http://www.xD.com/{x}")));
+
+            // TEST
+            var subject = await _mongoDbFixture.Repository.Exists(new Article("xDD 1", "xD","http://www.xD.com/1"));
+
+            subject.Should().BeTrue();
+        }
     }
 }
