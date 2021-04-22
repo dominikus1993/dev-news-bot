@@ -1,7 +1,45 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@using DevNews.Core.UseCases
+@using DevNews.Core.Dto
+@inject GetArticles _articles;
 
-Welcome to your new app.
+<h1>Weather forecast</h1>
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (articles == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var (title, _, link) in articles)
+        {
+            <tr>
+                <td>@title</td>
+                <td>@link</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ArticleDto> articles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        articles = await _articles.Execute(new GetArticlesQuery(1, 10));
+    }
+}
