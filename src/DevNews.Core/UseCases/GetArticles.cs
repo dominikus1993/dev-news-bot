@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevNews.Core.Dto;
 using DevNews.Core.Model;
 using DevNews.Core.Repository;
 
@@ -18,7 +19,7 @@ namespace DevNews.Core.UseCases
             _articlesRepository = articlesRepository;
         }
 
-        public async Task<List<Article>> Execute(GetArticlesQuery query)
+        public async Task<List<ArticleDto>> Execute(GetArticlesQuery query)
         {
             if (query.Page < 0)
             {
@@ -30,7 +31,7 @@ namespace DevNews.Core.UseCases
                 throw new ArgumentOutOfRangeException(nameof(query.PageSize));
             }
             
-            return await _articlesRepository.Get(query.Page, query.PageSize).ToListAsync();
+            return await _articlesRepository.Get(query.Page, query.PageSize).Select(article => new ArticleDto(article)).ToListAsync();
         }
     }
 }

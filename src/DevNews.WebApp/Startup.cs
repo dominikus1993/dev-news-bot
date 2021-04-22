@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DevNews.Core.DependencyInjection;
+using DevNews.Infrastructure.Persistence.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using DevNews.WebApp.Data;
-
 namespace DevNews.WebApp
 {
     public class Startup
@@ -28,7 +22,8 @@ namespace DevNews.WebApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddCore();
+            services.AddPersistence(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

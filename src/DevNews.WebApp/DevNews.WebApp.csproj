@@ -3,5 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DevNews.Core\DevNews.Core.csproj" />
+    <ProjectReference Include="..\DevNews.Infrastructure.Persistence\DevNews.Infrastructure.Persistence.csproj" />
+  </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

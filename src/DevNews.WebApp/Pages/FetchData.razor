@@ -1,13 +1,14 @@
 ﻿@page "/fetchdata"
 
-@using DevNews.WebApp.Data
-@inject WeatherForecastService ForecastService
+@using DevNews.Core.UseCases
+@using DevNews.Core.Dto
+@inject GetArticles _articles;
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (forecasts == null)
+@if (articles == null)
 {
     <p>
         <em>Loading...</em>
@@ -20,18 +21,14 @@ else
         <tr>
             <th>Date</th>
             <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
         </tr>
         </thead>
         <tbody>
-        @foreach (var forecast in forecasts)
+        @foreach (var (title, _, link) in articles)
         {
             <tr>
-                <td>@forecast.Date.ToShortDateString()</td>
-                <td>@forecast.TemperatureC</td>
-                <td>@forecast.TemperatureF</td>
-                <td>@forecast.Summary</td>
+                <td>@title</td>
+                <td>@link</td>
             </tr>
         }
         </tbody>
@@ -39,11 +36,11 @@ else
 }
 
 @code {
-    private WeatherForecast[] forecasts;
+    private List<ArticleDto> articles;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        articles = await _articles.Execute(new GetArticlesQuery(1, 10));
     }
 
 }
