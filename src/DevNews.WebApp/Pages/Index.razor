@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/{page:int}"
 
 @using DevNews.Core.UseCases
 @using DevNews.Core.Dto
@@ -45,9 +45,17 @@ else
 
 @code {
     private List<ArticleDto> articles;
-    private int page = 1;
+    
+    [Parameter]
+    public int? Page { get; set; }= 1;
+    
+    protected override void OnParametersSet()
+    {
+        Page ??= 1;
+    }
     protected override async Task OnInitializedAsync()
     {
+        var page = Page ?? 1;
         articles = await _articles.Execute(new GetArticlesQuery(page, 10));
     }
 
