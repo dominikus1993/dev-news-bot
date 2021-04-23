@@ -123,7 +123,7 @@ else
 
     private long numberOfPages = 0;
     
-        private const int pageSize = 20;
+    private const int pageSize = 20;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -150,7 +150,6 @@ else
     private async Task LoadArticles()
     {
         var page = Page ?? 1;
-        _logger.LogInformation("Load Articles by Param Page={Page} and PageSize={PageSize}", page, pageSize);
         articles = await _getArticles.Execute(new GetArticlesQuery(page, pageSize));
     }
 
