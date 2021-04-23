@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DevNews.Core.Model;
 using DevNews.Core.Repository;
@@ -10,12 +11,15 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using static LanguageExt.Prelude;
 
+[assembly: InternalsVisibleTo("DevNews.Persistence.UnitTests")]
 namespace DevNews.Infrastructure.Persistence.Repository
 {
-    public class MongoArticlesRepository : IArticlesRepository
+    internal class MongoArticlesRepository : IArticlesRepository
     {
         private readonly IMongoCollection<MongoArticle> _articles;
-
+        public const string ArticlesDatabase = "Articles";
+        public const string ArticlesCollection = "articles";
+        
         public MongoArticlesRepository(IMongoClient client)
         {
             _articles = GetCollection(GetDatabase(client));
@@ -60,7 +64,10 @@ namespace DevNews.Infrastructure.Persistence.Repository
 
             var skip = (page - 1) * pageSize;
 
-            var result = await _articles.AsQueryable().OrderBy(x => x.CrawledAt).Skip(skip).Take(pageSize)
+            var result = await _articles.AsQueryable()
+                .OrderBy(x => x.CrawledAt)
+                .Skip(skip)
+                .Take(pageSize)
                 .ToListAsync();
             if (result is null)
             {
@@ -73,14 +80,19 @@ namespace DevNews.Infrastructure.Persistence.Repository
             }
         }
 
-        private static IMongoDatabase GetDatabase(IMongoClient client)
+        public async Task<long> Count()
         {
-            return client.GetDatabase("Articles");
+            return await _articles.CountDocumentsAsync(FilterDefinition<MongoArticle>.Empty);
         }
 
-        private static IMongoCollection<MongoArticle> GetCollection(IMongoDatabase db)
+        public static IMongoDatabase GetDatabase(IMongoClient client)
         {
-            return db.GetCollection<MongoArticle>("articles");
+            return client.GetDatabase(ArticlesDatabase);
+        }
+
+        public static IMongoCollection<MongoArticle> GetCollection(IMongoDatabase db)
+        {
+            return db.GetCollection<MongoArticle>(ArticlesCollection);
         }
     }
 }

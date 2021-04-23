@@ -3,4 +3,3 @@ xunit
 xunit.runner.visualstudio
 coverlet.collector
 FluentAssertions
-Moq

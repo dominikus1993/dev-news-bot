@@ -13,6 +13,8 @@ namespace DevNews.Core.DependencyInjection
             services.AddTransient<IArticlesProvider, ChannelArticlesProvider>();
             services.AddTransient<ParseArticlesAndSendItUseCase>();
             services.AddTransient<INotificationBroadcaster, ChannelsNotificationBroadcaster>();
+            services.AddTransient<GetArticles>();
+            services.AddTransient<GetArticlesPagesQuantity>();
             return services;
         }
     }

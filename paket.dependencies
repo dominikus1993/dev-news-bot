@@ -25,6 +25,7 @@ nuget MongoDB.Driver
 nuget Microsoft.Extensions.Http
 nuget Microsoft.AspNetCore.Http.Features
 nuget Microsoft.Extensions.Logging.Abstractions
+nuget Moq
 
 nuget Serilog.AspNetCore
 nuget Serilog.Enrichers.Environment
