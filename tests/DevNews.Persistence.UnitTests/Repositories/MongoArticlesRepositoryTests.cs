@@ -124,5 +124,35 @@ namespace DevNews.WebApp.Tests.Repositories
 
             subject.Should().BeTrue();
         }
+        
+        [Fact]
+        public async Task CountWhenCollectionIsNotEmpty()
+        {
+            
+            await MongoArticlesRepository.GetDatabase(_mongoDbFixture.Client)
+                .DropCollectionAsync(MongoArticlesRepository.ArticlesCollection);
+
+            const int articlesQuantity = 20;
+            await _mongoDbFixture.Repository.InsertMany(Enumerable.Range(1, articlesQuantity)
+                .Select(x => new Article($"xDD {x}", "xD", $"http://www.xD.com/{x}")));
+            
+            // TEST
+            var subject = await _mongoDbFixture.Repository.Count();
+
+            subject.Should().Be(articlesQuantity);
+        }
+        
+        [Fact]
+        public async Task CountWhenCollectionIsEmpty()
+        {
+            
+            await MongoArticlesRepository.GetDatabase(_mongoDbFixture.Client)
+                .DropCollectionAsync(MongoArticlesRepository.ArticlesCollection);
+
+            // TEST
+            var subject = await _mongoDbFixture.Repository.Count();
+
+            subject.Should().Be(0);
+        }
     }
 }
