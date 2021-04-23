@@ -80,6 +80,11 @@ namespace DevNews.Infrastructure.Persistence.Repository
             }
         }
 
+        public async Task<long> Count()
+        {
+            return await _articles.CountDocumentsAsync(FilterDefinition<MongoArticle>.Empty);
+        }
+
         public static IMongoDatabase GetDatabase(IMongoClient client)
         {
             return client.GetDatabase(ArticlesDatabase);

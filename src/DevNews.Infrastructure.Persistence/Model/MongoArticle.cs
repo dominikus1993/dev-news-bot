@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace DevNews.Infrastructure.Persistence.Model
 {
-    public class MongoArticle
+    internal class MongoArticle
     {
         [BsonId, BsonRepresentation(BsonType.String)]
         public string? Title { get; init; }
