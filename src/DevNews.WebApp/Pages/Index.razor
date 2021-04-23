@@ -3,8 +3,10 @@
 
 @using DevNews.Core.UseCases
 @using DevNews.Core.Dto
-@inject GetArticles _articles;
-
+@using Microsoft.Extensions.Logging
+@inject GetArticles _getArticles;
+@inject GetArticlesPagesQuantity _getArticlesPagesQuantity;
+@inject ILogger<Index> _logger;
 <h1>DevNews Feed</h1>
 
 @if (articles == null)
@@ -31,31 +33,84 @@ else
 
     <nav aria-label="...">
         <ul class="pagination">
-            
-            @if (Page > 1)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@(Page - 1)" tabindex="-1" aria-disabled="true">Previous</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">@(Page - 1)</a>
-                </li>
-            }
-            else
+
+
+            @if (Page == 1)
             {
                 <li class="page-item disabled">
                     <a class="page-link" href="@(Page - 1)" tabindex="-1" aria-disabled="true">Previous</a>
                 </li>
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="/@Page">@Page</a>
+                </li>
+                if (Page + 1 <= numberOfPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/@(Page + 1)">@(Page + 1)</a>
+                    </li>
+                }
+                
+                if (Page + 2 <= numberOfPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/@(Page + 2)">@(Page + 2)</a>
+                    </li>
+                }
+
+                if (Page + 1 <= numberOfPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@(Page + 1)">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="@(Page + 1)">Next</a>
+                    </li>
+                }
             }
-            <li class="page-item active" aria-current="page">
-                <a class="page-link" href="/@Page">@Page</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="/@(Page + 1)">@(Page + 1)</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="@(Page + 1)">Next</a>
-            </li>
+            else if (Page < numberOfPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@(Page - 1)" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="/@(Page - 1)">@(Page - 1)</a>
+                </li>
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="/@Page">@Page</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="/@(Page + 1)">@(Page + 1)</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@(Page + 1)">Next</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@(Page - 1)" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                if (Page - 2 > 0)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/@(Page - 2)">@(Page - 2)</a>
+                    </li>
+                }
+
+                <li class="page-item">
+                    <a class="page-link" href="/@(Page - 1)">@(Page - 1)</a>
+                </li>
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="/@Page">@Page</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="@(Page + 1)">Next</a>
+                </li>
+            }
+
         </ul>
     </nav>
 }
@@ -66,18 +121,42 @@ else
     [Parameter]
     public int? Page { get; set; } = 1;
 
-    protected override void OnParametersSet()
+    private long numberOfPages = 0;
+    
+        private const int pageSize = 10;
+
+    protected override async Task OnParametersSetAsync()
     {
         if (Page is null or <= 0)
         {
             Page = 1;
+        }
+        else
+        {
+            await LoadArticles();
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
         var page = Page ?? 1;
-        articles = await _articles.Execute(new GetArticlesQuery(page, 10));
+
+        var getNumberOfPagesTask = LoadNumberOfPages();
+        var getArticlesTask = LoadArticles();
+
+        await Task.WhenAll(getNumberOfPagesTask, getArticlesTask);
+    }
+
+    private async Task LoadArticles()
+    {
+        var page = Page ?? 1;
+        _logger.LogInformation("Load Articles by Param Page={Page} and PageSize={PageSize}", page, pageSize);
+        articles = await _getArticles.Execute(new GetArticlesQuery(page, pageSize));
+    }
+
+    public async Task LoadNumberOfPages()
+    {
+        numberOfPages = await _getArticlesPagesQuantity.Execute(pageSize);
     }
 
 }

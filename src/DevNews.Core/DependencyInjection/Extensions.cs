@@ -14,6 +14,7 @@ namespace DevNews.Core.DependencyInjection
             services.AddTransient<ParseArticlesAndSendItUseCase>();
             services.AddTransient<INotificationBroadcaster, ChannelsNotificationBroadcaster>();
             services.AddTransient<GetArticles>();
+            services.AddTransient<GetArticlesPagesQuantity>();
             return services;
         }
     }

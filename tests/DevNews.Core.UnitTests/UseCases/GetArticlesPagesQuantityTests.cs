@@ -42,6 +42,7 @@ namespace DevNews.Core.UnitTests.UseCases
         [InlineData(5, 5, 1)]
         [InlineData(5, 0, 0)]
         [InlineData(5, 4, 1)]
+        [InlineData(10, 10, 1)]
         public async Task GetArticlesPages(int pageSize, int articlesQuantity, int expectedPagesQuantity)
         {
             // Arrange 
