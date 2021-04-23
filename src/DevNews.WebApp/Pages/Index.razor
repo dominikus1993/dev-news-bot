@@ -20,25 +20,41 @@ else
         {
             <li class="media">
                 <div class="media-body">
-                    <h5 class="mt-0 mb-1"><a href="@link">@title</a></h5>
+                    <h5 class="mt-0 mb-1">
+                        <a href="@link">@title</a>
+                    </h5>
                     <p>@content</p>
                 </div>
             </li>
         }
     </ul>
-    
+
     <nav aria-label="...">
         <ul class="pagination">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            
+            @if (Page > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@(Page - 1)" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#">@(Page - 1)</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="@(Page - 1)" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+            }
             <li class="page-item active" aria-current="page">
-                <a class="page-link" href="#">2</a>
+                <a class="page-link" href="/@Page">@Page</a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
             <li class="page-item">
-                <a class="page-link" href="#">Next</a>
+                <a class="page-link" href="/@(Page + 1)">@(Page + 1)</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="@(Page + 1)">Next</a>
             </li>
         </ul>
     </nav>
@@ -46,14 +62,18 @@ else
 
 @code {
     private List<ArticleDto> articles;
-    
+
     [Parameter]
     public int? Page { get; set; } = 1;
-    
+
     protected override void OnParametersSet()
     {
-        Page ??= 1;
+        if (Page is null or <= 0)
+        {
+            Page = 1;
+        }
     }
+
     protected override async Task OnInitializedAsync()
     {
         var page = Page ?? 1;
@@ -61,4 +81,3 @@ else
     }
 
 }
-
