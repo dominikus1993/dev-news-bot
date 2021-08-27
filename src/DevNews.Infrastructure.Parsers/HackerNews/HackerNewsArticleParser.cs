@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
 using HtmlAgilityPack;
@@ -11,10 +12,10 @@ namespace DevNews.Infrastructure.Parsers.HackerNews
     {
         private const string HackerNewsUrl = "https://news.ycombinator.com/";
         
-        public async IAsyncEnumerable<Article> Parse()
+        public async IAsyncEnumerable<Article> Parse([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var html = new HtmlWeb();
-            var document = await html.LoadFromWebAsync(HackerNewsUrl);
+            var document = await html.LoadFromWebAsync(HackerNewsUrl, cancellationToken);
 
             var nodes = document.DocumentNode.SelectNodes("//*[@class=\"storylink\"]");
 

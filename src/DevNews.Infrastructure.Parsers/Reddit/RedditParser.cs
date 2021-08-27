@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
 using LanguageExt;
@@ -21,7 +22,7 @@ namespace DevNews.Infrastructure.Parsers.Reddit
             _subRedditParser = subRedditParser;
         }
 
-        public async IAsyncEnumerable<Article> Parse()
+        public async IAsyncEnumerable<Article> Parse([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var subs = _redditConfiguration.SubReddits;
             if (subs is null)
@@ -29,12 +30,13 @@ namespace DevNews.Infrastructure.Parsers.Reddit
                 throw new AggregateException(nameof(_redditConfiguration.SubReddits));
             }
 
-            var subRedditPostsChannel = subs.ToChannel()
-                .TaskPipeAsync(Environment.ProcessorCount, async sub => await _subRedditParser.Parse(sub))
-                .Pipe(static articlesOption => articlesOption.IfNone(static () => Array.Empty<Article>()))
+            var subRedditPostsChannel = subs
+                .ToChannel(cancellationToken: cancellationToken)
+                .TaskPipeAsync(Environment.ProcessorCount, async sub => await _subRedditParser.Parse(sub), cancellationToken: cancellationToken)
+                .Pipe(static articlesOption => articlesOption.IfNone(static () => Array.Empty<Article>()), cancellationToken: cancellationToken)
                 .Join();
 
-            await foreach (var article in subRedditPostsChannel.ReadAllAsync())
+            await foreach (var article in subRedditPostsChannel.ReadAllAsync(cancellationToken))
             {
                 yield return article;
             }

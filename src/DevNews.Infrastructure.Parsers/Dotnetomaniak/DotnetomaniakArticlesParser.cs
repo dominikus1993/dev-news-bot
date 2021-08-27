@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
 using HtmlAgilityPack;
@@ -14,10 +15,10 @@ namespace DevNews.Infrastructure.Parsers.Dotnetomaniak
         private const string DotnetoManiakUrl = "https://dotnetomaniak.pl/";
         private static readonly Uri DotnetoManiakUri = new(DotnetoManiakUrl);
         
-        public async IAsyncEnumerable<Article> Parse()
+        public async IAsyncEnumerable<Article> Parse([EnumeratorCancellation]CancellationToken cancellationToken = default)
         {
             var html = new HtmlWeb();
-            var document = await html.LoadFromWebAsync(DotnetoManiakUrl);
+            var document = await html.LoadFromWebAsync(DotnetoManiakUrl, cancellationToken);
 
             var nodes = document.DocumentNode.SelectNodes("//*[@class=\"article\"]")
                 .Select(x => x.ChildNodes);

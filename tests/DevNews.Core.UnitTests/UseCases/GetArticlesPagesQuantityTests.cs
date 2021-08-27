@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DevNews.Core.Model;
 using DevNews.Core.Repository;
@@ -47,7 +48,7 @@ namespace DevNews.Core.UnitTests.UseCases
         {
             // Arrange 
             var repo = new Mock<IArticlesRepository>();
-            repo.Setup(repository => repository.Count()).ReturnsAsync(articlesQuantity);
+            repo.Setup(repository => repository.Count(It.IsAny<CancellationToken>())).ReturnsAsync(articlesQuantity);
             var useCase = new GetArticlesPagesQuantity(repo.Object);
             
             // Test

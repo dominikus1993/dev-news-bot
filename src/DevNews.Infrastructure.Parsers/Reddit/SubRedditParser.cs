@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using DevNews.Core.Model;
 using LanguageExt;
@@ -19,10 +20,10 @@ namespace DevNews.Infrastructure.Parsers.Reddit
             _client = client;
         }
 
-        public async Task<Option<Article[]>> Parse(string name)
+        public async Task<Option<Article[]>> Parse(string name, CancellationToken cancellationToken = default)
         {
             var url = $"r/{name}/top/.json?limit={PostToDownload}";
-            var result = await _client.GetFromJsonAsync<Subreddit>(url);
+            var result = await _client.GetFromJsonAsync<Subreddit>(url, cancellationToken: cancellationToken);
             if (result?.Data?.Posts is null)
             {
                 return None;

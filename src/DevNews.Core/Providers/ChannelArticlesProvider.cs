@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using DevNews.Core.Abstractions;
@@ -21,38 +22,38 @@ namespace DevNews.Core.Providers
             _articlesRepository = articlesRepository;
         }
 
-        public IAsyncEnumerable<Article> Provide()
+        public IAsyncEnumerable<Article> Provide(CancellationToken cancellationToken = default)
         {
-            var reader = StartProducing(_articlesParsers);
-            return reader.ReadAllAsync()
+            var reader = StartProducing(_articlesParsers, cancellationToken);
+            return reader.ReadAllAsync(cancellationToken)
                 .Where(static article => article.IsValidArticle())
                 .Select(static article => article.WithTrimmedTitle())
-                .WhereAwait(async article => await NotExists(_articlesRepository, article));
+                .WhereAwait(async article => await NotExists(_articlesRepository, article, cancellationToken));
         }
 
-        private static async Task<bool> NotExists(IArticlesRepository repository, Article article)
+        private static async Task<bool> NotExists(IArticlesRepository repository, Article article, CancellationToken cancellationToken)
         {
-            return !await repository.Exists(article);
+            return !await repository.Exists(article, cancellationToken);
         }
 
-        private static ChannelReader<Article> StartProducing(IEnumerable<IArticlesParser> articlesParsers)
+        private static ChannelReader<Article> StartProducing(IEnumerable<IArticlesParser> articlesParsers, CancellationToken cancellationToken)
         {
             var channel = Channel.CreateUnbounded<Article>(new UnboundedChannelOptions() { SingleReader = true, SingleWriter = false });
-            var parsers = articlesParsers.Select(parser => Produce(parser, channel.Writer));
+            var parsers = articlesParsers.Select(parser => Produce(parser, channel.Writer, cancellationToken));
 
             Task.Run(async () =>
             {
                 await Task.WhenAll(parsers);
                 await channel.CompleteAsync();
-            });
+            }, cancellationToken);
             return channel.Reader;
         }
         
-        private static async Task Produce(IArticlesParser parser, ChannelWriter<Article> writer)
+        private static async Task Produce(IArticlesParser parser, ChannelWriter<Article> writer, CancellationToken cancellationToken)
         {
-            await foreach (var article in parser.Parse())
+            await foreach (var article in parser.Parse(cancellationToken))
             {
-                await writer.WriteAsync(article);
+                await writer.WriteAsync(article, cancellationToken);
             }
         }
         

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Repository;
@@ -22,13 +23,13 @@ namespace DevNews.Core.UseCases
             _notificationBroadcaster = notificationBroadcaster;
         }
 
-        public async Task Execute(ParseArticlesAndSendItParam param)
+        public async Task Execute(ParseArticlesAndSendItParam param, CancellationToken cancellationToken = default)
         {
-            var articles = await _articlesProvider.Provide()
+            var articles = await _articlesProvider.Provide(cancellationToken)
                 .OrderBy(_ => Guid.NewGuid())
                 .Take(param.ArticleQuantity)
-                .ToListAsync();
-            await _articlesRepository.InsertMany(articles);
+                .ToListAsync(cancellationToken);
+            await _articlesRepository.InsertMany(articles, cancellationToken);
             await _notificationBroadcaster.Broadcast(articles);
         }
     }
