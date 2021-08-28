@@ -38,9 +38,9 @@ namespace DevNews.Infrastructure.Persistence.Repository
                     .Select(article => new InsertOneModel<MongoArticle>(article))
                     .ToList();
 
-                if (writes.Any())
+                if (writes.Count > 0)
                 {
-                    await _articles.BulkWriteAsync(writes);
+                    await _articles.BulkWriteAsync(writes, cancellationToken: cancellationToken);
                 }
 
                 return Right(Unit.Default);
