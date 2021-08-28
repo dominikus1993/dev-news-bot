@@ -43,8 +43,17 @@ namespace DevNews.Core.Providers
 
             Task.Run(async () =>
             {
-                await Task.WhenAll(parsers);
-                await channel.CompleteAsync();
+                try
+                {
+                    await Task.WhenAll(parsers);
+                    channel.Writer.Complete();
+                }
+                catch (System.Exception ex)
+                {
+
+                    channel.Writer.Complete(ex);
+                }
+
             }, cancellationToken);
             return channel.Reader;
         }
