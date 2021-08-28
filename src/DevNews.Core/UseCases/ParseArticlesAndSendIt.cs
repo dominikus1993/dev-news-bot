@@ -30,7 +30,7 @@ namespace DevNews.Core.UseCases
                 .Take(param.ArticleQuantity)
                 .ToListAsync(cancellationToken);
             await _articlesRepository.InsertMany(articles, cancellationToken);
-            await _notificationBroadcaster.Broadcast(articles);
+            await _notificationBroadcaster.Broadcast(articles, cancellationToken);
         }
     }
 }

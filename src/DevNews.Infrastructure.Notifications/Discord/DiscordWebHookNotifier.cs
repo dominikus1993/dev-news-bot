@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
@@ -20,7 +21,7 @@ namespace DevNews.Infrastructure.Notifications.Discord
             _logger = logger;
         }
 
-        public async Task Notify(IEnumerable<Article> articles)
+        public async Task Notify(IEnumerable<Article> articles, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Start Sending articles");   
             var embeds = articles

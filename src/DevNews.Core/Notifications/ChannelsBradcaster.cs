@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DevNews.Core.Abstractions;
 using DevNews.Core.Model;
@@ -15,7 +16,7 @@ namespace DevNews.Core.Notifications
             _notifiers = notifiers;
         }
 
-        public async Task Broadcast(IEnumerable<Article> articles)
+        public async Task Broadcast(IEnumerable<Article> articles, CancellationToken cancellationToken = default)
         {
             var tasks = _notifiers.Select(notifier => notifier.Notify(articles));
             await Task.WhenAll(tasks);
