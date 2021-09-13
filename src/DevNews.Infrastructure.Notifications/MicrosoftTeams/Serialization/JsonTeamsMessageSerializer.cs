@@ -11,7 +11,7 @@ namespace DevNews.Infrastructure.Notifications.MicrosoftTeams.Serialization
     internal class JsonTeamsMessageSerializer : ITeamsMessageSerializer
     {
         private static readonly JsonSerializerOptions Options = new()
-        { IgnoreNullValues = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+        { IgnoreNullValues = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase, Converters = { new MicrosoftTeamsMessageContentBodyConverter() } };
 
         public ValueTask<string> Serialize(MicrosoftTeamsMessage msg)
         {
