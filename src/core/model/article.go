@@ -1,5 +1,9 @@
 package model
 
+import (
+	"net/url"
+)
+
 type Article struct {
 	Title   string
 	Content string
@@ -23,12 +27,12 @@ func NewArticle(title, link string) Article {
 }
 
 func (a *Article) IsValid() bool {
-	contentIsValid := len(a.Content) > 0 && len(a.Content) < 2048
-	titleIsValid := a.Title != ""
 	linkIsValid := a.Link != ""
-	// uri, err := url.Parse(a.Link)
-	// if err != nil {
-	// 	return false
-	// }
+	_, err := url.Parse(a.Link)
+	if err != nil {
+		return false
+	}
+	contentIsValid := len(a.Content) == 0 || len(a.Content) < 2048
+	titleIsValid := a.Title != ""
 	return contentIsValid && titleIsValid && linkIsValid
 }
