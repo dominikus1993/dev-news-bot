@@ -17,7 +17,7 @@ type articlesProvider struct {
 	parsers []parsers.ArticlesParser
 }
 
-func NewFakeArticlesProvider(parsers []parsers.ArticlesParser) *articlesProvider {
+func NewArticlesProvider(parsers []parsers.ArticlesParser) *articlesProvider {
 	return &articlesProvider{parsers: parsers}
 }
 
