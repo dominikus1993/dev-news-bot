@@ -2,30 +2,50 @@ package providers
 
 import (
 	"context"
+	"sync"
 
 	"github.com/dominikus1993/dev-news-bot/src/core/model"
+	"github.com/dominikus1993/dev-news-bot/src/core/parsers"
+	log "github.com/sirupsen/logrus"
 )
 
 type ArticlesProvider interface {
 	Provide(ctx context.Context) ([]model.Article, error)
 }
 
-type fakeArticlesProvider struct {
+type articlesProvider struct {
+	parsers []parsers.ArticlesParser
 }
 
-func NewFakeArticlesProvider() *fakeArticlesProvider {
-	return &fakeArticlesProvider{}
+func NewFakeArticlesProvider(parsers []parsers.ArticlesParser) *articlesProvider {
+	return &articlesProvider{parsers: parsers}
 }
 
-func (f *fakeArticlesProvider) Provide(ctx context.Context) ([]model.Article, error) {
-	return []model.Article{
-		{
-			Title: "Fake article 1",
-			Link:  "https://fake.com/article1",
-		},
-		{
-			Title: "Fake article 2",
-			Link:  "https://fake.com/article2",
-		},
-	}, nil
+func (f *articlesProvider) parse(ctx context.Context, parser parsers.ArticlesParser, stream chan []model.Article, wg *sync.WaitGroup) {
+	defer wg.Done()
+	res, err := parser.Parse(ctx)
+	if err != nil {
+		log.WithError(err).WithContext(ctx).Error("Error while parsing articles")
+	}
+	stream <- res
+}
+
+func (f *articlesProvider) parseAll(ctx context.Context, stream chan []model.Article) {
+	var wg sync.WaitGroup
+	for _, parser := range f.parsers {
+		wg.Add(1)
+		go f.parse(ctx, parser, stream, &wg)
+	}
+	wg.Wait()
+	close(stream)
+}
+
+func (f *articlesProvider) Provide(ctx context.Context) ([]model.Article, error) {
+	stream := make(chan []model.Article)
+	result := make([]model.Article, 0)
+	go f.parseAll(ctx, stream)
+	for articles := range stream {
+		result = append(result, articles...)
+	}
+	return result, nil
 }
