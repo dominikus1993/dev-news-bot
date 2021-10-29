@@ -6,6 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestArticleValidationWhenUrlIsEmptyt(t *testing.T) {
+	article := NewArticle("test", "")
+	subject := article.IsValid()
+	assert.False(t, subject)
+}
+
 func TestArticleValidationWhenUrlIsInCorrect(t *testing.T) {
 	article := NewArticle("test", "notlink")
 	subject := article.IsValid()

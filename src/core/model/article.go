@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"net/url"
 )
 
@@ -28,11 +29,15 @@ func NewArticle(title, link string) Article {
 
 func (a *Article) IsValid() bool {
 	linkIsValid := a.Link != ""
-	_, err := url.Parse(a.Link)
+	if !linkIsValid {
+		return false
+	}
+	link, err := url.ParseRequestURI(a.Link)
 	if err != nil {
 		return false
 	}
+	fmt.Println(link.Scheme)
 	contentIsValid := len(a.Content) == 0 || len(a.Content) < 2048
 	titleIsValid := a.Title != ""
-	return contentIsValid && titleIsValid && linkIsValid
+	return contentIsValid && titleIsValid
 }
