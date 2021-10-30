@@ -2,7 +2,9 @@ package model
 
 import (
 	"fmt"
+	"math/rand"
 	"net/url"
+	"time"
 )
 
 type Article struct {
@@ -40,4 +42,20 @@ func (a *Article) IsValid() bool {
 	contentIsValid := len(a.Content) == 0 || len(a.Content) < 2048
 	titleIsValid := a.Title != ""
 	return contentIsValid && titleIsValid
+}
+
+func GetRandomArticles(articles []Article, take int) []Article {
+	if take == 0 {
+		return make([]Article, 0)
+	}
+	if take >= len(articles) {
+		return articles
+	}
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	randomArticles := make([]Article, 0, take)
+	for _, i := range r.Perm(take) {
+		randomArticles = append(randomArticles, articles[i])
+	}
+
+	return randomArticles
 }
