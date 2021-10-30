@@ -41,7 +41,7 @@ func (f *articlesProvider) parseAll(ctx context.Context, stream chan []model.Art
 }
 
 func (f *articlesProvider) Provide(ctx context.Context) ([]model.Article, error) {
-	stream := make(chan []model.Article)
+	stream := make(chan []model.Article, 10)
 	result := make([]model.Article, 0)
 	go f.parseAll(ctx, stream)
 	for articles := range stream {
