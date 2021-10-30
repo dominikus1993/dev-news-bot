@@ -23,7 +23,7 @@ func (f *fakeParser2) Parse(ctx context.Context) ([]model.Article, error) {
 	return []model.Article{model.NewArticle("test", "http://dadsadad")}, nil
 }
 
-func TestArticleValidationWhenLinkIsEmpty(t *testing.T) {
+func TestArticlesProvider(t *testing.T) {
 	articlesProvider := NewArticlesProvider([]parsers.ArticlesParser{&fakeParser{}, &fakeParser2{}})
 	subject, err := articlesProvider.Provide(context.Background())
 	assert.Nil(t, err)
