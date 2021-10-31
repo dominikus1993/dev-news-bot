@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/dominikus1993/dev-news-bot/src/core/model"
+	inframodel "github.com/dominikus1993/dev-news-bot/src/infrastructure/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -30,4 +31,14 @@ func (r *mongoArticlesRepository) Exists(ctx context.Context, article model.Arti
 		return false, err
 	}
 	return res > 0, nil
+}
+
+func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Article) error {
+	col := r.getCollection()
+	art := inframodel.FromArticles(articles)
+	_, err := col.InsertMany(ctx, art)
+	if err != nil {
+		return err
+	}
+	return nil
 }

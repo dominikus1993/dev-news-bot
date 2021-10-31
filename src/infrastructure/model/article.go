@@ -22,3 +22,11 @@ func FromArticle(article *model.Article) *MongoArticle {
 		CrawledAt: primitive.NewDateTimeFromTime(time.Now().UTC()),
 	}
 }
+
+func FromArticles(articles []model.Article) []interface{} {
+	mongoArticles := make([]interface{}, len(articles))
+	for i, article := range articles {
+		mongoArticles[i] = *FromArticle(&article)
+	}
+	return mongoArticles
+}
