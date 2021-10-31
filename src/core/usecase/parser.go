@@ -40,7 +40,7 @@ func (u *parseArticlesAndSendItUseCase) Execute(ctx context.Context, articlesQua
 		return err
 	}
 	newArticles := u.filterArticles(ctx, articles)
-	randomArticles := model.GetRandomArticles(newArticles, articlesQuantity)
+	randomArticles := model.TakeRandomArticles(newArticles, articlesQuantity)
 	err = u.repository.Save(ctx, randomArticles)
 	if err != nil {
 		return err

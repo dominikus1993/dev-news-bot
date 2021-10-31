@@ -44,7 +44,7 @@ func (a *Article) IsValid() bool {
 	return contentIsValid && titleIsValid
 }
 
-func GetRandomArticles(articles []Article, take int) []Article {
+func TakeRandomArticles(articles []Article, take int) []Article {
 	if take == 0 {
 		return make([]Article, 0)
 	}

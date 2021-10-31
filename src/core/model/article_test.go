@@ -38,18 +38,18 @@ func TestArticleValidationWhenUrlIsCorrect(t *testing.T) {
 
 func TestGetRandomArticlesWhenTakeIsZero(t *testing.T) {
 	articles := []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")}
-	randomArticles := GetRandomArticles(articles, 0)
+	randomArticles := TakeRandomArticles(articles, 0)
 	assert.Len(t, randomArticles, 0)
 }
 
 func TestGetRandomArticlesWhenTakeIsGreaterThanLenOfArticlesArray(t *testing.T) {
 	articles := []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")}
-	randomArticles := GetRandomArticles(articles, 5)
+	randomArticles := TakeRandomArticles(articles, 5)
 	assert.Len(t, randomArticles, len(articles))
 }
 
 func TestGetRandomArticlesWhenTakeIsSmallerThanLenOfArticlesArray(t *testing.T) {
 	articles := []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")}
-	randomArticles := GetRandomArticles(articles, 2)
+	randomArticles := TakeRandomArticles(articles, 2)
 	assert.Len(t, randomArticles, 2)
 }
