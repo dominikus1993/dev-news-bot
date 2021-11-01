@@ -2,6 +2,7 @@ package parser
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 
 	"github.com/dominikus1993/dev-news-bot/src/core/model"
@@ -9,7 +10,8 @@ import (
 )
 
 const (
-	hackerNewsURL string = "https://news.ycombinator.com"
+	hackerNewsURL    string = "news.ycombinator.com"
+	hackerNewsScheme string = "https"
 )
 
 type hackerNewsArticleParser struct {
@@ -37,7 +39,7 @@ func (p *hackerNewsArticleParser) Parse(ctx context.Context) ([]model.Article, e
 	c.OnHTML(".titlelink", func(e *colly.HTMLElement) {
 		result = append(result, model.NewArticle(e.Text, getLink(e)))
 	})
-	err := c.Visit(hackerNewsURL)
+	err := c.Visit(fmt.Sprintf("%s://%s", hackerNewsScheme, hackerNewsURL))
 	if err != nil {
 		return nil, err
 	}

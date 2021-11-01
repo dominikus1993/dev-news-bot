@@ -26,8 +26,9 @@ func (f *articlesProvider) parse(ctx context.Context, parser parsers.ArticlesPar
 	res, err := parser.Parse(ctx)
 	if err != nil {
 		log.WithError(err).WithContext(ctx).Error("Error while parsing articles")
+	} else {
+		stream <- res
 	}
-	stream <- res
 }
 
 func (f *articlesProvider) parseAll(ctx context.Context, stream chan []model.Article) {
