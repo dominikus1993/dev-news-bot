@@ -25,15 +25,24 @@ type subreddit struct {
 }
 
 func parseSubreddit(ctx context.Context, client *http.Client, subr string) (*subreddit, error) {
-	resp, err := client.Get(fmt.Sprintf("https://www.reddit.com/r/%s.json?limit=10", subr))
+	url := fmt.Sprintf("https://www.reddit.com/r/%s.json?limit=10", subr)
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("User-Agent", "dev-news-bot")
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("error while parsing subreddit: %s, status: %s", subr, resp.Status)
+	}
+
 	defer resp.Body.Close()
 	var sub subreddit
 	if err := json.NewDecoder(resp.Body).Decode(&sub); err != nil {
 		return nil, err
 	}
+	l := len(sub.Data.Children)
+	log.Infof("Parsed %d posts from subreddit %s", l, subr)
 	return &sub, nil
 }
 
@@ -67,13 +76,14 @@ func (p *redditParser) parseAll(ctx context.Context, stream chan []model.Article
 	var wg sync.WaitGroup
 	for _, sub := range p.subreddits {
 		wg.Add(1)
-		go func(sub string, wait *sync.WaitGroup) {
+		go func(s string, wait *sync.WaitGroup) {
 			defer wg.Done()
-			res, err := parseSubreddit(ctx, p.client, sub)
+			res, err := parseSubreddit(ctx, p.client, s)
 			if err != nil {
-				log.WithError(err).Errorf("Error while parsing subreddit: %s", sub)
+				log.WithError(err).Errorf("Error while parsing subreddit: %s", s)
+			} else {
+				stream <- mapPostToArticle(res)
 			}
-			stream <- mapPostToArticle(res)
 		}(sub, &wg)
 	}
 	wg.Wait()
@@ -83,7 +93,7 @@ func (p *redditParser) parseAll(ctx context.Context, stream chan []model.Article
 func (p *redditParser) Parse(ctx context.Context) ([]model.Article, error) {
 	stream := make(chan []model.Article)
 	go p.parseAll(ctx, stream)
-	var articles []model.Article
+	articles := make([]model.Article, 0)
 	for s := range stream {
 		articles = append(articles, s...)
 	}
