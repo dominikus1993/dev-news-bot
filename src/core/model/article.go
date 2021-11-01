@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"math/rand"
 	"net/url"
 	"time"
@@ -29,19 +28,19 @@ func NewArticle(title, link string) Article {
 	}
 }
 
+func isUrl(str string) bool {
+	u, err := url.Parse(str)
+	return err == nil && u.Scheme != "" && u.Host != ""
+}
+
 func (a *Article) IsValid() bool {
 	linkIsValid := a.Link != ""
 	if !linkIsValid {
 		return false
 	}
-	link, err := url.ParseRequestURI(a.Link)
-	if err != nil {
-		return false
-	}
-	fmt.Println(link.Scheme)
 	contentIsValid := len(a.Content) == 0 || len(a.Content) < 2048
 	titleIsValid := a.Title != ""
-	return contentIsValid && titleIsValid
+	return isUrl(a.Link) && contentIsValid && titleIsValid
 }
 
 func TakeRandomArticles(articles []Article, take int) []Article {

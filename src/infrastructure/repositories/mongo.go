@@ -12,7 +12,7 @@ type MongoClient struct {
 	mongo *mongo.Client
 }
 
-func NewClient(connectionString string, ctx context.Context) *MongoClient {
+func NewClient(ctx context.Context, connectionString string) (*MongoClient, error) {
 
 	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)
@@ -21,17 +21,17 @@ func NewClient(connectionString string, ctx context.Context) *MongoClient {
 	client, err := mongo.Connect(ctx, clientOptions)
 
 	if err != nil {
-		log.WithContext(ctx).WithField("ConnectionString", connectionString).WithError(err).Fatal("Error when trying connect to mongo")
+		return nil, err
 	}
 
 	// Check the connection
 	err = client.Ping(ctx, nil)
 
 	if err != nil {
-		log.WithContext(ctx).WithField("ConnectionString", connectionString).WithError(err).Fatal("Error when trying ping mongo")
+		return nil, err
 	}
 
-	return &MongoClient{mongo: client}
+	return &MongoClient{mongo: client}, nil
 }
 
 func (c *MongoClient) Close(ctx context.Context) {

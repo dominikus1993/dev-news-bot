@@ -17,7 +17,7 @@ type parseArticlesAndSendItUseCase struct {
 }
 
 func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvider, repository repositories.IArticleRepository, broadcaster notifications.Broadcaster) *parseArticlesAndSendItUseCase {
-	return &parseArticlesAndSendItUseCase{}
+	return &parseArticlesAndSendItUseCase{articlesProvider: articlesProvider, repository: repository, broadcaster: broadcaster}
 }
 
 func (u *parseArticlesAndSendItUseCase) filterArticles(ctx context.Context, articles []model.Article) []model.Article {

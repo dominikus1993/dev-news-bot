@@ -5,6 +5,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/dominikus1993/dev-news-bot/src/core/model"
+	log "github.com/sirupsen/logrus"
 )
 
 type discordWebhookNotifier struct {
@@ -23,6 +24,13 @@ func NewDiscordWebhookNotifier(webhookID, webhookToken string) (*discordWebhookN
 		webhookToken: webhookToken,
 		client:       session,
 	}, nil
+}
+
+func (not *discordWebhookNotifier) Close() {
+	err := not.client.Close()
+	if err != nil {
+		log.WithError(err).Error("Error while closing discord session")
+	}
 }
 
 func createDiscordEmbedsFromArticles(articles []model.Article) []*discordgo.MessageEmbed {
