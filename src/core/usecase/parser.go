@@ -20,14 +20,24 @@ func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvide
 	return &parseArticlesAndSendItUseCase{articlesProvider: articlesProvider, repository: repository, broadcaster: broadcaster}
 }
 
-func (u *parseArticlesAndSendItUseCase) filterArticles(ctx context.Context, articles []model.Article) []model.Article {
-	var filteredArticles []model.Article
+func (u *parseArticlesAndSendItUseCase) filterNewArticles(ctx context.Context, articles []model.Article) []model.Article {
+	filteredArticles := make([]model.Article, 0, len(articles))
 	for _, article := range articles {
-		exists, err := u.repository.Exists(ctx, article)
+		isNew, err := u.repository.IsNew(ctx, article)
 		if err != nil {
 			log.WithField("ArticleLink", article.Link).WithError(err).WithContext(ctx).Error("error while checking if article exists")
 		}
-		if !exists {
+		if isNew {
+			filteredArticles = append(filteredArticles, article)
+		}
+	}
+	return filteredArticles
+}
+
+func (u *parseArticlesAndSendItUseCase) filterValid(ctx context.Context, articles []model.Article) []model.Article {
+	filteredArticles := make([]model.Article, 0, len(articles))
+	for _, article := range articles {
+		if article.IsValid() {
 			filteredArticles = append(filteredArticles, article)
 		}
 	}
@@ -39,7 +49,8 @@ func (u *parseArticlesAndSendItUseCase) Execute(ctx context.Context, articlesQua
 	if err != nil {
 		return err
 	}
-	newArticles := u.filterArticles(ctx, articles)
+	validArticles := u.filterValid(ctx, articles)
+	newArticles := u.filterNewArticles(ctx, validArticles)
 	randomArticles := model.TakeRandomArticles(newArticles, articlesQuantity)
 	err = u.repository.Save(ctx, randomArticles)
 	if err != nil {

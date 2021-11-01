@@ -7,6 +7,6 @@ import (
 )
 
 type IArticleRepository interface {
-	Exists(ctx context.Context, article model.Article) (bool, error)
+	IsNew(ctx context.Context, article model.Article) (bool, error)
 	Save(ctx context.Context, articles []model.Article) error
 }
