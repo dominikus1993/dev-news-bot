@@ -43,7 +43,7 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	}
 	defer mongodbClient.Close(ctx)
 	repo := irepositories.NewMongoArticlesRepository(mongodbClient, "Articles")
-	articlesProvider := providers.NewArticlesProvider([]parsers.ArticlesParser{iparsers.NewHackerNewsArticleParser()})
+	articlesProvider := providers.NewArticlesProvider([]parsers.ArticlesParser{iparsers.NewHackerNewsArticleParser(), iparsers.NewRedditParser([]string{"golang"})})
 	discord, err := notifiers.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)
 	if err != nil {
 		log.WithError(err).Error("error creating discord notifier")
