@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/dominikus1993/dev-news-bot/src/core/model"
-	inframodel "github.com/dominikus1993/dev-news-bot/src/infrastructure/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -35,7 +34,7 @@ func (r *mongoArticlesRepository) IsNew(ctx context.Context, article model.Artic
 
 func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Article) error {
 	col := r.getCollection()
-	art := inframodel.FromArticles(articles)
+	art := fromArticles(articles)
 	_, err := col.InsertMany(ctx, art)
 	if err != nil {
 		return err

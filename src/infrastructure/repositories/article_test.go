@@ -1,4 +1,4 @@
-package model
+package repositories
 
 import (
 	"testing"
@@ -9,10 +9,10 @@ import (
 
 func TestFromArticles(t *testing.T) {
 	articles := []model.Article{model.NewArticle("sdd", "dasas"), model.NewArticle("sdd", "dasas")}
-	subject := FromArticles(articles)
+	subject := fromArticles(articles)
 	assert.NotNil(t, subject)
 	assert.Len(t, subject, 2)
-	mongoArt := subject[0].(MongoArticle)
+	mongoArt := subject[0].(mongoArticle)
 	assert.Equal(t, "sdd", mongoArt.Title)
 	assert.Equal(t, "dasas", mongoArt.Link)
 }
