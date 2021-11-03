@@ -42,8 +42,12 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 		log.WithError(err).Error("can't create mongodb client")
 	}
 	defer mongodbClient.Close(ctx)
+	redditParser := iparsers.NewRedditParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops"})
+	hackernewsParser := iparsers.NewHackerNewsArticleParser()
+	dotnetomaniakParser := iparsers.NewDotnetoManiakParser()
+	parsers := []parsers.ArticlesParser{redditParser, hackernewsParser, dotnetomaniakParser}
 	repo := irepositories.NewMongoArticlesRepository(mongodbClient, "Articles")
-	articlesProvider := providers.NewArticlesProvider([]parsers.ArticlesParser{iparsers.NewHackerNewsArticleParser(), iparsers.NewRedditParser([]string{"golang"})})
+	articlesProvider := providers.NewArticlesProvider(parsers)
 	discord, err := notifiers.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)
 	if err != nil {
 		log.WithError(err).Error("error creating discord notifier")
@@ -59,6 +63,6 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 		log.WithError(err).Error("Error while parsing articles")
 		return subcommands.ExitFailure
 	}
-
+	log.Infoln("Parsing articles finished")
 	return subcommands.ExitSuccess
 }

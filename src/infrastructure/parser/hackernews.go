@@ -7,6 +7,7 @@ import (
 
 	"github.com/dominikus1993/dev-news-bot/src/core/model"
 	"github.com/gocolly/colly/v2"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -43,5 +44,6 @@ func (p *hackerNewsArticleParser) Parse(ctx context.Context) ([]model.Article, e
 	if err != nil {
 		return nil, err
 	}
+	log.WithField("quantity", len(result)).Infoln("Parsed hackernews articles")
 	return result, nil
 }

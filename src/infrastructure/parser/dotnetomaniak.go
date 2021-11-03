@@ -9,7 +9,7 @@ import (
 
 	"github.com/dominikus1993/dev-news-bot/src/core/model"
 	"github.com/gocolly/colly/v2"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -45,7 +45,7 @@ func (p *dotnetoManiakParser) Parse(ctx context.Context) ([]model.Article, error
 		result = append(result, model.NewArticleWithContent(title, link, content))
 	})
 	c.SetRedirectHandler(func(req *http.Request, via []*http.Request) error {
-		logrus.Debugf("Redirecting to %s", req.URL.String())
+		log.Debugf("Redirecting to %s", req.URL.String())
 		return nil
 	})
 	url := fmt.Sprintf("%s://%s/", dotnetomaniakNewsScheme, dotnetomaniakNewsURL)
@@ -55,5 +55,6 @@ func (p *dotnetoManiakParser) Parse(ctx context.Context) ([]model.Article, error
 	if err != nil {
 		return nil, err
 	}
+	log.WithField("quantity", len(result)).Infoln("Parsed dotnetomaniak articles")
 	return result, nil
 }
