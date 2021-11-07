@@ -28,13 +28,13 @@ func (b *broadcaseter) Broadcast(ctx context.Context, articles []model.Article) 
 	var wg sync.WaitGroup
 	for _, notifier := range b.notifiers {
 		wg.Add(1)
-		go func(ctx context.Context, n Notifier) {
-			defer wg.Done()
+		go func(ctx context.Context, n Notifier, wait *sync.WaitGroup) {
+			defer wait.Done()
 			err := n.Notify(ctx, articles)
 			if err != nil {
 				log.WithError(err).Error("Error while broadcasting")
 			}
-		}(ctx, notifier)
+		}(ctx, notifier, &wg)
 	}
 	wg.Wait()
 	return nil

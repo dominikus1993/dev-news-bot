@@ -12,11 +12,11 @@ import (
 
 type parseArticlesAndSendItUseCase struct {
 	articlesProvider providers.ArticlesProvider
-	repository       repositories.IArticleRepository
+	repository       repositories.ArticleRepository
 	broadcaster      notifications.Broadcaster
 }
 
-func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvider, repository repositories.IArticleRepository, broadcaster notifications.Broadcaster) *parseArticlesAndSendItUseCase {
+func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvider, repository repositories.ArticleRepository, broadcaster notifications.Broadcaster) *parseArticlesAndSendItUseCase {
 	return &parseArticlesAndSendItUseCase{articlesProvider: articlesProvider, repository: repository, broadcaster: broadcaster}
 }
 
