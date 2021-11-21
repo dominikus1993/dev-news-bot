@@ -8,25 +8,25 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type discordWebhookNotifier struct {
+type DiscordWebhookNotifier struct {
 	webhookID    string
 	webhookToken string
 	client       *discordgo.Session
 }
 
-func NewDiscordWebhookNotifier(webhookID, webhookToken string) (*discordWebhookNotifier, error) {
+func NewDiscordWebhookNotifier(webhookID, webhookToken string) (*DiscordWebhookNotifier, error) {
 	session, err := discordgo.New()
 	if err != nil {
 		return nil, err
 	}
-	return &discordWebhookNotifier{
+	return &DiscordWebhookNotifier{
 		webhookID:    webhookID,
 		webhookToken: webhookToken,
 		client:       session,
 	}, nil
 }
 
-func (not *discordWebhookNotifier) Close() {
+func (not *DiscordWebhookNotifier) Close() {
 	err := not.client.Close()
 	if err != nil {
 		log.WithError(err).Error("Error while closing discord session")
@@ -46,7 +46,7 @@ func createDiscordEmbedsFromArticles(articles []model.Article) []*discordgo.Mess
 	return embeds
 }
 
-func (not *discordWebhookNotifier) Notify(ctx context.Context, articles []model.Article) error {
+func (not *DiscordWebhookNotifier) Notify(ctx context.Context, articles []model.Article) error {
 	msg := discordgo.WebhookParams{Content: "Witam serdecznie, oto nowe newsy", Embeds: createDiscordEmbedsFromArticles(articles)}
 	_, err := not.client.WebhookExecute(not.webhookID, not.webhookToken, true, &msg)
 	return err

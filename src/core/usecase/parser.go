@@ -10,17 +10,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type parseArticlesAndSendItUseCase struct {
+type ParseArticlesAndSendItUseCase struct {
 	articlesProvider providers.ArticlesProvider
 	repository       repositories.ArticleRepository
 	broadcaster      notifications.Broadcaster
 }
 
-func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvider, repository repositories.ArticleRepository, broadcaster notifications.Broadcaster) *parseArticlesAndSendItUseCase {
-	return &parseArticlesAndSendItUseCase{articlesProvider: articlesProvider, repository: repository, broadcaster: broadcaster}
+func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvider, repository repositories.ArticleRepository, broadcaster notifications.Broadcaster) *ParseArticlesAndSendItUseCase {
+	return &ParseArticlesAndSendItUseCase{articlesProvider: articlesProvider, repository: repository, broadcaster: broadcaster}
 }
 
-func (u *parseArticlesAndSendItUseCase) filterNewArticles(ctx context.Context, articles []model.Article) []model.Article {
+func (u *ParseArticlesAndSendItUseCase) filterNewArticles(ctx context.Context, articles []model.Article) []model.Article {
 	filteredArticles := make([]model.Article, 0, len(articles))
 	for _, article := range articles {
 		isNew, err := u.repository.IsNew(ctx, article)
@@ -34,7 +34,7 @@ func (u *parseArticlesAndSendItUseCase) filterNewArticles(ctx context.Context, a
 	return filteredArticles
 }
 
-func (u *parseArticlesAndSendItUseCase) filterValid(ctx context.Context, articles []model.Article) []model.Article {
+func (u *ParseArticlesAndSendItUseCase) filterValid(ctx context.Context, articles []model.Article) []model.Article {
 	filteredArticles := make([]model.Article, 0, len(articles))
 	for _, article := range articles {
 		if article.IsValid() {
@@ -44,7 +44,7 @@ func (u *parseArticlesAndSendItUseCase) filterValid(ctx context.Context, article
 	return filteredArticles
 }
 
-func (u *parseArticlesAndSendItUseCase) Execute(ctx context.Context, articlesQuantity int) error {
+func (u *ParseArticlesAndSendItUseCase) Execute(ctx context.Context, articlesQuantity int) error {
 	articles, err := u.articlesProvider.Provide(ctx)
 	if err != nil {
 		return err
