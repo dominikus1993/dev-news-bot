@@ -8,14 +8,14 @@ require (
 	github.com/google/subcommands v1.2.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
-	go.mongodb.org/mongo-driver v1.7.4
+	go.mongodb.org/mongo-driver v1.8.1
 )
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.2.4 // indirect
-	github.com/antchfx/xmlquery v1.3.8 // indirect
+	github.com/antchfx/xmlquery v1.3.9 // indirect
 	github.com/antchfx/xpath v1.2.0 // indirect
 	github.com/aws/aws-lambda-go v1.27.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -35,10 +35,10 @@ require (
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871 // indirect
-	golang.org/x/net v0.0.0-20211118161319-6a13c67c3ce4 // indirect
+	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b // indirect
+	golang.org/x/net v0.0.0-20211209124913-491a49abca63 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20211117180635-dee7805ff2e1 // indirect
+	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
