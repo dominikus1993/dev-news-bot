@@ -64,7 +64,7 @@ func parseTag(ctx context.Context, client *http.Client, tag string) (*devtorespo
 		return nil, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("error while parsing subreddit: %s, status: %s", tag, resp.Status)
+		return nil, fmt.Errorf("error while parsing tag: %s, status: %s", tag, resp.Status)
 	}
 
 	defer resp.Body.Close()
@@ -111,7 +111,7 @@ func (p *devtoParser) parseAll(ctx context.Context, stream chan []model.Article)
 			defer wg.Done()
 			res, err := parseTag(ctx, p.client, s)
 			if err != nil {
-				log.WithError(err).Errorf("Error while parsing subreddit: %s", s)
+				log.WithError(err).Errorf("Error while parsing tag: %s", s)
 			} else {
 				stream <- mapPostToArticle(res)
 			}
