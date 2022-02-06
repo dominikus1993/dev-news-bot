@@ -73,7 +73,7 @@ func parseTag(ctx context.Context, client *http.Client, tag string) (*devtorespo
 		return nil, err
 	}
 	l := len(sub)
-	log.Infof("Parsed %d posts from tag %s", l, tag)
+	log.WithContext(ctx).Infof("Parsed %d posts from tag %s", l, tag)
 	return &sub, nil
 }
 
@@ -111,7 +111,7 @@ func (p *devtoParser) parseAll(ctx context.Context, stream chan []model.Article)
 			defer wg.Done()
 			res, err := parseTag(ctx, p.client, s)
 			if err != nil {
-				log.WithError(err).Errorf("Error while parsing tag: %s", s)
+				log.WithContext(ctx).WithError(err).Errorf("Error while parsing tag: %s", s)
 			} else {
 				stream <- mapPostToArticle(res)
 			}

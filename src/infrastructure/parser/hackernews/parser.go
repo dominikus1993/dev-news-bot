@@ -44,6 +44,6 @@ func (p *hackerNewsArticleParser) Parse(ctx context.Context) ([]model.Article, e
 	if err != nil {
 		return nil, err
 	}
-	log.WithField("quantity", len(result)).Infoln("Parsed hackernews articles")
+	log.WithContext(ctx).WithField("quantity", len(result)).Infoln("Parsed hackernews articles")
 	return result, nil
 }
