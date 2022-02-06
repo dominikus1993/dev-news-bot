@@ -9,7 +9,10 @@ import (
 	"github.com/dominikus1993/dev-news-bot/src/core/providers"
 	"github.com/dominikus1993/dev-news-bot/src/core/usecase"
 	"github.com/dominikus1993/dev-news-bot/src/infrastructure/notifiers"
-	iparsers "github.com/dominikus1993/dev-news-bot/src/infrastructure/parser"
+	"github.com/dominikus1993/dev-news-bot/src/infrastructure/parser/devto"
+	"github.com/dominikus1993/dev-news-bot/src/infrastructure/parser/dotnetomaniak"
+	"github.com/dominikus1993/dev-news-bot/src/infrastructure/parser/hackernews"
+	"github.com/dominikus1993/dev-news-bot/src/infrastructure/parser/reddit"
 	irepositories "github.com/dominikus1993/dev-news-bot/src/infrastructure/repositories"
 	"github.com/google/subcommands"
 	log "github.com/sirupsen/logrus"
@@ -42,10 +45,11 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 		log.WithError(err).Error("can't create mongodb client")
 	}
 	defer mongodbClient.Close(ctx)
-	redditParser := iparsers.NewRedditParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops"})
-	hackernewsParser := iparsers.NewHackerNewsArticleParser()
-	dotnetomaniakParser := iparsers.NewDotnetoManiakParser()
-	parsers := []parsers.ArticlesParser{redditParser, hackernewsParser, dotnetomaniakParser}
+	redditParser := reddit.NewRedditParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops"})
+	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops"})
+	hackernewsParser := hackernews.NewHackerNewsArticleParser()
+	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
+	parsers := []parsers.ArticlesParser{redditParser, hackernewsParser, dotnetomaniakParser, devtoParser}
 	repo := irepositories.NewMongoArticlesRepository(mongodbClient, "Articles")
 	articlesProvider := providers.NewArticlesProvider(parsers)
 	discord, err := notifiers.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)

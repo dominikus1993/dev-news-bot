@@ -2,6 +2,7 @@ package notifiers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/dominikus1993/dev-news-bot/src/core/model"
@@ -49,5 +50,5 @@ func createDiscordEmbedsFromArticles(articles []model.Article) []*discordgo.Mess
 func (not *DiscordWebhookNotifier) Notify(ctx context.Context, articles []model.Article) error {
 	msg := discordgo.WebhookParams{Content: "Witam serdecznie, oto nowe newsy", Embeds: createDiscordEmbedsFromArticles(articles)}
 	_, err := not.client.WebhookExecute(not.webhookID, not.webhookToken, true, &msg)
-	return err
+	return fmt.Errorf("error while sending webhook: %w", err)
 }

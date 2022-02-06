@@ -1,4 +1,4 @@
-package parser
+package dotnetomaniak
 
 import (
 	"context"
@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHackerNews(t *testing.T) {
-	parser := NewHackerNewsArticleParser()
+func TestDotnetomaniakParser(t *testing.T) {
+	parser := NewDotnetoManiakParser()
 	result, err := parser.Parse(context.TODO())
 	assert.Nil(t, err)
 	assert.NotNil(t, result)
