@@ -43,6 +43,7 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	mongodbClient, err := irepositories.NewClient(ctx, p.mongoConnectionString)
 	if err != nil {
 		log.WithError(err).Error("can't create mongodb client")
+		return subcommands.ExitFailure
 	}
 	defer mongodbClient.Close(ctx)
 	redditParser := reddit.NewRedditParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops"})
