@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 
+	"github.com/dominikus1993/dev-news-bot/internal/discord"
 	irepositories "github.com/dominikus1993/dev-news-bot/internal/mongo"
-	"github.com/dominikus1993/dev-news-bot/internal/notifiers"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/devto"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/dotnetomaniak"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/hackernews"
@@ -53,7 +53,7 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	parsers := []parsers.ArticlesParser{redditParser, hackernewsParser, dotnetomaniakParser, devtoParser}
 	repo := irepositories.NewMongoArticlesRepository(mongodbClient, "Articles")
 	articlesProvider := providers.NewArticlesProvider(parsers)
-	discord, err := notifiers.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)
+	discord, err := discord.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)
 	if err != nil {
 		log.WithError(err).Error("error creating discord notifier")
 		return subcommands.ExitFailure

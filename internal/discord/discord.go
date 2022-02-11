@@ -1,4 +1,4 @@
-package notifiers
+package discord
 
 import (
 	"context"
