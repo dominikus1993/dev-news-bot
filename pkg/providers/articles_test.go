@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/dominikus1993/dev-news-bot/src/core/model"
-	"github.com/dominikus1993/dev-news-bot/src/core/parsers"
+	"github.com/dominikus1993/dev-news-bot/pkg/model"
+	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/stretchr/testify/assert"
 )
 

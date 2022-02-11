@@ -5,7 +5,7 @@ import (
 	"flag"
 
 	"github.com/dominikus1993/dev-news-bot/internal/discord"
-	irepositories "github.com/dominikus1993/dev-news-bot/internal/mongo"
+	"github.com/dominikus1993/dev-news-bot/internal/mongo"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/devto"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/dotnetomaniak"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/hackernews"
@@ -40,7 +40,7 @@ func (p *ParseArticlesAndSendIt) SetFlags(f *flag.FlagSet) {
 
 func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
 	log.WithField("mongo", p.mongoConnectionString).WithField("quantity", p.quantity).WithField("dicord-webhook-id", p.dicordWebhookId).WithField("discord-webhook-token", p.discordWebhookToken).Infoln("Parse Articles And Send It")
-	mongodbClient, err := irepositories.NewClient(ctx, p.mongoConnectionString)
+	mongodbClient, err := mongo.NewClient(ctx, p.mongoConnectionString)
 	if err != nil {
 		log.WithError(err).Error("can't create mongodb client")
 		return subcommands.ExitFailure
@@ -51,7 +51,7 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	hackernewsParser := hackernews.NewHackerNewsArticleParser()
 	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
 	parsers := []parsers.ArticlesParser{redditParser, hackernewsParser, dotnetomaniakParser, devtoParser}
-	repo := irepositories.NewMongoArticlesRepository(mongodbClient, "Articles")
+	repo := mongo.NewMongoArticlesRepository(mongodbClient, "Articles")
 	articlesProvider := providers.NewArticlesProvider(parsers)
 	discord, err := discord.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)
 	if err != nil {
