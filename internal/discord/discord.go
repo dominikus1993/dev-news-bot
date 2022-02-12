@@ -50,5 +50,8 @@ func createDiscordEmbedsFromArticles(articles []model.Article) []*discordgo.Mess
 func (not *DiscordWebhookNotifier) Notify(ctx context.Context, articles []model.Article) error {
 	msg := discordgo.WebhookParams{Content: "Witam serdecznie, oto nowe newsy", Embeds: createDiscordEmbedsFromArticles(articles)}
 	_, err := not.client.WebhookExecute(not.webhookID, not.webhookToken, true, &msg)
-	return fmt.Errorf("error while sending webhook: %w", err)
+	if err != nil {
+		return fmt.Errorf("error while sending webhook: %w", err)
+	}
+	return nil
 }

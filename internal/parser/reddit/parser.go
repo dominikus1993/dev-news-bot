@@ -94,8 +94,15 @@ func (p *redditParser) Parse(ctx context.Context) ([]model.Article, error) {
 	stream := make(chan []model.Article)
 	go p.parseAll(ctx, stream)
 	articles := make([]model.Article, 0)
-	for s := range stream {
-		articles = append(articles, s...)
+	for {
+		select {
+		case <-ctx.Done():
+			return articles, nil
+		case v, ok := <-stream:
+			if !ok {
+				return articles, nil
+			}
+			articles = append(articles, v...)
+		}
 	}
-	return articles, nil
 }

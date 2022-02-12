@@ -45,8 +45,16 @@ func (f *articlesProvider) Provide(ctx context.Context) ([]model.Article, error)
 	stream := make(chan []model.Article, 10)
 	result := make([]model.Article, 0)
 	go f.parseAll(ctx, stream)
-	for articles := range stream {
-		result = append(result, articles...)
+	for {
+		select {
+		case v, ok := <-stream:
+			if ok {
+				result = append(result, v...)
+			} else {
+				return result, nil
+			}
+		case <-ctx.Done():
+			return result, nil
+		}
 	}
-	return result, nil
 }
