@@ -21,35 +21,54 @@ func NewArticlesProvider(parsers []parsers.ArticlesParser) *articlesProvider {
 	return &articlesProvider{parsers: parsers}
 }
 
-func (f *articlesProvider) parse(ctx context.Context, parser parsers.ArticlesParser, stream chan<- []model.Article, wg *sync.WaitGroup) {
-	defer wg.Done()
-	res, err := parser.Parse(ctx)
-	if err != nil {
-		log.WithError(err).WithContext(ctx).Error("Error while parsing articles")
-	} else {
-		stream <- res
+func fanIn(ctx context.Context, stream ...chan model.Article) chan model.Article {
+	var wg sync.WaitGroup
+	out := make(chan model.Article)
+	output := func(c <-chan model.Article) {
+		for v := range c {
+			out <- v
+		}
+		wg.Done()
 	}
+	wg.Add(len(stream))
+	for _, c := range stream {
+		go output(c)
+	}
+	go func() {
+		wg.Wait()
+		close(out)
+	}()
+	return out
 }
 
-func (f *articlesProvider) parseAll(ctx context.Context, stream chan<- []model.Article) {
-	var wg sync.WaitGroup
-	for _, parser := range f.parsers {
-		wg.Add(1)
-		go f.parse(ctx, parser, stream, &wg)
-	}
-	wg.Wait()
-	close(stream)
+func (f *articlesProvider) parse(ctx context.Context, parser parsers.ArticlesParser) chan model.Article {
+	stream := make(chan model.Article, 10)
+	go func() {
+		res, err := parser.Parse(ctx)
+		if err != nil {
+			log.WithError(err).WithContext(ctx).Error("Error while parsing articles")
+		} else {
+			for _, v := range res {
+				stream <- v
+			}
+		}
+		close(stream)
+	}()
+	return stream
 }
 
 func (f *articlesProvider) Provide(ctx context.Context) ([]model.Article, error) {
-	stream := make(chan []model.Article, 10)
+	streams := make([]chan model.Article, 0, len(f.parsers))
 	result := make([]model.Article, 0)
-	go f.parseAll(ctx, stream)
+	for _, parser := range f.parsers {
+		streams = append(streams, f.parse(ctx, parser))
+	}
+	finalStream := fanIn(ctx, streams...)
 	for {
 		select {
-		case v, ok := <-stream:
+		case v, ok := <-finalStream:
 			if ok {
-				result = append(result, v...)
+				result = append(result, v)
 			} else {
 				return result, nil
 			}
