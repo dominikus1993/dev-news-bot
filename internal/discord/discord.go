@@ -48,6 +48,7 @@ func createDiscordEmbedsFromArticles(articles []model.Article) []*discordgo.Mess
 }
 
 func (not *DiscordWebhookNotifier) Notify(ctx context.Context, articles []model.Article) error {
+	log.Infoln("Notifying via discord")
 	msg := discordgo.WebhookParams{Content: "Witam serdecznie, oto nowe newsy", Embeds: createDiscordEmbedsFromArticles(articles)}
 	_, err := not.client.WebhookExecute(not.webhookID, not.webhookToken, true, &msg)
 	if err != nil {

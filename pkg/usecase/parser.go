@@ -49,8 +49,11 @@ func (u *ParseArticlesAndSendItUseCase) Execute(ctx context.Context, articlesQua
 	if err != nil {
 		return err
 	}
+	log.Infoln("Found articles:", len(articles))
 	validArticles := u.filterValid(ctx, articles)
+	log.Infoln("Found valid articles:", len(validArticles))
 	newArticles := u.filterNewArticles(ctx, validArticles)
+	log.Infoln("Found new articles:", len(newArticles))
 	randomArticles := model.TakeRandomArticles(newArticles, articlesQuantity)
 	err = u.broadcaster.Broadcast(ctx, randomArticles)
 	if err != nil {
