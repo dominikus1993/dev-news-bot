@@ -33,8 +33,7 @@ func (f *fakeErrorParser) Parse(ctx context.Context) ([]model.Article, error) {
 
 func TestArticlesProvider(t *testing.T) {
 	articlesProvider := NewArticlesProvider([]parsers.ArticlesParser{&fakeParser{}, &fakeParser2{}})
-	subject, err := articlesProvider.Provide(context.Background())
-	assert.Nil(t, err)
+	subject := model.ToArticlesArray(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 2)
 	assert.Equal(t, "test", subject[0].Title)
 	assert.Equal(t, "test", subject[1].Title)
@@ -42,8 +41,7 @@ func TestArticlesProvider(t *testing.T) {
 
 func TestArticlesProviderWhenError(t *testing.T) {
 	articlesProvider := NewArticlesProvider([]parsers.ArticlesParser{&fakeParser{}, &fakeErrorParser{}})
-	subject, err := articlesProvider.Provide(context.Background())
-	assert.Nil(t, err)
+	subject := model.ToArticlesArray(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 1)
 	assert.Equal(t, "test", subject[0].Title)
 }

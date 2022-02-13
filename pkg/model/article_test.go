@@ -43,19 +43,31 @@ func TestArticleValidationWhenUrlIsCorrect(t *testing.T) {
 }
 
 func TestGetRandomArticlesWhenTakeIsZero(t *testing.T) {
-	articles := []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")}
+	articles := make(chan Article, 10)
+	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")} {
+		articles <- a
+	}
+	close(articles)
 	randomArticles := TakeRandomArticles(articles, 0)
 	assert.Len(t, randomArticles, 0)
 }
 
 func TestGetRandomArticlesWhenTakeIsGreaterThanLenOfArticlesArray(t *testing.T) {
-	articles := []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")}
+	articles := make(chan Article, 10)
+	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")} {
+		articles <- a
+	}
+	close(articles)
 	randomArticles := TakeRandomArticles(articles, 5)
 	assert.Len(t, randomArticles, len(articles))
 }
 
 func TestGetRandomArticlesWhenTakeIsSmallerThanLenOfArticlesArray(t *testing.T) {
-	articles := []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")}
+	articles := make(chan Article, 10)
+	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")} {
+		articles <- a
+	}
+	close(articles)
 	randomArticles := TakeRandomArticles(articles, 2)
 	assert.Len(t, randomArticles, 2)
 }

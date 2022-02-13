@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"sync"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
@@ -20,42 +21,49 @@ func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvide
 	return &ParseArticlesAndSendItUseCase{articlesProvider: articlesProvider, repository: repository, broadcaster: broadcaster}
 }
 
-func (u *ParseArticlesAndSendItUseCase) filterNewArticles(ctx context.Context, articles []model.Article) []model.Article {
-	filteredArticles := make([]model.Article, 0, len(articles))
-	for _, article := range articles {
+func pipe(ctx context.Context, articles model.ArticlesStream, f func(ctx context.Context, article model.Article, articles chan<- model.Article)) model.ArticlesStream {
+	filteredArticles := make(chan model.Article, 10)
+	go func() {
+		var wg sync.WaitGroup
+		for article := range articles {
+			wg.Add(1)
+			go func(a model.Article) {
+				f(ctx, a, filteredArticles)
+				wg.Done()
+			}(article)
+		}
+		wg.Wait()
+		close(filteredArticles)
+	}()
+	return filteredArticles
+}
+
+func (u *ParseArticlesAndSendItUseCase) filterNewArticles(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
+	return pipe(ctx, articles, func(ctx context.Context, article model.Article, articles chan<- model.Article) {
 		isNew, err := u.repository.IsNew(ctx, article)
 		if err != nil {
 			log.WithField("ArticleLink", article.Link).WithError(err).WithContext(ctx).Error("error while checking if article exists")
 		}
 		if isNew {
-			filteredArticles = append(filteredArticles, article)
+			articles <- article
 		}
-	}
-	return filteredArticles
+	})
 }
 
-func (u *ParseArticlesAndSendItUseCase) filterValid(ctx context.Context, articles []model.Article) []model.Article {
-	filteredArticles := make([]model.Article, 0, len(articles))
-	for _, article := range articles {
+func (u *ParseArticlesAndSendItUseCase) filterValid(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
+	return pipe(ctx, articles, func(ctx context.Context, article model.Article, articles chan<- model.Article) {
 		if article.IsValid() {
-			filteredArticles = append(filteredArticles, article)
+			articles <- article
 		}
-	}
-	return filteredArticles
+	})
 }
 
 func (u *ParseArticlesAndSendItUseCase) Execute(ctx context.Context, articlesQuantity int) error {
-	articles, err := u.articlesProvider.Provide(ctx)
-	if err != nil {
-		return err
-	}
-	log.Infoln("Found articles:", len(articles))
+	articles := u.articlesProvider.Provide(ctx)
 	validArticles := u.filterValid(ctx, articles)
-	log.Infoln("Found valid articles:", len(validArticles))
 	newArticles := u.filterNewArticles(ctx, validArticles)
-	log.Infoln("Found new articles:", len(newArticles))
 	randomArticles := model.TakeRandomArticles(newArticles, articlesQuantity)
-	err = u.broadcaster.Broadcast(ctx, randomArticles)
+	err := u.broadcaster.Broadcast(ctx, randomArticles)
 	if err != nil {
 		return err
 	}

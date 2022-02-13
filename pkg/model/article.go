@@ -12,6 +12,8 @@ type Article struct {
 	Link    string
 }
 
+type ArticlesStream <-chan Article
+
 func NewArticleWithContent(title, link, content string) Article {
 	return Article{
 		Title:   title,
@@ -43,10 +45,11 @@ func (a *Article) IsValid() bool {
 	return isUrl(a.Link) && contentIsValid && titleIsValid
 }
 
-func TakeRandomArticles(articles []Article, take int) []Article {
+func TakeRandomArticles(stream ArticlesStream, take int) []Article {
 	if take == 0 {
 		return make([]Article, 0)
 	}
+	articles := ToArticlesArray(stream)
 	if take >= len(articles) {
 		return articles
 	}
@@ -57,4 +60,12 @@ func TakeRandomArticles(articles []Article, take int) []Article {
 	}
 
 	return randomArticles
+}
+
+func ToArticlesArray(s ArticlesStream) []Article {
+	res := make([]Article, 0)
+	for v := range s {
+		res = append(res, v)
+	}
+	return res
 }

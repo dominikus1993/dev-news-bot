@@ -10,7 +10,7 @@ import (
 )
 
 type ArticlesProvider interface {
-	Provide(ctx context.Context) ([]model.Article, error)
+	Provide(ctx context.Context) model.ArticlesStream
 }
 
 type articlesProvider struct {
@@ -26,7 +26,11 @@ func fanIn(ctx context.Context, stream ...chan model.Article) chan model.Article
 	out := make(chan model.Article)
 	output := func(c <-chan model.Article) {
 		for v := range c {
-			out <- v
+			select {
+			case <-ctx.Done():
+				return
+			case out <- v:
+			}
 		}
 		wg.Done()
 	}
@@ -49,7 +53,11 @@ func (f *articlesProvider) parse(ctx context.Context, parser parsers.ArticlesPar
 			log.WithError(err).WithContext(ctx).Error("Error while parsing articles")
 		} else {
 			for _, v := range res {
-				stream <- v
+				select {
+				case <-ctx.Done():
+					return
+				case stream <- v:
+				}
 			}
 		}
 		close(stream)
@@ -57,23 +65,10 @@ func (f *articlesProvider) parse(ctx context.Context, parser parsers.ArticlesPar
 	return stream
 }
 
-func (f *articlesProvider) Provide(ctx context.Context) ([]model.Article, error) {
+func (f *articlesProvider) Provide(ctx context.Context) model.ArticlesStream {
 	streams := make([]chan model.Article, 0, len(f.parsers))
-	result := make([]model.Article, 0)
 	for _, parser := range f.parsers {
 		streams = append(streams, f.parse(ctx, parser))
 	}
-	finalStream := fanIn(ctx, streams...)
-	for {
-		select {
-		case v, ok := <-finalStream:
-			if ok {
-				result = append(result, v)
-			} else {
-				return result, nil
-			}
-		case <-ctx.Done():
-			return result, nil
-		}
-	}
+	return fanIn(ctx, streams...)
 }
