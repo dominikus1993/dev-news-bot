@@ -59,7 +59,7 @@ func TestGetRandomArticlesWhenTakeIsGreaterThanLenOfArticlesArray(t *testing.T) 
 	}
 	close(articles)
 	randomArticles := TakeRandomArticles(articles, 5)
-	assert.Len(t, randomArticles, len(articles))
+	assert.Len(t, randomArticles, 3)
 }
 
 func TestGetRandomArticlesWhenTakeIsSmallerThanLenOfArticlesArray(t *testing.T) {
