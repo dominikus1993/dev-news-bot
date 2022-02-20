@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"sync"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
@@ -22,17 +21,11 @@ func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvide
 }
 
 func pipe(ctx context.Context, articles model.ArticlesStream, f func(ctx context.Context, article model.Article, articles chan<- model.Article)) model.ArticlesStream {
-	filteredArticles := make(chan model.Article, 10)
+	filteredArticles := make(chan model.Article, 100)
 	go func() {
-		var wg sync.WaitGroup
 		for article := range articles {
-			wg.Add(1)
-			go func(a model.Article) {
-				f(ctx, a, filteredArticles)
-				wg.Done()
-			}(article)
+			f(ctx, article, filteredArticles)
 		}
-		wg.Wait()
 		close(filteredArticles)
 	}()
 	return filteredArticles
