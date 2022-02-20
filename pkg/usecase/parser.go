@@ -20,11 +20,13 @@ func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvide
 	return &ParseArticlesAndSendItUseCase{articlesProvider: articlesProvider, repository: repository, broadcaster: broadcaster}
 }
 
-func pipe(ctx context.Context, articles model.ArticlesStream, f func(ctx context.Context, article model.Article, articles chan<- model.Article)) model.ArticlesStream {
+func filter(ctx context.Context, articles model.ArticlesStream, predicate func(ctx context.Context, article *model.Article) bool) model.ArticlesStream {
 	filteredArticles := make(chan model.Article, 100)
 	go func() {
 		for article := range articles {
-			f(ctx, article, filteredArticles)
+			if predicate(ctx, &article) {
+				filteredArticles <- article
+			}
 		}
 		close(filteredArticles)
 	}()
@@ -32,22 +34,19 @@ func pipe(ctx context.Context, articles model.ArticlesStream, f func(ctx context
 }
 
 func (u *ParseArticlesAndSendItUseCase) filterNewArticles(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
-	return pipe(ctx, articles, func(ctx context.Context, article model.Article, articles chan<- model.Article) {
+	return filter(ctx, articles, func(ctx context.Context, article *model.Article) bool {
 		isNew, err := u.repository.IsNew(ctx, article)
 		if err != nil {
 			log.WithField("ArticleLink", article.Link).WithError(err).WithContext(ctx).Error("error while checking if article exists")
+			return false
 		}
-		if isNew {
-			articles <- article
-		}
+		return isNew
 	})
 }
 
 func (u *ParseArticlesAndSendItUseCase) filterValid(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
-	return pipe(ctx, articles, func(ctx context.Context, article model.Article, articles chan<- model.Article) {
-		if article.IsValid() {
-			articles <- article
-		}
+	return filter(ctx, articles, func(ctx context.Context, article *model.Article) bool {
+		return article.IsValid()
 	})
 }
 

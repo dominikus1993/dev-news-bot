@@ -22,7 +22,7 @@ func (c *mongoArticlesRepository) getCollection() *mongo.Collection {
 	return c.db.Collection("articles")
 }
 
-func (r *mongoArticlesRepository) IsNew(ctx context.Context, article model.Article) (bool, error) {
+func (r *mongoArticlesRepository) IsNew(ctx context.Context, article *model.Article) (bool, error) {
 	col := r.getCollection()
 	opts := options.Count().SetLimit(1)
 	res, err := col.CountDocuments(ctx, bson.D{{"_id", article.Title}}, opts)

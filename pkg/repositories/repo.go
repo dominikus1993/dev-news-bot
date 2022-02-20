@@ -7,7 +7,7 @@ import (
 )
 
 type ArticlesReader interface {
-	IsNew(ctx context.Context, article model.Article) (bool, error)
+	IsNew(ctx context.Context, article *model.Article) (bool, error)
 }
 
 type ArticlesWriter interface {
