@@ -2,10 +2,9 @@ package notifications
 
 import (
 	"context"
-	"sync"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
-	log "github.com/sirupsen/logrus"
+	"golang.org/x/sync/errgroup"
 )
 
 type Notifier interface {
@@ -25,17 +24,12 @@ func NewBroadcaster(notifiers []Notifier) *broadcaseter {
 }
 
 func (b *broadcaseter) Broadcast(ctx context.Context, articles []model.Article) error {
-	var wg sync.WaitGroup
+	var wg errgroup.Group
 	for _, notifier := range b.notifiers {
-		wg.Add(1)
-		go func(ctx context.Context, n Notifier, wait *sync.WaitGroup) {
-			defer wait.Done()
-			err := n.Notify(ctx, articles)
-			if err != nil {
-				log.WithError(err).Error("Error while broadcasting")
-			}
-		}(ctx, notifier, &wg)
+		not := notifier
+		wg.Go(func() error {
+			return not.Notify(ctx, articles)
+		})
 	}
-	wg.Wait()
-	return nil
+	return wg.Wait()
 }
