@@ -55,8 +55,9 @@ func TakeRandomArticles(stream ArticlesStream, take int) []Article {
 	}
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	randomArticles := make([]Article, 0, take)
-	for _, i := range r.Perm(take) {
-		randomArticles = append(randomArticles, articles[i])
+	for i := 0; i < take; i++ {
+		index := r.Intn(len(articles))
+		randomArticles = append(randomArticles, articles[index])
 	}
 
 	return randomArticles
