@@ -9,6 +9,7 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
 	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/dominikus1993/dev-news-bot/pkg/providers"
+	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,6 +45,10 @@ func (r *fakeRepo) IsNew(ctx context.Context, article *model.Article) (bool, err
 		}
 	}
 	return true, nil
+}
+
+func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesParams) ([]model.Article, error) {
+	return r.articles, nil
 }
 
 func (r *fakeRepo) Save(ctx context.Context, articles []model.Article) error {

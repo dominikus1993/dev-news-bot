@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
+	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -40,4 +41,29 @@ func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Art
 		return err
 	}
 	return nil
+}
+
+func (r *mongoArticlesRepository) Read(ctx context.Context, params repositories.GetArticlesParams) ([]model.Article, error) {
+	col := r.getCollection()
+	opts := options.Find()
+	if params.PageSize > 0 {
+		opts.SetLimit(int64(params.PageSize))
+	}
+	if params.Page > 0 {
+		opts.SetSkip(int64(params.Page * params.PageSize))
+	}
+	cur, err := col.Find(ctx, bson.D{}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+	var articles []model.Article
+	for cur.Next(ctx) {
+		var art model.Article
+		if err := cur.Decode(&art); err != nil {
+			return nil, err
+		}
+		articles = append(articles, art)
+	}
+	return articles, nil
 }
