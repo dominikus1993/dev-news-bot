@@ -2,22 +2,25 @@ package usecase
 
 import (
 	"context"
+	"time"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
 )
 
 type ArticleDto struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
-	Link    string `json:"link"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	Link      string    `json:"link"`
+	CrawledAt time.Time `json:"crawledAt"`
 }
 
 func NewArticleDto(article model.Article) ArticleDto {
 	return ArticleDto{
-		Title:   article.Title,
-		Content: article.Content,
-		Link:    article.Link,
+		Title:     article.Title,
+		Content:   article.Content,
+		Link:      article.Link,
+		CrawledAt: article.CrawledAt,
 	}
 }
 
