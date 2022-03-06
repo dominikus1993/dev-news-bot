@@ -8,9 +8,9 @@ import (
 )
 
 type ArticleDto struct {
-	Title   string
-	Content string
-	Link    string
+	Title   string `json:"title"`
+	Content string `json:"content"`
+	Link    string `json:"link"`
 }
 
 func NewArticleDto(article model.Article) ArticleDto {

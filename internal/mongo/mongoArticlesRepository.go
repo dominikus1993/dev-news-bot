@@ -59,11 +59,11 @@ func (r *mongoArticlesRepository) Read(ctx context.Context, params repositories.
 	defer cur.Close(ctx)
 	var articles []model.Article
 	for cur.Next(ctx) {
-		var art model.Article
+		var art mongoArticle
 		if err := cur.Decode(&art); err != nil {
 			return nil, err
 		}
-		articles = append(articles, art)
+		articles = append(articles, toArticle(&art))
 	}
 	return articles, nil
 }

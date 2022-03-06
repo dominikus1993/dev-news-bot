@@ -30,3 +30,11 @@ func fromArticles(articles []model.Article) []interface{} {
 	}
 	return mongoArticles
 }
+
+func toArticle(article *mongoArticle) model.Article {
+	return model.Article{
+		Title:   article.Title,
+		Link:    article.Link,
+		Content: article.Content,
+	}
+}
