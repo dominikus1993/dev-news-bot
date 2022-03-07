@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<body>
+    <h1>{{.PageTitle}}</h1>
+    <ul>
+        {{range .Articles}}
+            <li><a href="{{.Link}}">{{.Title}}</a></li>
+        {{end}}
+    </ul>
+</body>
+</html>
