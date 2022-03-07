@@ -1,10 +1,19 @@
 <!DOCTYPE html>
+
 <body>
     <h1>{{.PageTitle}}</h1>
-    <ul>
+    <article>
         {{range .Articles}}
-            <li><a href="{{.Link}}">{{.Title}}</a></li>
+        <article>
+            <h1><a href="{{.Link}}" title="{{.Title}}">
+                    {{.Title}}
+                </a></h1>
+            <p>
+                {{.Content}}
+            </p>
+        </article>
         {{end}}
-    </ul>
+    </article>
 </body>
+
 </html>

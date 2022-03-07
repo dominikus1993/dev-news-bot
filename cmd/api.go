@@ -45,8 +45,9 @@ func (p *RunDevNewsApi) Execute(ctx context.Context, f *flag.FlagSet, _ ...inter
 	})
 	app.Use(logger.New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		articles, err := getArticles.Execute(c.Context(), repositories.GetArticlesParams{Page: 1, PageSize: 20})
+	app.Get("/:page?", func(c *fiber.Ctx) error {
+		page := common.ParseInt(c.Params("page"), 1)
+		articles, err := getArticles.Execute(c.Context(), repositories.GetArticlesParams{Page: page, PageSize: 20})
 		if err != nil {
 			return err
 		}
