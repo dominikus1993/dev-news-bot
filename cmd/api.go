@@ -46,7 +46,7 @@ func (p *RunDevNewsApi) Execute(ctx context.Context, f *flag.FlagSet, _ ...inter
 	app.Use(logger.New())
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		articles, err := getArticles.Execute(c.Context(), repositories.GetArticlesParams{Page: 1, PageSize: 10})
+		articles, err := getArticles.Execute(c.Context(), repositories.GetArticlesParams{Page: 1, PageSize: 20})
 		if err != nil {
 			return err
 		}
