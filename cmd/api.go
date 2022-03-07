@@ -5,6 +5,7 @@ import (
 	"flag"
 
 	"github.com/dominikus1993/dev-news-bot/internal/mongo"
+	"github.com/dominikus1993/dev-news-bot/pkg/common"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
 	"github.com/dominikus1993/dev-news-bot/pkg/usecase"
 	"github.com/gofiber/fiber/v2"
@@ -39,8 +40,13 @@ func (p *RunDevNewsApi) Execute(ctx context.Context, f *flag.FlagSet, _ ...inter
 	usecase := usecase.NewGetArticlesUseCase(repo)
 	app := fiber.New()
 	app.Use(logger.New())
-	app.Get("/", func(c *fiber.Ctx) error {
-		res, err := usecase.Execute(c.Context(), repositories.GetArticlesParams{Page: 1, PageSize: 10})
+
+	app.Get("/api/articles", func(c *fiber.Ctx) error {
+		c.Context().Logger().Printf("Get articles")
+		pageSize := common.ParseInt(c.Query("pageSize"), 10)
+		page := common.ParseInt(c.Query("page"), 1)
+		log.WithField("pageSize", pageSize).WithField("page", page).Infoln("get articles")
+		res, err := usecase.Execute(c.Context(), repositories.GetArticlesParams{Page: page, PageSize: pageSize})
 		if err != nil {
 			return err
 		}
