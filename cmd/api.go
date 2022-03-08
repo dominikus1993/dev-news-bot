@@ -26,7 +26,7 @@ func (*RunDevNewsApi) Usage() string {
 }
 
 func (p *RunDevNewsApi) SetFlags(f *flag.FlagSet) {
-	f.StringVar(&p.mongoConnectionString, "mongo-connection-string", "", "mongo connection string")
+	f.StringVar(&p.mongoConnectionString, "mongo-connection-string", common.GetEnvOrDefault("MONGODB_CONNECTION", ""), "mongo connection string")
 }
 
 func (p *RunDevNewsApi) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
@@ -52,11 +52,15 @@ func (p *RunDevNewsApi) Execute(ctx context.Context, f *flag.FlagSet, _ ...inter
 			return err
 		}
 		return c.Render("index", struct {
-			Articles  []usecase.ArticleDto
-			PageTitle string
+			Articles      []usecase.ArticleDto
+			PageTitle     string
+			Total         int
+			NumberOfPages int
 		}{
-			Articles:  articles,
-			PageTitle: "Dev News",
+			Articles:      articles.Articles,
+			PageTitle:     "Dev News",
+			NumberOfPages: articles.NumberOfPages,
+			Total:         articles.Total,
 		})
 	})
 

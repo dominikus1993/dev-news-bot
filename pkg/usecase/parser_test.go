@@ -47,8 +47,8 @@ func (r *fakeRepo) IsNew(ctx context.Context, article *model.Article) (bool, err
 	return true, nil
 }
 
-func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesParams) ([]model.Article, error) {
-	return r.articles, nil
+func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesParams) (*repositories.Articles, error) {
+	return nil, nil
 }
 
 func (r *fakeRepo) Save(ctx context.Context, articles []model.Article) error {

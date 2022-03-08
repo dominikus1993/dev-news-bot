@@ -11,9 +11,18 @@ type GetArticlesParams struct {
 	PageSize int
 }
 
+type Articles struct {
+	Articles []model.Article
+	Total    int
+}
+
+func NewArticles(articles []model.Article, total int) *Articles {
+	return &Articles{Articles: articles, Total: total}
+}
+
 type ArticlesReader interface {
 	IsNew(ctx context.Context, article *model.Article) (bool, error)
-	Read(ctx context.Context, params GetArticlesParams) ([]model.Article, error)
+	Read(ctx context.Context, params GetArticlesParams) (*Articles, error)
 }
 
 type ArticlesWriter interface {
