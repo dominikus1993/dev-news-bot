@@ -1,8 +1,6 @@
 package mongo
 
 import (
-	"time"
-
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -19,7 +17,7 @@ func fromArticle(article *model.Article) *mongoArticle {
 		Title:     article.Title,
 		Link:      article.Link,
 		Content:   article.Content,
-		CrawledAt: primitive.NewDateTimeFromTime(time.Now().UTC()),
+		CrawledAt: primitive.NewDateTimeFromTime(article.CrawledAt),
 	}
 }
 
@@ -29,4 +27,13 @@ func fromArticles(articles []model.Article) []interface{} {
 		mongoArticles[i] = *fromArticle(&article)
 	}
 	return mongoArticles
+}
+
+func toArticle(article *mongoArticle) model.Article {
+	return model.Article{
+		Title:     article.Title,
+		Link:      article.Link,
+		Content:   article.Content,
+		CrawledAt: article.CrawledAt.Time(),
+	}
 }

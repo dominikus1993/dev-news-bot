@@ -16,7 +16,7 @@ type DiscordWebhookNotifier struct {
 }
 
 func NewDiscordWebhookNotifier(webhookID, webhookToken string) (*DiscordWebhookNotifier, error) {
-	session, err := discordgo.New()
+	session, err := discordgo.New("")
 	if err != nil {
 		return nil, err
 	}

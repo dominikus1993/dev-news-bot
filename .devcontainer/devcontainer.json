@@ -27,7 +27,8 @@
 	"extensions": [
 		"golang.Go",
 		"GitHub.copilot",
-		"wakatime.vscode-wakatime"
+		"wakatime.vscode-wakatime",
+		"jinliming2.vscode-go-template"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

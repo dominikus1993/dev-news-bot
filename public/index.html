@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<body>
+    <h1>{{.PageTitle}}</h1>
+    <p>{{.NumberOfPages}}</p>
+    <p>{{.Total}}</p>
+    <article>
+        {{range .Articles}}
+        <article>
+            <h1><a href="{{.Link}}" title="{{.Title}}">
+                    {{.Title}}
+                </a></h1>
+            <p>
+                {{.Content}}
+            </p>
+        </article>
+        {{end}}
+    </article>
+</body>
+
+</html>

@@ -7,26 +7,29 @@ import (
 )
 
 type Article struct {
-	Title   string
-	Content string
-	Link    string
+	Title     string
+	Content   string
+	Link      string
+	CrawledAt time.Time
 }
 
 type ArticlesStream <-chan Article
 
 func NewArticleWithContent(title, link, content string) Article {
 	return Article{
-		Title:   title,
-		Content: content,
-		Link:    link,
+		Title:     title,
+		Content:   content,
+		Link:      link,
+		CrawledAt: time.Now().UTC(),
 	}
 }
 
 func NewArticle(title, link string) Article {
 	return Article{
-		Title:   title,
-		Content: "",
-		Link:    link,
+		Title:     title,
+		Content:   "",
+		Link:      link,
+		CrawledAt: time.Now().UTC(),
 	}
 }
 

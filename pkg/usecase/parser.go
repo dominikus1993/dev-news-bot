@@ -55,9 +55,9 @@ func (u *ParseArticlesAndSendItUseCase) Execute(ctx context.Context, articlesQua
 	validArticles := u.filterValid(ctx, articles)
 	newArticles := u.filterNewArticles(ctx, validArticles)
 	randomArticles := model.TakeRandomArticles(newArticles, articlesQuantity)
-	err := u.broadcaster.Broadcast(ctx, randomArticles)
+	err := u.repository.Save(ctx, randomArticles)
 	if err != nil {
 		return err
 	}
-	return u.repository.Save(ctx, randomArticles)
+	return u.broadcaster.Broadcast(ctx, randomArticles)
 }

@@ -13,6 +13,7 @@ import (
 func main() {
 	log.SetFormatter(&log.JSONFormatter{})
 	subcommands.Register(&cmd.ParseArticlesAndSendIt{}, "")
+	subcommands.Register(&cmd.RunDevNewsApi{}, "")
 	flag.Parse()
 	ctx := context.Background()
 	os.Exit(int(subcommands.Execute(ctx)))
