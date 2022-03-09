@@ -51,16 +51,11 @@ func (p *RunDevNewsApi) Execute(ctx context.Context, f *flag.FlagSet, _ ...inter
 		if err != nil {
 			return err
 		}
-		return c.Render("index", struct {
-			Articles      []usecase.ArticleDto
-			PageTitle     string
-			Total         int
-			NumberOfPages int
-		}{
-			Articles:      articles.Articles,
-			PageTitle:     "Dev News",
-			NumberOfPages: articles.NumberOfPages,
-			Total:         articles.Total,
+		return c.Render("index", fiber.Map{
+			"Articles":      articles.Articles,
+			"PageTitle":     "Dev News",
+			"NumberOfPages": articles.NumberOfPages,
+			"Total":         articles.Total,
 		})
 	})
 

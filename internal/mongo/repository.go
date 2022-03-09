@@ -24,7 +24,8 @@ func (c *mongoArticlesRepository) getCollection() *mongo.Collection {
 }
 
 func (r *mongoArticlesRepository) IsNew(ctx context.Context, article *model.Article) (bool, error) {
-	res, err := r.countArticles(ctx, bson.D{{"_id", article.Title}})
+	opt := options.Count().SetLimit(1)
+	res, err := r.countArticles(ctx, opt, bson.D{{"_id", article.Title}})
 	if err != nil {
 		return false, err
 	}
@@ -41,9 +42,8 @@ func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Art
 	return nil
 }
 
-func (r *mongoArticlesRepository) countArticles(ctx context.Context, filter interface{}) (int64, error) {
+func (r *mongoArticlesRepository) countArticles(ctx context.Context, opts *options.CountOptions, filter interface{}) (int64, error) {
 	col := r.getCollection()
-	opts := options.Count().SetLimit(1)
 	res, err := col.CountDocuments(ctx, filter, opts)
 	if err != nil {
 		return 0, err
@@ -74,8 +74,8 @@ func (r *mongoArticlesRepository) Read(ctx context.Context, params repositories.
 		}
 		articles = append(articles, toArticle(&art))
 	}
-
-	total, err := r.countArticles(ctx, bson.D{})
+	opt := options.Count()
+	total, err := r.countArticles(ctx, opt, bson.D{})
 	if err != nil {
 		return nil, err
 	}
