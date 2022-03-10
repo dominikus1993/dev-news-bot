@@ -32,13 +32,13 @@ func (p *RunDevNewsApi) SetFlags(f *flag.FlagSet) {
 func (p *RunDevNewsApi) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
 	engine := html.New("./public", ".html")
 	log.WithField("mongo", p.mongoConnectionString).Infoln("Start DevNews Api")
-	mongodbClient, err := mongo.NewClient(ctx, p.mongoConnectionString)
+	mongodbClient, err := mongo.NewClient(ctx, p.mongoConnectionString, "Articles")
 	if err != nil {
 		log.WithError(err).Error("can't create mongodb client")
 		return subcommands.ExitFailure
 	}
 	defer mongodbClient.Close(ctx)
-	repo := mongo.NewMongoArticlesRepository(mongodbClient, "Articles")
+	repo := mongo.NewMongoArticlesRepository(mongodbClient)
 	getArticles := usecase.NewGetArticlesUseCase(repo)
 	app := fiber.New(fiber.Config{
 		Views: engine,

@@ -9,10 +9,12 @@ import (
 )
 
 type MongoClient struct {
-	mongo *mongo.Client
+	mongo      *mongo.Client
+	db         *mongo.Database
+	collection *mongo.Collection
 }
 
-func NewClient(ctx context.Context, connectionString string) (*MongoClient, error) {
+func NewClient(ctx context.Context, connectionString, database string) (*MongoClient, error) {
 
 	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)
@@ -30,8 +32,10 @@ func NewClient(ctx context.Context, connectionString string) (*MongoClient, erro
 	if err != nil {
 		return nil, err
 	}
+	db := client.Database(database)
+	collection := db.Collection("articles")
 
-	return &MongoClient{mongo: client}, nil
+	return &MongoClient{mongo: client, db: db, collection: collection}, nil
 }
 
 func (c *MongoClient) Close(ctx context.Context) {
