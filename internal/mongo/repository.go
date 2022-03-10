@@ -19,7 +19,7 @@ func NewMongoArticlesRepository(client *MongoClient) *mongoArticlesRepository {
 
 func (r *mongoArticlesRepository) IsNew(ctx context.Context, article *model.Article) (bool, error) {
 	col := r.client.collection
-	opts := options.Count().SetLimit(1)
+	opts := options.Count()
 	res, err := col.CountDocuments(ctx, bson.D{{"_id", article.Title}}, opts)
 	if err != nil {
 		return false, err
@@ -28,9 +28,8 @@ func (r *mongoArticlesRepository) IsNew(ctx context.Context, article *model.Arti
 }
 
 func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Article) error {
-	col := r.client.collection
 	art := fromArticles(articles)
-	_, err := col.InsertMany(ctx, art)
+	_, err := r.client.collection.InsertMany(ctx, art)
 	if err != nil {
 		return err
 	}
