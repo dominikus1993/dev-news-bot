@@ -27,7 +27,7 @@ type subreddit struct {
 func parseSubreddit(ctx context.Context, client *http.Client, subr string) (*subreddit, error) {
 	url := fmt.Sprintf("https://www.reddit.com/r/%s.json?limit=10", subr)
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("User-Agent", "dev-news-bot")
+	req.Header.Set("User-Agent", "dev-news-bot v1.9 by /u/dominukus1993")
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
