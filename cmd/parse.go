@@ -9,7 +9,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/internal/parser/devto"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/dotnetomaniak"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/hackernews"
-	"github.com/dominikus1993/dev-news-bot/internal/parser/reddit"
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
 	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/dominikus1993/dev-news-bot/pkg/providers"
@@ -46,11 +45,10 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 		return subcommands.ExitFailure
 	}
 	defer mongodbClient.Close(ctx)
-	redditParser := reddit.NewRedditParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops"})
 	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops"})
 	hackernewsParser := hackernews.NewHackerNewsArticleParser()
 	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
-	parsers := []parsers.ArticlesParser{redditParser, hackernewsParser, dotnetomaniakParser, devtoParser}
+	parsers := []parsers.ArticlesParser{hackernewsParser, dotnetomaniakParser, devtoParser}
 	repo := mongo.NewMongoArticlesRepository(mongodbClient)
 	articlesProvider := providers.NewArticlesProvider(parsers)
 	discord, err := discord.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)
