@@ -7,6 +7,7 @@ import (
 )
 
 type Article struct {
+	ID        string
 	Title     string
 	Content   string
 	Link      string
@@ -16,7 +17,9 @@ type Article struct {
 type ArticlesStream <-chan Article
 
 func NewArticleWithContent(title, link, content string) Article {
+	id, _ := GenerateId(title, link)
 	return Article{
+		ID:        id,
 		Title:     title,
 		Content:   content,
 		Link:      link,
@@ -25,7 +28,9 @@ func NewArticleWithContent(title, link, content string) Article {
 }
 
 func NewArticle(title, link string) Article {
+	id, _ := GenerateId(title, link)
 	return Article{
+		ID:        id,
 		Title:     title,
 		Content:   "",
 		Link:      link,
