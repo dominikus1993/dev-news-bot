@@ -46,7 +46,7 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 		return subcommands.ExitFailure
 	}
 	defer mongodbClient.Close(ctx)
-	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops"})
+	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops", "rust", "aws"})
 	hackernewsParser := hackernews.NewHackerNewsArticleParser()
 	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
 	parsers := []parsers.ArticlesParser{hackernewsParser, dotnetomaniakParser, devtoParser}
