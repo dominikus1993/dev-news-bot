@@ -50,7 +50,7 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
 	parsers := []parsers.ArticlesParser{hackernewsParser, dotnetomaniakParser, devtoParser}
 	repo := mongo.NewMongoArticlesRepository(mongodbClient)
-	articlesProvider := providers.NewArticlesProvider(parsers)
+	articlesProvider := providers.NewArticlesProvider(parsers, repo)
 	discord, err := discord.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)
 	if err != nil {
 		log.WithError(err).Error("error creating discord notifier")
