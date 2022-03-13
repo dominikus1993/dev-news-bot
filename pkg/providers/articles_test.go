@@ -2,7 +2,6 @@ package providers
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
@@ -14,18 +13,25 @@ import (
 type fakeParser struct {
 }
 
-func (f *fakeParser) Parse(ctx context.Context) ([]model.Article, error) {
-	return []model.Article{model.NewArticle("test", "http://dad")}, nil
+func (f *fakeParser) Parse(ctx context.Context) model.ArticlesStream {
+	stream := make(chan model.Article)
+	go func() {
+		stream <- model.NewArticle("test", "http://dad")
+		close(stream)
+	}()
+	return stream
 }
 
 type fakeParser2 struct {
 }
 
-func (f *fakeParser2) Parse(ctx context.Context) ([]model.Article, error) {
-	return []model.Article{model.NewArticle("test", "http://dadsadad")}, nil
-}
-
-type fakeErrorParser struct {
+func (f *fakeParser2) Parse(ctx context.Context) model.ArticlesStream {
+	stream := make(chan model.Article)
+	go func() {
+		stream <- model.NewArticle("test", "http://dadsadad")
+		close(stream)
+	}()
+	return stream
 }
 
 type fakeRepo struct {
@@ -45,23 +51,12 @@ func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesPara
 	return nil, nil
 }
 
-func (f *fakeErrorParser) Parse(ctx context.Context) ([]model.Article, error) {
-	return nil, errors.New("xDDD")
-}
-
 func TestArticlesProvider(t *testing.T) {
 	articlesProvider := NewArticlesProvider([]parsers.ArticlesParser{&fakeParser{}, &fakeParser2{}}, &fakeRepo{})
 	subject := model.ToArticlesArray(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 2)
 	assert.Equal(t, "test", subject[0].Title)
 	assert.Equal(t, "test", subject[1].Title)
-}
-
-func TestArticlesProviderWhenError(t *testing.T) {
-	articlesProvider := NewArticlesProvider([]parsers.ArticlesParser{&fakeParser{}, &fakeErrorParser{}}, &fakeRepo{})
-	subject := model.ToArticlesArray(articlesProvider.Provide(context.Background()))
-	assert.Len(t, subject, 1)
-	assert.Equal(t, "test", subject[0].Title)
 }
 
 func TestArticlesProviderWhenArticlesAlreadyExistsInDb(t *testing.T) {

@@ -97,23 +97,27 @@ func getArticle(id int, client *http.Client) (*hackernewsArticle, error) {
 	return &res, nil
 }
 
-func (p *hackerNewsArticleParser) Parse(ctx context.Context) ([]model.Article, error) {
-	result := make([]model.Article, 0)
-	ids, err := getTopArticlesIds(p.client)
-	if err != nil {
-		return nil, err
-	}
-	ids = takeRandomArticesIds(ids, 10)
-	for _, id := range ids {
-		hackerNewsArticle, err := getArticle(id, p.client)
+func (p *hackerNewsArticleParser) Parse(ctx context.Context) model.ArticlesStream {
+	result := make(chan model.Article, 20)
+	go func() {
+		defer close(result)
+		ids, err := getTopArticlesIds(p.client)
 		if err != nil {
-			log.WithField("id", id).WithError(err).Error("error while parsing article by id")
-			continue
+			log.WithContext(ctx).WithError(err).Errorln("Error while parsing hackernews top articles")
+			return
 		}
-		article := model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL)
-		if article.IsValid() {
-			result = append(result, model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL))
+		ids = takeRandomArticesIds(ids, 10)
+		for _, id := range ids {
+			hackerNewsArticle, err := getArticle(id, p.client)
+			if err != nil {
+				log.WithField("id", id).WithError(err).Error("error while parsing article by id")
+				continue
+			}
+			article := model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL)
+			if article.IsValid() {
+				result <- article
+			}
 		}
-	}
-	return result, nil
+	}()
+	return result
 }

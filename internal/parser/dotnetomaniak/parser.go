@@ -35,26 +35,28 @@ func geDotnetomaniakLink(link string) string {
 	return url.String()
 }
 
-func (p *dotnetoManiakParser) Parse(ctx context.Context) ([]model.Article, error) {
-	result := make([]model.Article, 0)
-	c := colly.NewCollector()
-	c.OnHTML(".article", func(e *colly.HTMLElement) {
-		title := e.ChildText(".title .taggedlink span")
-		link := geDotnetomaniakLink(e.ChildAttr(".title .taggedlink", "href"))
-		content := e.ChildText(".description p span")
-		result = append(result, model.NewArticleWithContent(title, link, content))
-	})
-	c.SetRedirectHandler(func(req *http.Request, via []*http.Request) error {
-		log.Debugf("Redirecting to %s", req.URL.String())
-		return nil
-	})
-	url := fmt.Sprintf("%s://%s/", dotnetomaniakNewsScheme, dotnetomaniakNewsURL)
-	c.SetRequestTimeout(time.Second * 30)
-	c.UserAgent = "devnews-bot"
-	err := c.Visit(url)
-	if err != nil {
-		return nil, err
-	}
-	log.WithField("quantity", len(result)).Infoln("Parsed dotnetomaniak articles")
-	return result, nil
+func (p *dotnetoManiakParser) Parse(ctx context.Context) model.ArticlesStream {
+	result := make(chan model.Article)
+	go func() {
+		c := colly.NewCollector()
+		c.OnHTML(".article", func(e *colly.HTMLElement) {
+			title := e.ChildText(".title .taggedlink span")
+			link := geDotnetomaniakLink(e.ChildAttr(".title .taggedlink", "href"))
+			content := e.ChildText(".description p span")
+			result <- model.NewArticleWithContent(title, link, content)
+		})
+		c.SetRedirectHandler(func(req *http.Request, via []*http.Request) error {
+			log.Debugf("Redirecting to %s", req.URL.String())
+			return nil
+		})
+		url := fmt.Sprintf("%s://%s/", dotnetomaniakNewsScheme, dotnetomaniakNewsURL)
+		c.SetRequestTimeout(time.Second * 30)
+		c.UserAgent = "devnews-bot"
+		err := c.Visit(url)
+		if err != nil {
+			log.WithError(err).Errorln("Error while parsing dotnetomaniak")
+		}
+		close(result)
+	}()
+	return result
 }

@@ -4,16 +4,17 @@ import (
 	"context"
 	"testing"
 
+	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestHackerNews(t *testing.T) {
 	parser := NewHackerNewsArticleParser()
-	result, err := parser.Parse(context.TODO())
-	assert.Nil(t, err)
-	assert.NotNil(t, result)
-	assert.NotEmpty(t, result)
-	for _, article := range result {
+	result := parser.Parse(context.TODO())
+	subject := model.ToArticlesArray(result)
+	assert.NotNil(t, subject)
+	assert.NotEmpty(t, subject)
+	for _, article := range subject {
 		assert.True(t, article.IsValid())
 	}
 }

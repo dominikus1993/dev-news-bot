@@ -41,8 +41,8 @@ func parseTag(ctx context.Context, client *http.Client, tag string) (*devtorespo
 }
 
 type devtoParser struct {
-	client     *http.Client
-	subreddits []string
+	client *http.Client
+	tags   []string
 }
 
 func getClient() *http.Client {
@@ -51,10 +51,10 @@ func getClient() *http.Client {
 	}
 }
 
-func NewDevToParser(subreddits []string) *devtoParser {
+func NewDevToParser(tags []string) *devtoParser {
 	return &devtoParser{
-		client:     getClient(),
-		subreddits: subreddits,
+		client: getClient(),
+		tags:   tags,
 	}
 }
 
@@ -66,37 +66,41 @@ func mapPostToArticle(sub *devtoresponse) []model.Article {
 	return articles
 }
 
-func (p *devtoParser) parseAll(ctx context.Context, stream chan []model.Article) {
-	var wg sync.WaitGroup
-	for _, sub := range p.subreddits {
-		wg.Add(1)
-		go func(s string, wait *sync.WaitGroup) {
-			defer wg.Done()
-			res, err := parseTag(ctx, p.client, s)
-			if err != nil {
-				log.WithContext(ctx).WithError(err).Errorf("Error while parsing tag: %s", s)
-			} else {
-				stream <- mapPostToArticle(res)
-			}
-		}(sub, &wg)
-	}
-	wg.Wait()
-	close(stream)
+func (p *devtoParser) parseAll(ctx context.Context) chan []model.Article {
+	stream := make(chan []model.Article, 10)
+	go func() {
+		var wg sync.WaitGroup
+		for _, sub := range p.tags {
+			wg.Add(1)
+			go func(s string, wait *sync.WaitGroup) {
+				defer wg.Done()
+				res, err := parseTag(ctx, p.client, s)
+				if err != nil {
+					log.WithContext(ctx).WithError(err).Errorf("Error while parsing tag: %s", s)
+				} else {
+					stream <- mapPostToArticle(res)
+				}
+			}(sub, &wg)
+		}
+		wg.Wait()
+		close(stream)
+	}()
+	return stream
 }
 
-func (p *devtoParser) Parse(ctx context.Context) ([]model.Article, error) {
-	stream := make(chan []model.Article)
-	go p.parseAll(ctx, stream)
-	articles := make([]model.Article, 0)
-	for {
-		select {
-		case <-ctx.Done():
-			return articles, nil
-		case v, ok := <-stream:
-			if !ok {
-				return articles, nil
+func flatten(stream chan []model.Article) model.ArticlesStream {
+	result := make(chan model.Article)
+	go func() {
+		for articles := range stream {
+			for _, article := range articles {
+				result <- article
 			}
-			articles = append(articles, v...)
 		}
-	}
+		close(result)
+	}()
+	return result
+}
+
+func (p *devtoParser) Parse(ctx context.Context) model.ArticlesStream {
+	return flatten(p.parseAll(ctx))
 }

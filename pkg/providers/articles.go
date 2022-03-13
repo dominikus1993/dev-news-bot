@@ -23,7 +23,7 @@ func NewArticlesProvider(parsers []parsers.ArticlesParser, repository repositori
 	return &articlesProvider{parsers: parsers, repository: repository}
 }
 
-func fanIn(ctx context.Context, stream ...chan model.Article) chan model.Article {
+func fanIn(ctx context.Context, stream ...model.ArticlesStream) chan model.Article {
 	var wg sync.WaitGroup
 	out := make(chan model.Article)
 	output := func(c <-chan model.Article) {
@@ -77,30 +77,10 @@ func (u *articlesProvider) filterValid(ctx context.Context, articles model.Artic
 	})
 }
 
-func (f *articlesProvider) parse(ctx context.Context, parser parsers.ArticlesParser) chan model.Article {
-	stream := make(chan model.Article, 10)
-	go func() {
-		res, err := parser.Parse(ctx)
-		if err != nil {
-			log.WithError(err).WithContext(ctx).Error("Error while parsing articles")
-		} else {
-			for _, v := range res {
-				select {
-				case <-ctx.Done():
-					return
-				case stream <- v:
-				}
-			}
-		}
-		close(stream)
-	}()
-	return stream
-}
-
 func (f *articlesProvider) Provide(ctx context.Context) model.ArticlesStream {
-	streams := make([]chan model.Article, 0, len(f.parsers))
+	streams := make([]model.ArticlesStream, 0, len(f.parsers))
 	for _, parser := range f.parsers {
-		streams = append(streams, f.parse(ctx, parser))
+		streams = append(streams, parser.Parse(ctx))
 	}
 	articles := fanIn(ctx, streams...)
 	validArticles := f.filterValid(ctx, articles)

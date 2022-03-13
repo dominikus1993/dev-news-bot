@@ -7,5 +7,5 @@ import (
 )
 
 type ArticlesParser interface {
-	Parse(ctx context.Context) ([]model.Article, error)
+	Parse(ctx context.Context) model.ArticlesStream
 }

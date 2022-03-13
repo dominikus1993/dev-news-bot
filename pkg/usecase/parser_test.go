@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
@@ -16,22 +15,25 @@ import (
 type fakeParser struct {
 }
 
-func (f *fakeParser) Parse(ctx context.Context) ([]model.Article, error) {
-	return []model.Article{model.NewArticle("test", "http://dad")}, nil
+func (f *fakeParser) Parse(ctx context.Context) model.ArticlesStream {
+	stream := make(chan model.Article)
+	go func() {
+		stream <- model.NewArticle("test", "http://dad")
+		close(stream)
+	}()
+	return stream
 }
 
 type fakeParser2 struct {
 }
 
-func (f *fakeParser2) Parse(ctx context.Context) ([]model.Article, error) {
-	return []model.Article{model.NewArticle("test", "http://dadsadad")}, nil
-}
-
-type fakeErrorParser struct {
-}
-
-func (f *fakeErrorParser) Parse(ctx context.Context) ([]model.Article, error) {
-	return nil, errors.New("xDDD")
+func (f *fakeParser2) Parse(ctx context.Context) model.ArticlesStream {
+	stream := make(chan model.Article)
+	go func() {
+		stream <- model.NewArticle("test", "http://dadsadad")
+		close(stream)
+	}()
+	return stream
 }
 
 type fakeRepo struct {
@@ -122,7 +124,6 @@ func TestParseArticlesWhenArticlesAleradyExistsInDb(t *testing.T) {
 func TestParseArticlesAndSendItUseCaseWhenArticlesParserHasError(t *testing.T) {
 	provider := providers.NewArticlesProvider([]parsers.ArticlesParser{
 		&fakeParser{},
-		&fakeErrorParser{},
 	}, &fakeRepo{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
