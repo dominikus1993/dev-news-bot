@@ -6,7 +6,8 @@ import (
 )
 
 type mongoArticle struct {
-	Title     string             `bson:"_id"`
+	ID        string             `bson:"_id,omitempty"`
+	Title     string             `bson:"Title"`
 	Link      string             `bson:"Link"`
 	Content   string             `bson:"Content"`
 	CrawledAt primitive.DateTime `bson:"CrawledAt"`
@@ -14,6 +15,7 @@ type mongoArticle struct {
 
 func fromArticle(article *model.Article) *mongoArticle {
 	return &mongoArticle{
+		ID:        article.ID,
 		Title:     article.Title,
 		Link:      article.Link,
 		Content:   article.Content,
@@ -31,6 +33,7 @@ func fromArticles(articles []model.Article) []interface{} {
 
 func toArticle(article *mongoArticle) model.Article {
 	return model.Article{
+		ID:        article.ID,
 		Title:     article.Title,
 		Link:      article.Link,
 		Content:   article.Content,

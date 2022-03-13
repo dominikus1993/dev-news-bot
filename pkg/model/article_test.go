@@ -71,3 +71,14 @@ func TestGetRandomArticlesWhenTakeIsSmallerThanLenOfArticlesArray(t *testing.T) 
 	randomArticles := TakeRandomArticles(articles, 2)
 	assert.Len(t, randomArticles, 2)
 }
+
+func TestGetUniqueArticlesFromStream(t *testing.T) {
+	articles := make(chan Article, 10)
+	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37"), NewArticle("x", "2"), NewArticle("x", "3"), NewArticle("xd", "37")} {
+		articles <- a
+	}
+	close(articles)
+	uniqueArticles := UniqueArticles(articles)
+	subject := ToArticlesArray(uniqueArticles)
+	assert.Len(t, subject, 4)
+}

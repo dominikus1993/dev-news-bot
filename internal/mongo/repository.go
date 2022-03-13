@@ -20,7 +20,7 @@ func NewMongoArticlesRepository(client *MongoClient) *mongoArticlesRepository {
 func (r *mongoArticlesRepository) IsNew(ctx context.Context, article *model.Article) (bool, error) {
 	col := r.client.collection
 	opts := options.Count()
-	res, err := col.CountDocuments(ctx, bson.D{{"_id", article.Title}}, opts)
+	res, err := col.CountDocuments(ctx, bson.D{{"_id", article.ID}}, opts)
 	if err != nil {
 		return false, err
 	}
