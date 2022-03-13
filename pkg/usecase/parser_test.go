@@ -74,9 +74,7 @@ func TestParseArticlesAndSendItUseCase(t *testing.T) {
 	}, &fakeRepo{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
-	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster([]notifications.Notifier{
-		notifier,
-	}))
+	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
 
 	ctx := context.Background()
 	err := ucase.Execute(ctx, 10)
@@ -92,9 +90,7 @@ func TestParseArticlesAndSendItUseCaseWhenArticlesQuantityIsOne(t *testing.T) {
 	}, &fakeRepo{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
-	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster([]notifications.Notifier{
-		notifier,
-	}))
+	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
 
 	ctx := context.Background()
 	err := ucase.Execute(ctx, 1)
@@ -110,9 +106,7 @@ func TestParseArticlesWhenArticlesAleradyExistsInDb(t *testing.T) {
 	}, &fakeRepo{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
-	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster([]notifications.Notifier{
-		notifier,
-	}))
+	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
 
 	ctx := context.Background()
 	err := ucase.Execute(ctx, 1)
@@ -127,9 +121,7 @@ func TestParseArticlesAndSendItUseCaseWhenArticlesParserHasError(t *testing.T) {
 	}, &fakeRepo{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
-	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster([]notifications.Notifier{
-		notifier,
-	}))
+	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
 
 	ctx := context.Background()
 	err := ucase.Execute(ctx, 10)

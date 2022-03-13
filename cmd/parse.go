@@ -59,7 +59,7 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	}
 	defer discord.Close()
 	pprint := console.NewPPrintNotifier()
-	bradcaster := notifications.NewBroadcaster([]notifications.Notifier{pprint, discord})
+	bradcaster := notifications.NewBroadcaster(pprint, discord)
 	usecase := usecase.NewParseArticlesAndSendItUseCase(articlesProvider, repo, bradcaster)
 
 	err = usecase.Execute(ctx, p.quantity)

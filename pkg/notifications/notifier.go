@@ -19,7 +19,7 @@ type broadcaseter struct {
 	notifiers []Notifier
 }
 
-func NewBroadcaster(notifiers []Notifier) *broadcaseter {
+func NewBroadcaster(notifiers ...Notifier) *broadcaseter {
 	return &broadcaseter{notifiers: notifiers}
 }
 
