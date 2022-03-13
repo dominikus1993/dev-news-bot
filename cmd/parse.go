@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 
+	"github.com/dominikus1993/dev-news-bot/internal/console"
 	"github.com/dominikus1993/dev-news-bot/internal/discord"
 	"github.com/dominikus1993/dev-news-bot/internal/mongo"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/devto"
@@ -57,7 +58,8 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 		return subcommands.ExitFailure
 	}
 	defer discord.Close()
-	bradcaster := notifications.NewBroadcaster([]notifications.Notifier{discord})
+	pprint := console.NewPPrintNotifier()
+	bradcaster := notifications.NewBroadcaster([]notifications.Notifier{pprint, discord})
 	usecase := usecase.NewParseArticlesAndSendItUseCase(articlesProvider, repo, bradcaster)
 
 	err = usecase.Execute(ctx, p.quantity)
