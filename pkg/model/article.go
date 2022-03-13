@@ -81,7 +81,7 @@ func ToArticlesArray(s ArticlesStream) []Article {
 
 func UniqueArticles(articles ArticlesStream) ArticlesStream {
 	seen := make(map[string]bool)
-	res := make(chan Article)
+	res := make(chan Article, 20)
 	go func() {
 		for v := range articles {
 			if !seen[v.ID] {
