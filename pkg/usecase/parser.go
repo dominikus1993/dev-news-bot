@@ -21,8 +21,7 @@ func NewParseArticlesAndSendItUseCase(articlesProvider providers.ArticlesProvide
 
 func (u *ParseArticlesAndSendItUseCase) Execute(ctx context.Context, articlesQuantity int) error {
 	articles := u.articlesProvider.Provide(ctx)
-	uniqueArticles := model.UniqueArticles(articles)
-	randomArticles := model.TakeRandomArticles(uniqueArticles, articlesQuantity)
+	randomArticles := model.TakeRandomArticles(articles, articlesQuantity)
 	err := u.repository.Save(ctx, randomArticles)
 	if err != nil {
 		return err

@@ -104,6 +104,7 @@ func (f *articlesProvider) Provide(ctx context.Context) model.ArticlesStream {
 	}
 	articles := fanIn(ctx, streams...)
 	validArticles := f.filterValid(ctx, articles)
-	newArticles := f.filterNewArticles(ctx, validArticles)
+	uniqueArticles := model.UniqueArticles(validArticles)
+	newArticles := f.filterNewArticles(ctx, uniqueArticles)
 	return newArticles
 }
