@@ -9,4 +9,4 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 COPY --from=builder /main ./
 RUN chmod +x ./main
-ENTRYPOINT ["./main"]
+CMD ["./main"]
