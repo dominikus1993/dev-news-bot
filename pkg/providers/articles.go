@@ -3,7 +3,7 @@ package providers
 import (
 	"context"
 
-	"github.com/dominikus1993/dev-news-bot/pkg/common/channels"
+	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"

@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 
+	"github.com/dominikus1993/dev-news-bot/internal/common"
 	"github.com/dominikus1993/dev-news-bot/internal/mongo"
-	"github.com/dominikus1993/dev-news-bot/pkg/common"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
 	"github.com/dominikus1993/dev-news-bot/pkg/usecase"
 	"github.com/gofiber/fiber/v2"
