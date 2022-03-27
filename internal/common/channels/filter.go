@@ -3,14 +3,22 @@ package channels
 import "context"
 
 func Filter[T any](ctx context.Context, source <-chan T, predicate func(ctx context.Context, article *T) bool) <-chan T {
-	result := make(chan T, 100)
+	out := make(chan T)
 	go func() {
-		for data := range source {
-			if predicate(ctx, &data) {
-				result <- data
+		defer close(out)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case article, ok := <-source:
+				if !ok {
+					return
+				}
+				if predicate(ctx, &article) {
+					out <- article
+				}
 			}
 		}
-		close(result)
 	}()
-	return result
+	return out
 }
