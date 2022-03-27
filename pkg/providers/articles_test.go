@@ -6,7 +6,6 @@ import (
 
 	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
-	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
 	"github.com/stretchr/testify/assert"
 )
@@ -53,7 +52,7 @@ func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesPara
 }
 
 func TestArticlesProvider(t *testing.T) {
-	articlesProvider := NewArticlesProvider([]parsers.ArticlesParser{&fakeParser{}, &fakeParser2{}}, &fakeRepo{})
+	articlesProvider := NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
 	subject := channels.ToSlice(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 2)
 	assert.Equal(t, "test", subject[0].Title)
@@ -61,7 +60,7 @@ func TestArticlesProvider(t *testing.T) {
 }
 
 func TestArticlesProviderWhenArticlesAlreadyExistsInDb(t *testing.T) {
-	articlesProvider := NewArticlesProvider([]parsers.ArticlesParser{&fakeParser{}, &fakeParser2{}}, &fakeRepo{articles: []model.Article{model.NewArticle("test", "http://dad"), model.NewArticle("test", "http://dadsadad")}})
+	articlesProvider := NewArticlesProvider(&fakeRepo{articles: []model.Article{model.NewArticle("test", "http://dad"), model.NewArticle("test", "http://dadsadad")}}, &fakeParser{}, &fakeParser2{})
 	subject := channels.ToSlice(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 0)
 }

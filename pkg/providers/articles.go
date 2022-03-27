@@ -19,7 +19,7 @@ type articlesProvider struct {
 	repository repositories.ArticlesReader
 }
 
-func NewArticlesProvider(parsers []parsers.ArticlesParser, repository repositories.ArticlesReader) *articlesProvider {
+func NewArticlesProvider(repository repositories.ArticlesReader, parsers ...parsers.ArticlesParser) *articlesProvider {
 	return &articlesProvider{parsers: parsers, repository: repository}
 }
 

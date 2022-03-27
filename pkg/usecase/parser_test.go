@@ -6,7 +6,6 @@ import (
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
-	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/dominikus1993/dev-news-bot/pkg/providers"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
 	"github.com/stretchr/testify/assert"
@@ -68,10 +67,7 @@ func (n *fakeNotifier) Notify(ctx context.Context, articles []model.Article) err
 }
 
 func TestParseArticlesAndSendItUseCase(t *testing.T) {
-	provider := providers.NewArticlesProvider([]parsers.ArticlesParser{
-		&fakeParser{},
-		&fakeParser2{},
-	}, &fakeRepo{})
+	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
@@ -84,10 +80,7 @@ func TestParseArticlesAndSendItUseCase(t *testing.T) {
 }
 
 func TestParseArticlesAndSendItUseCaseWhenArticlesQuantityIsOne(t *testing.T) {
-	provider := providers.NewArticlesProvider([]parsers.ArticlesParser{
-		&fakeParser{},
-		&fakeParser2{},
-	}, &fakeRepo{})
+	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
@@ -100,10 +93,7 @@ func TestParseArticlesAndSendItUseCaseWhenArticlesQuantityIsOne(t *testing.T) {
 }
 
 func TestParseArticlesWhenArticlesAleradyExistsInDb(t *testing.T) {
-	provider := providers.NewArticlesProvider([]parsers.ArticlesParser{
-		&fakeParser{},
-		&fakeParser2{},
-	}, &fakeRepo{})
+	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
@@ -116,9 +106,7 @@ func TestParseArticlesWhenArticlesAleradyExistsInDb(t *testing.T) {
 }
 
 func TestParseArticlesAndSendItUseCaseWhenArticlesParserHasError(t *testing.T) {
-	provider := providers.NewArticlesProvider([]parsers.ArticlesParser{
-		&fakeParser{},
-	}, &fakeRepo{})
+	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeParser{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))

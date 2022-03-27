@@ -11,7 +11,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/internal/parser/dotnetomaniak"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/hackernews"
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
-	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/dominikus1993/dev-news-bot/pkg/providers"
 	"github.com/dominikus1993/dev-news-bot/pkg/usecase"
 	"github.com/google/subcommands"
@@ -49,9 +48,8 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops", "rust", "aws"})
 	hackernewsParser := hackernews.NewHackerNewsArticleParser()
 	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
-	parsers := []parsers.ArticlesParser{hackernewsParser, dotnetomaniakParser, devtoParser}
 	repo := mongo.NewMongoArticlesRepository(mongodbClient)
-	articlesProvider := providers.NewArticlesProvider(parsers, repo)
+	articlesProvider := providers.NewArticlesProvider(repo, hackernewsParser, dotnetomaniakParser, devtoParser)
 	discord, err := discord.NewDiscordWebhookNotifier(p.dicordWebhookId, p.discordWebhookToken)
 	if err != nil {
 		log.WithError(err).Error("error creating discord notifier")
