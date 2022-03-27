@@ -3,6 +3,7 @@ package model
 import (
 	"testing"
 
+	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -79,6 +80,6 @@ func TestGetUniqueArticlesFromStream(t *testing.T) {
 	}
 	close(articles)
 	uniqueArticles := UniqueArticles(articles)
-	subject := ToArticlesArray(uniqueArticles)
+	subject := channels.ToSlice(uniqueArticles)
 	assert.Len(t, subject, 4)
 }

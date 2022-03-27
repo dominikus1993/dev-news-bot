@@ -4,6 +4,8 @@ import (
 	"math/rand"
 	"net/url"
 	"time"
+
+	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 )
 
 type Article struct {
@@ -57,7 +59,7 @@ func TakeRandomArticles(stream ArticlesStream, take int) []Article {
 	if take == 0 {
 		return make([]Article, 0)
 	}
-	articles := ToArticlesArray(stream)
+	articles := channels.ToSlice(stream)
 	if take >= len(articles) {
 		return articles
 	}
@@ -69,14 +71,6 @@ func TakeRandomArticles(stream ArticlesStream, take int) []Article {
 	}
 
 	return randomArticles
-}
-
-func ToArticlesArray(s ArticlesStream) []Article {
-	res := make([]Article, 0)
-	for v := range s {
-		res = append(res, v)
-	}
-	return res
 }
 
 func UniqueArticles(articles ArticlesStream) ArticlesStream {

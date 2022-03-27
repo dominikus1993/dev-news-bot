@@ -2,7 +2,7 @@ package channels
 
 import "context"
 
-func Filter[T any](ctx context.Context, source <-chan T, predicate func(ctx context.Context, article *T) bool) <-chan T {
+func Filter[T any](ctx context.Context, source <-chan T, predicate func(ctx context.Context, element T) bool) <-chan T {
 	out := make(chan T)
 	go func() {
 		defer close(out)
@@ -14,7 +14,7 @@ func Filter[T any](ctx context.Context, source <-chan T, predicate func(ctx cont
 				if !ok {
 					return
 				}
-				if predicate(ctx, &article) {
+				if predicate(ctx, article) {
 					out <- article
 				}
 			}

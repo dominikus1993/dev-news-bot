@@ -24,8 +24,8 @@ func NewArticlesProvider(parsers []parsers.ArticlesParser, repository repositori
 }
 
 func (u *articlesProvider) filterNewArticles(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
-	return channels.Filter(ctx, articles, func(ctx context.Context, article *model.Article) bool {
-		isNew, err := u.repository.IsNew(ctx, article)
+	return channels.Filter(ctx, articles, func(ctx context.Context, article model.Article) bool {
+		isNew, err := u.repository.IsNew(ctx, &article)
 		if err != nil {
 			log.WithField("ArticleLink", article.Link).WithError(err).WithContext(ctx).Error("error while checking if article exists")
 			return false
@@ -35,7 +35,7 @@ func (u *articlesProvider) filterNewArticles(ctx context.Context, articles model
 }
 
 func (u *articlesProvider) filterValid(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
-	return channels.Filter(ctx, articles, func(ctx context.Context, article *model.Article) bool {
+	return channels.Filter(ctx, articles, func(ctx context.Context, article model.Article) bool {
 		return article.IsValid()
 	})
 }
