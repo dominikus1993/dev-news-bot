@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"errors"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
@@ -28,6 +29,9 @@ func (r *mongoArticlesRepository) IsNew(ctx context.Context, article *model.Arti
 }
 
 func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Article) error {
+	if len(articles) == 0 {
+		return errors.New("no articles to save")
+	}
 	art := fromArticles(articles)
 	_, err := r.client.collection.InsertMany(ctx, art)
 	if err != nil {

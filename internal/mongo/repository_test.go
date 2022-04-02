@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
@@ -39,6 +40,7 @@ func TestSave(t *testing.T) {
 }
 
 func TestIsNew(t *testing.T) {
+	// Arrange
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
 		Image:        "mongo:latest",
@@ -53,4 +55,40 @@ func TestIsNew(t *testing.T) {
 		t.Error(err)
 	}
 	defer mongoC.Terminate(ctx)
+	host, err := mongoC.Host(ctx)
+	if err != nil {
+		t.Error(err)
+	}
+	port, err := mongoC.MappedPort(ctx, "27017")
+	if err != nil {
+		t.Error(err)
+	}
+	mongoConnection := fmt.Sprintf("mongodb://%s:%s", host, port.Port())
+	client, err := NewClient(ctx, mongoConnection, "Articles")
+	if err != nil {
+		t.Error(err)
+	}
+	repo := NewMongoArticlesRepository(client)
+
+	t.Run("Article not exists", func(t *testing.T) {
+		// Act
+		article := model.NewArticle("xd", "xDDDDD")
+		isNew, err := repo.IsNew(ctx, &article)
+
+		// Test
+		assert.Nil(t, err)
+		assert.True(t, isNew)
+	})
+
+	t.Run("Article exists in database", func(t *testing.T) {
+		// Act
+		article := model.NewArticle("testArticle", "http://test.com")
+		err := repo.Save(ctx, []model.Article{article})
+
+		isNew, err := repo.IsNew(ctx, &article)
+
+		// Test
+		assert.Nil(t, err)
+		assert.False(t, isNew)
+	})
 }
