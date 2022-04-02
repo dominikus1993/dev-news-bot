@@ -8,7 +8,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
 	"go.mongodb.org/mongo-driver/mongo/integration/mtest"
 )
 
@@ -39,35 +38,48 @@ func TestSave(t *testing.T) {
 	})
 }
 
-func TestIsNew(t *testing.T) {
-	// Arrange
-	ctx := context.Background()
+type mongoContainer struct {
+	testcontainers.Container
+	ConnectionString string
+}
+
+func setupMongo(ctx context.Context) (*mongoContainer, error) {
 	req := testcontainers.ContainerRequest{
 		Image:        "mongo:latest",
 		ExposedPorts: []string{"27017/tcp"},
-		WaitingFor:   wait.ForListeningPort("27017"),
 	}
 	mongoC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: req,
 		Started:          true,
 	})
 	if err != nil {
-		t.Error(err)
+		return nil, err
 	}
-	defer mongoC.Terminate(ctx)
+
 	host, err := mongoC.Host(ctx)
 	if err != nil {
-		t.Error(err)
+		return nil, err
 	}
 	port, err := mongoC.MappedPort(ctx, "27017")
 	if err != nil {
-		t.Error(err)
+		return nil, err
 	}
 	mongoConnection := fmt.Sprintf("mongodb://%s:%s", host, port.Port())
-	client, err := NewClient(ctx, mongoConnection, "Articles")
-	if err != nil {
-		t.Error(err)
+	return &mongoContainer{mongoC, mongoConnection}, nil
+}
+
+func TestIsNew(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test")
 	}
+	// Arrange
+	ctx := context.Background()
+	mongoC, err := setupMongo(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer mongoC.Terminate(ctx)
+	client, err := NewClient(ctx, mongoC.ConnectionString, "Articles")
 	repo := NewMongoArticlesRepository(client)
 
 	t.Run("Article not exists", func(t *testing.T) {
