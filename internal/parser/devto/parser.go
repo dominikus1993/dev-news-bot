@@ -59,8 +59,9 @@ func NewDevToParser(tags []string) *devtoParser {
 }
 
 func mapPostToArticle(sub *devtoresponse) []model.Article {
-	articles := make([]model.Article, len(*sub))
-	for i, post := range *sub {
+	tag := *sub
+	articles := make([]model.Article, len(tag), len(tag))
+	for i, post := range tag {
 		articles[i] = model.NewArticleWithContent(post.Title, post.URL, post.Description)
 	}
 	return articles
