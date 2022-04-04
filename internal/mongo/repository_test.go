@@ -80,6 +80,10 @@ func TestIsNew(t *testing.T) {
 	}
 	defer mongoC.Terminate(ctx)
 	client, err := NewClient(ctx, mongoC.ConnectionString, "Articles")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer client.Close(ctx)
 	repo := NewMongoArticlesRepository(client)
 
 	t.Run("Article not exists", func(t *testing.T) {
