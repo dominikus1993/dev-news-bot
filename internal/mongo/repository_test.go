@@ -101,6 +101,8 @@ func TestIsNew(t *testing.T) {
 		article := model.NewArticle("testArticle", "http://test.com")
 		err := repo.Save(ctx, []model.Article{article})
 
+		assert.Nil(t, err)
+
 		isNew, err := repo.IsNew(ctx, &article)
 
 		// Test
