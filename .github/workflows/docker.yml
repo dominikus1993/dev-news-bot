@@ -31,10 +31,14 @@ jobs:
 
     - name: Test
       run: go test -v ./...
-    
+    - name: Go Vet
+      run: "go vet ./..."
+      
     - uses: dominikh/staticcheck-action@v1.2.0
+      name: staticcheck
       with:
         version: "2022.1"
+        min-go-version: 1.18
       
   push-import:
     needs: build
