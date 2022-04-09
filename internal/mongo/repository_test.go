@@ -42,7 +42,7 @@ func TestIsNew(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := integrationtestcontainers.NewMongoDbContainer(ctx, integrationtestcontainers.DefaultMongoContainerConfiguration)
+	mongoC, err := integrationtestcontainers.StartMongoDbContainer(ctx, integrationtestcontainers.DefaultMongoContainerConfiguration)
 	if err != nil {
 		t.Fatal(err)
 	}
