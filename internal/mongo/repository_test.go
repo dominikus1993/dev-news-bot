@@ -18,7 +18,7 @@ func TestSave(t *testing.T) {
 		mt.AddMockResponses(mtest.CreateSuccessResponse())
 		client := MongoClient{mt.Client, mt.DB, mt.Coll}
 		repo := NewMongoArticlesRepository(&client)
-		article := model.NewArticle("testArticle", "http://test.com")
+		article := model.NewArticle("testArticle", "http://testarticle.com")
 		err := repo.Save(context.Background(), []model.Article{article})
 		assert.Nil(mt, err)
 	})
