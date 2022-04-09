@@ -18,9 +18,8 @@ func TestSave(t *testing.T) {
 		mt.AddMockResponses(mtest.CreateSuccessResponse())
 		client := MongoClient{mt.Client, mt.DB, mt.Coll}
 		repo := NewMongoArticlesRepository(&client)
-
 		article := model.NewArticle("testArticle", "http://test.com")
-		err := repo.Save(mtest.Background, []model.Article{article})
+		err := repo.Save(context.Background(), []model.Article{article})
 		assert.Nil(mt, err)
 	})
 
@@ -33,7 +32,7 @@ func TestSave(t *testing.T) {
 		repo := NewMongoArticlesRepository(&client)
 
 		article := model.NewArticle("testArticle", "http://test.com")
-		err := repo.Save(mtest.Background, []model.Article{article})
+		err := repo.Save(context.Background(), []model.Article{article})
 		assert.NotNil(mt, err)
 	})
 }
@@ -100,6 +99,8 @@ func TestIsNew(t *testing.T) {
 		// Act
 		article := model.NewArticle("testArticle", "http://test.com")
 		err := repo.Save(ctx, []model.Article{article})
+
+		assert.Nil(t, err)
 
 		isNew, err := repo.IsNew(ctx, &article)
 
