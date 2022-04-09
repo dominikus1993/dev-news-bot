@@ -40,7 +40,7 @@ type fakeRepo struct {
 
 func (r *fakeRepo) IsNew(ctx context.Context, article *model.Article) (bool, error) {
 	for _, a := range r.articles {
-		if a.Title == article.Title {
+		if a.GetTitle() == article.GetTitle() {
 			return false, nil
 		}
 	}
@@ -55,8 +55,8 @@ func TestArticlesProvider(t *testing.T) {
 	articlesProvider := NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
 	subject := channels.ToSlice(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 2)
-	assert.Equal(t, "test", subject[0].Title)
-	assert.Equal(t, "test", subject[1].Title)
+	assert.Equal(t, "test", subject[0].GetTitle())
+	assert.Equal(t, "test", subject[1].GetTitle())
 }
 
 func TestArticlesProviderWhenArticlesAlreadyExistsInDb(t *testing.T) {

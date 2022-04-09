@@ -27,7 +27,7 @@ func (u *articlesProvider) filterNewArticles(ctx context.Context, articles model
 	return channels.Filter(ctx, articles, func(ctx context.Context, article model.Article) bool {
 		isNew, err := u.repository.IsNew(ctx, &article)
 		if err != nil {
-			log.WithField("ArticleLink", article.Link).WithError(err).WithContext(ctx).Error("error while checking if article exists")
+			log.WithField("ArticleLink", article.GetLink()).WithError(err).WithContext(ctx).Error("error while checking if article exists")
 			return false
 		}
 		return isNew

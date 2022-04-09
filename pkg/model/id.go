@@ -19,5 +19,5 @@ func GenerateId(keys ...string) (string, error) {
 }
 
 func GenerateArticleId(article Article) (string, error) {
-	return GenerateId(article.Title, article.Link)
+	return GenerateId(article.title, article.link)
 }

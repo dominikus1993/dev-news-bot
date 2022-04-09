@@ -38,9 +38,9 @@ func createDiscordEmbedsFromArticles(articles []model.Article) []*discordgo.Mess
 	embeds := make([]*discordgo.MessageEmbed, 0)
 	for _, article := range articles {
 		embeds = append(embeds, &discordgo.MessageEmbed{
-			Title:       article.Title,
-			Description: article.Content,
-			URL:         article.Link,
+			Title:       article.GetTitle(),
+			Description: article.GetContent(),
+			URL:         article.GetLink(),
 			Color:       0x00ff00,
 		})
 	}

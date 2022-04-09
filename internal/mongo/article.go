@@ -15,11 +15,11 @@ type mongoArticle struct {
 
 func fromArticle(article *model.Article) *mongoArticle {
 	return &mongoArticle{
-		ID:        article.ID,
-		Title:     article.Title,
-		Link:      article.Link,
-		Content:   article.Content,
-		CrawledAt: primitive.NewDateTimeFromTime(article.CrawledAt),
+		ID:        article.GetID(),
+		Title:     article.GetTitle(),
+		Link:      article.GetLink(),
+		Content:   article.GetContent(),
+		CrawledAt: primitive.NewDateTimeFromTime(article.GetCrawledAt()),
 	}
 }
 
@@ -32,11 +32,5 @@ func fromArticles(articles []model.Article) []interface{} {
 }
 
 func toArticle(article *mongoArticle) model.Article {
-	return model.Article{
-		ID:        article.ID,
-		Title:     article.Title,
-		Link:      article.Link,
-		Content:   article.Content,
-		CrawledAt: article.CrawledAt.Time(),
-	}
+	return model.NewArticleWithContent(article.Title, article.Link, article.Content)
 }

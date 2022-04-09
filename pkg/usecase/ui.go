@@ -30,10 +30,10 @@ func countNumberOfPages(total int, pageSize int) int {
 
 func NewArticleDto(article model.Article) ArticleDto {
 	return ArticleDto{
-		Title:     article.Title,
-		Content:   article.Content,
-		Link:      article.Link,
-		CrawledAt: article.CrawledAt,
+		Title:     article.GetTitle(),
+		Content:   article.GetContent(),
+		Link:      article.GetLink(),
+		CrawledAt: article.GetCrawledAt(),
 	}
 }
 

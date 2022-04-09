@@ -9,11 +9,31 @@ import (
 )
 
 type Article struct {
-	ID        string
-	Title     string
-	Content   string
-	Link      string
-	CrawledAt time.Time
+	id        string
+	title     string
+	content   string
+	link      string
+	crawledAt time.Time
+}
+
+func (article Article) GetID() string {
+	return article.id
+}
+
+func (article Article) GetTitle() string {
+	return article.title
+}
+
+func (article Article) GetContent() string {
+	return article.content
+}
+
+func (article Article) GetLink() string {
+	return article.link
+}
+
+func (article Article) GetCrawledAt() time.Time {
+	return article.crawledAt
 }
 
 type ArticlesStream <-chan Article
@@ -21,22 +41,22 @@ type ArticlesStream <-chan Article
 func NewArticleWithContent(title, link, content string) Article {
 	id, _ := GenerateId(title, link)
 	return Article{
-		ID:        id,
-		Title:     title,
-		Content:   content,
-		Link:      link,
-		CrawledAt: time.Now().UTC(),
+		id:        id,
+		title:     title,
+		content:   content,
+		link:      link,
+		crawledAt: time.Now().UTC(),
 	}
 }
 
 func NewArticle(title, link string) Article {
 	id, _ := GenerateId(title, link)
 	return Article{
-		ID:        id,
-		Title:     title,
-		Content:   "",
-		Link:      link,
-		CrawledAt: time.Now().UTC(),
+		id:        id,
+		title:     title,
+		content:   "",
+		link:      link,
+		crawledAt: time.Now().UTC(),
 	}
 }
 
@@ -46,13 +66,13 @@ func isUrl(str string) bool {
 }
 
 func (a *Article) IsValid() bool {
-	linkIsValid := a.Link != ""
+	linkIsValid := a.link != ""
 	if !linkIsValid {
 		return false
 	}
-	contentIsValid := len(a.Content) == 0 || len(a.Content) < 2048
-	titleIsValid := a.Title != ""
-	return isUrl(a.Link) && contentIsValid && titleIsValid
+	contentIsValid := len(a.content) == 0 || len(a.content) < 2048
+	titleIsValid := a.title != ""
+	return isUrl(a.link) && contentIsValid && titleIsValid
 }
 
 func TakeRandomArticles(stream ArticlesStream, take int) []Article {
@@ -78,8 +98,8 @@ func UniqueArticles(articles ArticlesStream) ArticlesStream {
 	res := make(chan Article, 20)
 	go func() {
 		for v := range articles {
-			if !seen[v.ID] {
-				seen[v.ID] = true
+			if !seen[v.id] {
+				seen[v.id] = true
 				res <- v
 			}
 		}

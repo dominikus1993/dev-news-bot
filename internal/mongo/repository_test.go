@@ -19,7 +19,7 @@ func TestSave(t *testing.T) {
 		client := MongoClient{mt.Client, mt.DB, mt.Coll}
 		repo := NewMongoArticlesRepository(&client)
 
-		article := model.Article{Title: "test"}
+		article := model.NewArticle("testArticle", "http://test.com")
 		err := repo.Save(mtest.Background, []model.Article{article})
 		assert.Nil(mt, err)
 	})
@@ -32,7 +32,7 @@ func TestSave(t *testing.T) {
 		client := MongoClient{mt.Client, mt.DB, mt.Coll}
 		repo := NewMongoArticlesRepository(&client)
 
-		article := model.Article{Title: "test"}
+		article := model.NewArticle("testArticle", "http://test.com")
 		err := repo.Save(mtest.Background, []model.Article{article})
 		assert.NotNil(mt, err)
 	})

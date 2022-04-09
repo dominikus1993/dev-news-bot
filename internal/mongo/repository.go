@@ -21,7 +21,7 @@ func NewMongoArticlesRepository(client *MongoClient) *mongoArticlesRepository {
 func (r *mongoArticlesRepository) IsNew(ctx context.Context, article *model.Article) (bool, error) {
 	col := r.client.collection
 	opts := options.Count()
-	res, err := col.CountDocuments(ctx, bson.D{{"_id", article.ID}}, opts)
+	res, err := col.CountDocuments(ctx, bson.D{{Key: "_id", Value: article.GetID()}}, opts)
 	if err != nil {
 		return false, err
 	}
@@ -49,7 +49,7 @@ func (r *mongoArticlesRepository) Read(ctx context.Context, params repositories.
 	if params.Page > 0 {
 		opts.SetSkip(int64((params.Page - 1) * params.PageSize))
 	}
-	opts.SetSort(bson.D{{"CrawledAt", -1}})
+	opts.SetSort(bson.D{{Key: "CrawledAt", Value: -1}})
 	cur, err := col.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		return nil, err
