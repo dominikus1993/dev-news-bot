@@ -94,9 +94,9 @@ func TakeRandomArticles(stream ArticlesStream, take int) []Article {
 }
 
 func UniqueArticles(articles ArticlesStream) ArticlesStream {
-	seen := make(map[string]bool)
 	res := make(chan Article, 20)
 	go func() {
+		seen := make(map[string]bool)
 		for v := range articles {
 			if !seen[v.id] {
 				seen[v.id] = true

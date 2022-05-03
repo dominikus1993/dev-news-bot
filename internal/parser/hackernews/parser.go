@@ -25,11 +25,12 @@ type hackernewsArticle struct {
 }
 
 type hackerNewsArticleParser struct {
-	client *http.Client
+	client              *http.Client
+	maxArticlesQuantity int
 }
 
-func NewHackerNewsArticleParser() *hackerNewsArticleParser {
-	return &hackerNewsArticleParser{client: getClient()}
+func NewHackerNewsArticleParser(maxArticlesQuantity int) *hackerNewsArticleParser {
+	return &hackerNewsArticleParser{client: getClient(), maxArticlesQuantity: maxArticlesQuantity}
 }
 
 func getClient() *http.Client {
@@ -106,7 +107,7 @@ func (p *hackerNewsArticleParser) Parse(ctx context.Context) model.ArticlesStrea
 			log.WithContext(ctx).WithError(err).Errorln("Error while parsing hackernews top articles")
 			return
 		}
-		ids = takeRandomArticesIds(ids, 10)
+		ids = takeRandomArticesIds(ids, p.maxArticlesQuantity)
 		for _, id := range ids {
 			hackerNewsArticle, err := getArticle(id, p.client)
 			if err != nil {

@@ -18,7 +18,7 @@ func NewMongoArticlesRepository(client *MongoClient) *mongoArticlesRepository {
 	return &mongoArticlesRepository{client: client}
 }
 
-func (r *mongoArticlesRepository) IsNew(ctx context.Context, article *model.Article) (bool, error) {
+func (r *mongoArticlesRepository) IsNew(ctx context.Context, article model.Article) (bool, error) {
 	col := r.client.collection
 	opts := options.Count()
 	res, err := col.CountDocuments(ctx, bson.D{{Key: "_id", Value: article.GetID()}}, opts)

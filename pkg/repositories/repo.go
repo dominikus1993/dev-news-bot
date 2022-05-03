@@ -21,7 +21,7 @@ func NewArticles(articles []model.Article, total int) *Articles {
 }
 
 type ArticlesReader interface {
-	IsNew(ctx context.Context, article *model.Article) (bool, error)
+	IsNew(ctx context.Context, article model.Article) (bool, error)
 	Read(ctx context.Context, params GetArticlesParams) (*Articles, error)
 }
 

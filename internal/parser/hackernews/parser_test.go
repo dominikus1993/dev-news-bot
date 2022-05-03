@@ -9,11 +9,13 @@ import (
 )
 
 func TestHackerNews(t *testing.T) {
-	parser := NewHackerNewsArticleParser()
+	const q = 10
+	parser := NewHackerNewsArticleParser(q)
 	result := parser.Parse(context.TODO())
 	subject := channels.ToSlice(result)
 	assert.NotNil(t, subject)
 	assert.NotEmpty(t, subject)
+	assert.Len(t, subject, q)
 	for _, article := range subject {
 		assert.True(t, article.IsValid())
 	}

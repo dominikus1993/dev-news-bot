@@ -57,7 +57,7 @@ func TestIsNew(t *testing.T) {
 	t.Run("Article not exists", func(t *testing.T) {
 		// Act
 		article := model.NewArticle("xd", "xDDDDD")
-		isNew, err := repo.IsNew(ctx, &article)
+		isNew, err := repo.IsNew(ctx, article)
 
 		// Test
 		assert.Nil(t, err)
@@ -71,7 +71,7 @@ func TestIsNew(t *testing.T) {
 
 		assert.Nil(t, err)
 
-		isNew, err := repo.IsNew(ctx, &article)
+		isNew, err := repo.IsNew(ctx, article)
 
 		// Test
 		assert.Nil(t, err)
