@@ -38,7 +38,7 @@ type fakeRepo struct {
 	articles []model.Article
 }
 
-func (r *fakeRepo) IsNew(ctx context.Context, article *model.Article) (bool, error) {
+func (r *fakeRepo) IsNew(ctx context.Context, article model.Article) (bool, error) {
 	for _, a := range r.articles {
 		if a.GetTitle() == article.GetTitle() {
 			return false, nil

@@ -73,6 +73,8 @@ func TestGetRandomArticlesWhenTakeIsSmallerThanLenOfArticlesArray(t *testing.T) 
 	assert.Len(t, randomArticles, 2)
 }
 
+//96d86055-c7c2-570e-91a7-06567337af70
+
 func TestGetUniqueArticlesFromStream(t *testing.T) {
 	articles := make(chan Article, 10)
 	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37"), NewArticle("x", "2"), NewArticle("x", "3"), NewArticle("xd", "37")} {
