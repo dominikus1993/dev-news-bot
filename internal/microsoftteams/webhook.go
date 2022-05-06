@@ -25,6 +25,7 @@ func NewDiscordWebhookNotifier(webhookUrl string) (*TeamsWebhookNotifier, error)
 func createDiscordEmbedsFromArticles(articles []model.Article) goteamsnotify.MessageCard {
 	msgCard := goteamsnotify.NewMessageCard()
 	msgCard.Title = "Witam serdecznie, oto nowe newsy"
+	msgCard.Text = "Oto nowe newsy"
 	for _, article := range articles {
 		pa, _ := goteamsnotify.NewMessageCardPotentialAction(
 			goteamsnotify.PotentialActionOpenURIType,
