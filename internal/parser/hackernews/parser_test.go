@@ -15,7 +15,6 @@ func TestHackerNews(t *testing.T) {
 	subject := channels.ToSlice(result)
 	assert.NotNil(t, subject)
 	assert.NotEmpty(t, subject)
-	assert.Len(t, subject, q)
 	for _, article := range subject {
 		assert.True(t, article.IsValid())
 	}
