@@ -25,9 +25,9 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/antchfx/htmlquery v1.2.4 // indirect
-	github.com/antchfx/xmlquery v1.3.10 // indirect
-	github.com/antchfx/xpath v1.2.0 // indirect
+	github.com/antchfx/htmlquery v1.2.5 // indirect
+	github.com/antchfx/xmlquery v1.3.11 // indirect
+	github.com/antchfx/xpath v1.2.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.2 // indirect
 	github.com/containerd/cgroups v1.0.3 // indirect
 	github.com/containerd/containerd v1.6.2 // indirect
@@ -46,7 +46,7 @@ require (
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
-	github.com/klauspost/compress v1.15.4 // indirect
+	github.com/klauspost/compress v1.15.5 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
@@ -70,8 +70,8 @@ require (
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	go.opencensus.io v0.23.0 // indirect
-	golang.org/x/crypto v0.0.0-20220518034528-6f7dac969898 // indirect
-	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
+	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
+	golang.org/x/net v0.0.0-20220526153639-5463443f8c37 // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
