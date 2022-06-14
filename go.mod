@@ -7,7 +7,7 @@ require (
 	github.com/bwmarrin/discordgo v0.25.0
 	github.com/dominikus1993/integrationtestcontainers-go v0.0.3
 	github.com/gocolly/colly/v2 v2.1.0
-	github.com/gofiber/fiber/v2 v2.34.0
+	github.com/gofiber/fiber/v2 v2.34.1
 	github.com/gofiber/template v1.6.28
 	github.com/google/subcommands v1.2.0
 	github.com/google/uuid v1.3.0
