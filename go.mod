@@ -13,7 +13,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/k0kubun/pp/v3 v3.1.0
 	github.com/sirupsen/logrus v1.8.1
-	github.com/stretchr/testify v1.7.4
+	github.com/stretchr/testify v1.7.5
 	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 )
