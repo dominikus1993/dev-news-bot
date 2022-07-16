@@ -24,7 +24,9 @@ func fromArticle(article *model.Article) *mongoArticle {
 }
 
 func fromArticles(articles []model.Article) []interface{} {
+	articles = model.UniqueArticlesArray(articles)
 	mongoArticles := make([]interface{}, len(articles))
+
 	for i, article := range articles {
 		mongoArticles[i] = *fromArticle(&article)
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -32,16 +33,34 @@ func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Art
 	if len(articles) == 0 {
 		return errors.New("no articles to save")
 	}
-	art := fromArticles(articles)
-	_, err := r.client.collection.InsertMany(ctx, art)
+	session, err := r.client.mongo.StartSession()
 	if err != nil {
 		return err
 	}
-	return nil
+	defer session.EndSession(ctx)
+	err = session.StartTransaction()
+	if err != nil {
+		return err
+	}
+	err = mongo.WithSession(ctx, session, func(sc mongo.SessionContext) error {
+		art := fromArticles(articles)
+
+		_, err = r.client.collection.InsertMany(ctx, art)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		session.AbortTransaction(ctx)
+		return err
+	}
+	return session.CommitTransaction(ctx)
 }
 
 func (r *mongoArticlesRepository) Read(ctx context.Context, params repositories.GetArticlesParams) (*repositories.Articles, error) {
 	col := r.client.collection
+
 	opts := options.Find()
 	if params.PageSize > 0 {
 		opts.SetLimit(int64(params.PageSize))

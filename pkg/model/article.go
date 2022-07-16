@@ -107,3 +107,15 @@ func UniqueArticles(articles ArticlesStream) ArticlesStream {
 	}()
 	return res
 }
+
+func UniqueArticlesArray(articles []Article) []Article {
+	res := make([]Article, 0)
+	seen := make(map[string]bool)
+	for _, v := range articles {
+		if !seen[v.id] {
+			seen[v.id] = true
+			res = append(res, v)
+		}
+	}
+	return res
+}
