@@ -12,7 +12,7 @@ require (
 	github.com/google/subcommands v1.2.0
 	github.com/google/uuid v1.3.0
 	github.com/k0kubun/pp/v3 v3.1.0
-	github.com/sirupsen/logrus v1.8.1
+	github.com/sirupsen/logrus v1.9.0
 	github.com/stretchr/testify v1.8.0
 	go.mongodb.org/mongo-driver v1.10.0
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
@@ -36,7 +36,6 @@ require (
 	github.com/docker/docker v20.10.14+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
-	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
