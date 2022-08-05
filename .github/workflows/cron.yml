@@ -1,7 +1,6 @@
-name: Run e2e tests
+name: Run Bot 
 
 on:
-  push:
   schedule:
     - cron: "00 11 * * 1"
 jobs:
