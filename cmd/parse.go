@@ -87,7 +87,7 @@ func (p *ParseArticlesAndSendIt) SetFlags(f *flag.FlagSet) {
 }
 
 func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	log.WithField("mongo", p.mongoConnectionString).WithField("quantity", p.quantity).WithField("dicord-webhook-id", p.dicordWebhookId).WithField("discord-webhook-token", p.discordWebhookToken).Infoln("Parse Articles And Send It")
+	log.Infoln("Parse Articles And Send It")
 	mongodbClient, err := mongo.NewClient(ctx, p.mongoConnectionString, "Articles")
 	if err != nil {
 		log.WithError(err).Error("can't create mongodb client")
