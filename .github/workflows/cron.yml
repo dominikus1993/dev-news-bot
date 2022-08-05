@@ -1,0 +1,24 @@
+name: Run e2e tests
+
+on:
+  push:
+  schedule:
+    - cron: "00 11 * * 1"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.18
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v ./...
+    - name: Go Run
+      run: go run . parse --discord-webhook-token="$DISCORD_WEBHOOK_TOKEN" --dicord-webhook-id="$DISCORD_WEBHOOK_ID" --mongo-connection-string="$MONGO_CONNECTION"
