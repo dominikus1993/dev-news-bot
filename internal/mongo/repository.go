@@ -21,12 +21,10 @@ func NewMongoArticlesRepository(client *MongoClient) *mongoArticlesRepository {
 
 func (r *mongoArticlesRepository) IsNew(ctx context.Context, article model.Article) (bool, error) {
 	col := r.client.collection
-	opts := options.Count()
-	res, err := col.CountDocuments(ctx, bson.D{{Key: "_id", Value: article.GetID()}}, opts)
-	if err != nil {
-		return false, err
-	}
-	return res == 0, nil
+	opts := options.FindOne()
+	res := col.FindOne(ctx, bson.D{{Key: "_id", Value: article.GetID()}}, opts)
+	notexists := res.Err() == mongo.ErrNoDocuments
+	return notexists, nil
 }
 
 func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Article) error {
