@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/atc0005/go-teams-notify/v2 v2.6.1
-	github.com/bwmarrin/discordgo v0.25.0
+	github.com/bwmarrin/discordgo v0.26.0
 	github.com/dominikus1993/integrationtestcontainers-go v0.0.3
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/gofiber/fiber/v2 v2.36.0
