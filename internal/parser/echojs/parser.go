@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
-	"github.com/gocolly/colly"
+	"github.com/gocolly/colly/v2"
 	log "github.com/sirupsen/logrus"
 )
 
