@@ -10,6 +10,7 @@ import (
 	"github.com/dominikus1993/dev-news-bot/internal/mongo"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/devto"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/dotnetomaniak"
+	"github.com/dominikus1993/dev-news-bot/internal/parser/echojs"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/hackernews"
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
 	"github.com/dominikus1993/dev-news-bot/pkg/providers"
@@ -97,8 +98,9 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops", "rust", "aws"})
 	hackernewsParser := hackernews.NewHackerNewsArticleParser(50)
 	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
+	echojsp := echojs.NewEechoJsParser()
 	repo := mongo.NewMongoArticlesRepository(mongodbClient)
-	articlesProvider := providers.NewArticlesProvider(repo, hackernewsParser, dotnetomaniakParser, devtoParser)
+	articlesProvider := providers.NewArticlesProvider(repo, hackernewsParser, dotnetomaniakParser, devtoParser, echojsp)
 	notifiers, err := createNotifiers(p)
 	if err != nil {
 		log.WithError(err).Error("can't create notifiers")

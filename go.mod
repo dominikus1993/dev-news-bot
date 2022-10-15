@@ -6,6 +6,7 @@ require (
 	github.com/atc0005/go-teams-notify/v2 v2.6.1
 	github.com/bwmarrin/discordgo v0.26.1
 	github.com/dominikus1993/integrationtestcontainers-go v0.0.3
+	github.com/gocolly/colly v1.2.0
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/gofiber/fiber/v2 v2.38.1
 	github.com/gofiber/template v1.7.1
