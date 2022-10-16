@@ -20,6 +20,22 @@ func fromSlice[T any](s []T) chan T {
 	return res
 }
 
+func TestGetArticleTitleAndContenWhenArticleHasNoContent(t *testing.T) {
+	article := model.NewArticle("77% of all developers are involved in DevOps", "https://dev.to/slashdatahq/77-of-all-developers-are-involved-in-devops-hao")
+	subject := getArticleTitleAndContent(article)
+	assert.NotNil(t, subject)
+	assert.NotEmpty(t, subject)
+	assert.Equal(t, article.GetTitle(), subject)
+}
+
+func TestGetArticleTitleAndContenWhenArticleHasContent(t *testing.T) {
+	article := model.NewArticleWithContent("77% of all developers are involved in DevOps", "https://dev.to/slashdatahq/77-of-all-developers-are-involved-in-devops-hao", "Some Content")
+	subject := getArticleTitleAndContent(article)
+	assert.NotNil(t, subject)
+	assert.NotEmpty(t, subject)
+	assert.Equal(t, "77% of all developers are involved in DevOps Some Content", subject)
+}
+
 func TestLanguageFilter(t *testing.T) {
 	filter := NewLanguageFilter()
 	articles := []model.Article{
