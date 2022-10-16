@@ -66,8 +66,15 @@ func (n *fakeNotifier) Notify(ctx context.Context, articles []model.Article) err
 	return nil
 }
 
+type fakeFilter struct {
+}
+
+func (f fakeFilter) Where(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
+	return articles
+}
+
 func TestParseArticlesAndSendItUseCase(t *testing.T) {
-	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
+	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{}, &fakeParser2{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
@@ -80,7 +87,7 @@ func TestParseArticlesAndSendItUseCase(t *testing.T) {
 }
 
 func TestParseArticlesAndSendItUseCaseWhenArticlesQuantityIsOne(t *testing.T) {
-	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
+	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{}, &fakeParser2{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
@@ -93,7 +100,7 @@ func TestParseArticlesAndSendItUseCaseWhenArticlesQuantityIsOne(t *testing.T) {
 }
 
 func TestParseArticlesWhenArticlesAleradyExistsInDb(t *testing.T) {
-	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
+	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{}, &fakeParser2{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
@@ -106,7 +113,7 @@ func TestParseArticlesWhenArticlesAleradyExistsInDb(t *testing.T) {
 }
 
 func TestParseArticlesAndSendItUseCaseWhenArticlesParserHasError(t *testing.T) {
-	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeParser{})
+	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{})
 	repo := &fakeRepo{}
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))

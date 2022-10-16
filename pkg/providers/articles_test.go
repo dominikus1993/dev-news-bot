@@ -51,8 +51,15 @@ func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesPara
 	return nil, nil
 }
 
+type fakeFilter struct {
+}
+
+func (f fakeFilter) Where(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
+	return articles
+}
+
 func TestArticlesProvider(t *testing.T) {
-	articlesProvider := NewArticlesProvider(&fakeRepo{}, &fakeParser{}, &fakeParser2{})
+	articlesProvider := NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{}, &fakeParser2{})
 	subject := channels.ToSlice(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 2)
 	assert.Equal(t, "test", subject[0].GetTitle())
@@ -60,7 +67,7 @@ func TestArticlesProvider(t *testing.T) {
 }
 
 func TestArticlesProviderWhenArticlesAlreadyExistsInDb(t *testing.T) {
-	articlesProvider := NewArticlesProvider(&fakeRepo{articles: []model.Article{model.NewArticle("test", "http://dad"), model.NewArticle("test", "http://dadsadad")}}, &fakeParser{}, &fakeParser2{})
+	articlesProvider := NewArticlesProvider(&fakeRepo{articles: []model.Article{model.NewArticle("test", "http://dad"), model.NewArticle("test", "http://dadsadad")}}, fakeFilter{}, &fakeParser{}, &fakeParser2{})
 	subject := channels.ToSlice(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 0)
 }
