@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
+	"github.com/dominikus1993/dev-news-bot/pkg/filters"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
@@ -16,11 +17,12 @@ type ArticlesProvider interface {
 
 type articlesProvider struct {
 	parsers    []parsers.ArticlesParser
+	filter     filters.ArticlesFilter
 	repository repositories.ArticlesReader
 }
 
-func NewArticlesProvider(repository repositories.ArticlesReader, parsers ...parsers.ArticlesParser) *articlesProvider {
-	return &articlesProvider{parsers: parsers, repository: repository}
+func NewArticlesProvider(repository repositories.ArticlesReader, filter filters.ArticlesFilter, parsers ...parsers.ArticlesParser) *articlesProvider {
+	return &articlesProvider{parsers: parsers, repository: repository, filter: filter}
 }
 
 func (u *articlesProvider) filterNewArticles(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
@@ -48,6 +50,7 @@ func (f *articlesProvider) Provide(ctx context.Context) model.ArticlesStream {
 	articles := channels.FanIn(ctx, streams...)
 	validArticles := f.filterValid(ctx, articles)
 	uniqueArticles := model.UniqueArticles(validArticles)
-	newArticles := f.filterNewArticles(ctx, uniqueArticles)
+	filteredArticles := f.filter.Where(ctx, uniqueArticles)
+	newArticles := f.filterNewArticles(ctx, filteredArticles)
 	return newArticles
 }

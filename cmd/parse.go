@@ -6,6 +6,7 @@ import (
 
 	"github.com/dominikus1993/dev-news-bot/internal/console"
 	"github.com/dominikus1993/dev-news-bot/internal/discord"
+	"github.com/dominikus1993/dev-news-bot/internal/language"
 	"github.com/dominikus1993/dev-news-bot/internal/microsoftteams"
 	"github.com/dominikus1993/dev-news-bot/internal/mongo"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/devto"
@@ -100,7 +101,8 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
 	echojsp := echojs.NewEechoJsParser()
 	repo := mongo.NewMongoArticlesRepository(mongodbClient)
-	articlesProvider := providers.NewArticlesProvider(repo, hackernewsParser, dotnetomaniakParser, devtoParser, echojsp)
+	languageFilter := language.NewLanguageFilter()
+	articlesProvider := providers.NewArticlesProvider(repo, languageFilter, hackernewsParser, dotnetomaniakParser, devtoParser, echojsp)
 	notifiers, err := createNotifiers(p)
 	if err != nil {
 		log.WithError(err).Error("can't create notifiers")
