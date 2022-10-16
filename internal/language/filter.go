@@ -2,7 +2,6 @@ package language
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/filters"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
@@ -14,12 +13,8 @@ type languageFilter struct {
 }
 
 func NewLanguageFilter() filters.ArticlesFilter {
-	languages := []lingua.Language{
-		lingua.English,
-		lingua.Polish,
-	}
 	detector := lingua.NewLanguageDetectorBuilder().
-		FromLanguages(languages...).
+		FromAllLanguages().
 		Build()
 
 	return languageFilter{detector: detector}
@@ -30,8 +25,9 @@ func (filter languageFilter) Where(ctx context.Context, articles model.ArticlesS
 	go func() {
 		for article := range articles {
 			if lang, exists := filter.detector.DetectLanguageOf(article.GetTitle()); exists {
-				fmt.Println(lang)
-				result <- article
+				if lang == lingua.English || lang == lingua.Polish {
+					result <- article
+				}
 			}
 		}
 		close(result)
