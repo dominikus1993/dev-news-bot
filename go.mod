@@ -7,11 +7,12 @@ require (
 	github.com/bwmarrin/discordgo v0.26.1
 	github.com/dominikus1993/integrationtestcontainers-go v0.0.3
 	github.com/gocolly/colly/v2 v2.1.0
-	github.com/gofiber/fiber/v2 v2.38.1
+	github.com/gofiber/fiber/v2 v2.39.0
 	github.com/gofiber/template v1.7.1
 	github.com/google/subcommands v1.2.0
 	github.com/google/uuid v1.3.0
 	github.com/k0kubun/pp/v3 v3.1.0
+	github.com/pemistahl/lingua-go v1.0.5
 	github.com/sirupsen/logrus v1.9.0
 	github.com/stretchr/testify v1.8.0
 	go.mongodb.org/mongo-driver v1.10.3
@@ -48,6 +49,7 @@ require (
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
+	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/moby/sys/mount v0.3.1 // indirect
 	github.com/moby/sys/mountinfo v0.6.0 // indirect
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
@@ -56,9 +58,9 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/opencontainers/runc v1.1.1 // indirect
-	github.com/pemistahl/lingua-go v1.0.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/testcontainers/testcontainers-go v0.13.0 // indirect
