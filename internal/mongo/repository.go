@@ -43,7 +43,7 @@ func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Art
 	err = mongo.WithSession(ctx, session, func(sc mongo.SessionContext) error {
 		art := fromArticles(articles)
 
-		_, err = r.client.collection.InsertMany(sc, art)
+		_, err = r.client.collection.InsertMany(ctx, art)
 		if err != nil {
 			return err
 		}
