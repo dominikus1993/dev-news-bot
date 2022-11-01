@@ -61,12 +61,12 @@ func (r *mongoArticlesRepository) Read(ctx context.Context, params repositories.
 
 	opts := options.Find()
 	if params.PageSize > 0 {
-		opts.SetLimit(int64(params.PageSize))
+		opts = opts.SetLimit(int64(params.PageSize))
 	}
 	if params.Page > 0 {
-		opts.SetSkip(int64((params.Page - 1) * params.PageSize))
+		opts = opts.SetSkip(int64((params.Page - 1) * params.PageSize))
 	}
-	opts.SetSort(bson.D{{Key: "CrawledAt", Value: -1}})
+	opts = opts.SetSort(bson.D{{Key: "CrawledAt", Value: -1}})
 	cur, err := col.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		return nil, err
