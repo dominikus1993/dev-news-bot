@@ -12,7 +12,4 @@ func TestFromArticles(t *testing.T) {
 	subject := fromArticles(articles)
 	assert.NotNil(t, subject)
 	assert.Len(t, subject, 1)
-	mongoArt := subject[0].(mongoArticle)
-	assert.Equal(t, "sdd", mongoArt.Title)
-	assert.Equal(t, "dasas", mongoArt.Link)
 }

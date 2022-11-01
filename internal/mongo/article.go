@@ -3,6 +3,7 @@ package mongo
 import (
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type mongoArticle struct {
@@ -13,22 +14,22 @@ type mongoArticle struct {
 	CrawledAt primitive.DateTime `bson:"CrawledAt"`
 }
 
-func fromArticle(article *model.Article) *mongoArticle {
-	return &mongoArticle{
+func fromArticle(article *model.Article) mongo.WriteModel {
+	return mongo.NewInsertOneModel().SetDocument(mongoArticle{
 		ID:        article.GetID(),
 		Title:     article.GetTitle(),
 		Link:      article.GetLink(),
 		Content:   article.GetContent(),
 		CrawledAt: primitive.NewDateTimeFromTime(article.GetCrawledAt()),
-	}
+	})
 }
 
-func fromArticles(articles []model.Article) []interface{} {
+func fromArticles(articles []model.Article) []mongo.WriteModel {
 	articles = model.UniqueArticlesArray(articles)
-	mongoArticles := make([]interface{}, len(articles))
+	mongoArticles := make([]mongo.WriteModel, len(articles))
 
 	for i, article := range articles {
-		mongoArticles[i] = *fromArticle(&article)
+		mongoArticles[i] = fromArticle(&article)
 	}
 	return mongoArticles
 }
