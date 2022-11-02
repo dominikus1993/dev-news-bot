@@ -14,7 +14,7 @@ require (
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/pemistahl/lingua-go v1.0.5
 	github.com/sirupsen/logrus v1.9.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	go.mongodb.org/mongo-driver v1.10.4
 	golang.org/x/sync v0.1.0
 )
