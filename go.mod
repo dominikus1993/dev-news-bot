@@ -8,7 +8,7 @@ require (
 	github.com/dominikus1993/integrationtestcontainers-go v0.0.3
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/gofiber/fiber/v2 v2.39.0
-	github.com/gofiber/template v1.7.1
+	github.com/gofiber/template v1.7.2
 	github.com/google/subcommands v1.2.0
 	github.com/google/uuid v1.3.0
 	github.com/k0kubun/pp/v3 v3.2.0
