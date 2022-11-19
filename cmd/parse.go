@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"context"
-	"flag"
-
 	"github.com/dominikus1993/dev-news-bot/internal/console"
 	"github.com/dominikus1993/dev-news-bot/internal/discord"
 	"github.com/dominikus1993/dev-news-bot/internal/language"
@@ -16,7 +13,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
 	"github.com/dominikus1993/dev-news-bot/pkg/providers"
 	"github.com/dominikus1993/dev-news-bot/pkg/usecase"
-	"github.com/google/subcommands"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
@@ -27,7 +23,7 @@ type notifiers struct {
 	teams   *microsoftteams.TeamsWebhookNotifier
 }
 
-func createNotifiers(cmd *ParseArticlesAndSendIt) (notifiers, error) {
+func createNotifiers(cmd *ParseArgs) (notifiers, error) {
 	var notifiers notifiers
 	if cmd.dicordWebhookId != "" && cmd.discordWebhookToken != "" {
 		discordn, err := discord.NewDiscordWebhookNotifier(cmd.dicordWebhookId, cmd.discordWebhookToken)
@@ -67,63 +63,6 @@ func (n notifiers) close() {
 	}
 }
 
-type ParseArticlesAndSendIt struct {
-	quantity              int
-	dicordWebhookId       string
-	discordWebhookToken   string
-	mongoConnectionString string
-	teamsWebhookUrl       string
-}
-
-func (*ParseArticlesAndSendIt) Name() string     { return "parse" }
-func (*ParseArticlesAndSendIt) Synopsis() string { return "Parse Articles And Send It" }
-func (*ParseArticlesAndSendIt) Usage() string {
-	return `go run . parse"`
-}
-
-func (p *ParseArticlesAndSendIt) SetFlags(f *flag.FlagSet) {
-	f.IntVar(&p.quantity, "quantity", 10, "quantity of articles")
-	f.StringVar(&p.dicordWebhookId, "dicord-webhook-id", "", "dicord webhook id")
-	f.StringVar(&p.discordWebhookToken, "discord-webhook-token", "", "discord webhook token")
-	f.StringVar(&p.mongoConnectionString, "mongo-connection-string", "", "mongo connection string")
-	f.StringVar(&p.teamsWebhookUrl, "teams-webhook-url", "", "teams webhook url")
-}
-
-func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	log.Infoln("Parse Articles And Send It")
-	mongodbClient, err := mongo.NewClient(ctx, p.mongoConnectionString, "Articles")
-	if err != nil {
-		log.WithError(err).Error("can't create mongodb client")
-		return subcommands.ExitFailure
-	}
-	defer mongodbClient.Close(ctx)
-	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops", "rust", "aws"})
-	hackernewsParser := hackernews.NewHackerNewsArticleParser(50)
-	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
-	echojsp := echojs.NewEechoJsParser()
-	repo := mongo.NewMongoArticlesRepository(mongodbClient)
-	languageFilter := language.NewLanguageFilter()
-	articlesProvider := providers.NewArticlesProvider(repo, languageFilter, hackernewsParser, dotnetomaniakParser, devtoParser, echojsp)
-	notifiers, err := createNotifiers(p)
-	if err != nil {
-		log.WithError(err).Error("can't create notifiers")
-		return subcommands.ExitFailure
-	}
-	defer notifiers.close()
-
-	bradcaster := notifiers.createBroadcaster()
-	usecase := usecase.NewParseArticlesAndSendItUseCase(articlesProvider, repo, bradcaster)
-
-	err = usecase.Execute(ctx, p.quantity)
-
-	if err != nil {
-		log.WithError(err).Error("Error while parsing articles")
-		return subcommands.ExitFailure
-	}
-	log.Infoln("Parsing articles finished")
-	return subcommands.ExitSuccess
-}
-
 type ParseArgs struct {
 	quantity              int
 	dicordWebhookId       string
@@ -142,7 +81,37 @@ func NewParseArgs(context *cli.Context) *ParseArgs {
 }
 
 func Parse(ctx *cli.Context) error {
-	args := NewParseArgs(ctx)
-	log.Infoln(args)
-	return cli.Exit("ersr", 1)
+	p := NewParseArgs(ctx)
+	log.Infoln("Parse Articles And Send It")
+	mongodbClient, err := mongo.NewClient(ctx.Context, p.mongoConnectionString, "Articles")
+	if err != nil {
+		log.WithError(err).Error("can't create mongodb client")
+		return cli.Exit("can't create mongodb client", 1)
+	}
+	defer mongodbClient.Close(ctx.Context)
+	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops", "rust", "aws"})
+	hackernewsParser := hackernews.NewHackerNewsArticleParser(50)
+	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
+	echojsp := echojs.NewEechoJsParser()
+	repo := mongo.NewMongoArticlesRepository(mongodbClient)
+	languageFilter := language.NewLanguageFilter()
+	articlesProvider := providers.NewArticlesProvider(repo, languageFilter, hackernewsParser, dotnetomaniakParser, devtoParser, echojsp)
+	notifiers, err := createNotifiers(p)
+	if err != nil {
+		log.WithError(err).Error("can't create notifiers")
+		return cli.Exit("can't create notifiers", 1)
+	}
+	defer notifiers.close()
+
+	bradcaster := notifiers.createBroadcaster()
+	usecase := usecase.NewParseArticlesAndSendItUseCase(articlesProvider, repo, bradcaster)
+
+	err = usecase.Execute(ctx.Context, p.quantity)
+
+	if err != nil {
+		log.WithError(err).Error("Error while parsing articles")
+		return cli.Exit("Error while parsing articles", 0)
+	}
+	log.Infoln("Parsing articles finished")
+	return nil
 }
