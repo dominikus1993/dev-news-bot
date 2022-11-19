@@ -18,6 +18,7 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/usecase"
 	"github.com/google/subcommands"
 	log "github.com/sirupsen/logrus"
+	"github.com/urfave/cli/v2"
 )
 
 type notifiers struct {
@@ -121,4 +122,27 @@ func (p *ParseArticlesAndSendIt) Execute(ctx context.Context, f *flag.FlagSet, _
 	}
 	log.Infoln("Parsing articles finished")
 	return subcommands.ExitSuccess
+}
+
+type ParseArgs struct {
+	quantity              int
+	dicordWebhookId       string
+	discordWebhookToken   string
+	mongoConnectionString string
+	teamsWebhookUrl       string
+}
+
+func NewParseArgs(context *cli.Context) *ParseArgs {
+	dicordWebhookId := context.String("dicord-webhook-id")
+	discordWebhhokToken := context.String("discord-webhook-token")
+	quantity := context.Int("quantity")
+	mongo := context.String("mongo-connection-string")
+	teams := context.String("teams-webhook-url")
+	return &ParseArgs{dicordWebhookId: dicordWebhookId, discordWebhookToken: discordWebhhokToken, quantity: quantity, mongoConnectionString: mongo, teamsWebhookUrl: teams}
+}
+
+func Parse(ctx *cli.Context) error {
+	args := NewParseArgs(ctx)
+	log.Infoln(args)
+	return cli.Exit("ersr", 1)
 }
