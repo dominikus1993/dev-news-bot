@@ -50,6 +50,9 @@ func (p *dotnetoManiakParser) Parse(ctx context.Context) model.ArticlesStream {
 			log.Debugf("Redirecting to %s", req.URL.String())
 			return nil
 		})
+		c.OnError(func(r *colly.Response, err error) {
+			log.WithError(err).Errorln("can't parse dotnetomaniak")
+		})
 		url := fmt.Sprintf("%s://%s/", dotnetomaniakNewsScheme, dotnetomaniakNewsURL)
 		c.SetRequestTimeout(time.Second * 30)
 		c.UserAgent = "devnews-bot"
@@ -57,6 +60,7 @@ func (p *dotnetoManiakParser) Parse(ctx context.Context) model.ArticlesStream {
 		if err != nil {
 			log.WithError(err).Errorln("Error while parsing dotnetomaniak")
 		}
+		c.Wait()
 		close(result)
 	}()
 	return result

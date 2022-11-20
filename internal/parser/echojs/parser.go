@@ -34,6 +34,7 @@ func (parser *echojsParser) Parse(ctx context.Context) model.ArticlesStream {
 		if err != nil {
 			log.WithError(err).Errorln("Error while parsing dotnetomaniak")
 		}
+		c.Wait()
 		close(result)
 	}()
 	return result
