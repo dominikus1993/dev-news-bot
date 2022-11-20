@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var projectionStage = bson.D{{"$project", bson.D{{"_id", "$_id"}}}}
+var projectionStage = bson.D{{Key: "$project", Value: bson.D{{Key: "_id", Value: "$_id"}}}}
 
 type mongoArticlesRepository struct {
 	client *MongoClient
@@ -75,7 +75,7 @@ func (r *mongoArticlesRepository) checkArticleExistence(ctx context.Context, art
 	if len(articles) == 0 {
 		return result, nil
 	}
-	matchStage := bson.D{{"$match", bson.D{{"_id", bson.D{{"$in", getArticlesIds(articles)}}}}}}
+	matchStage := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: bson.D{{Key: "$in", Value: getArticlesIds(articles)}}}}}}
 
 	cursor, err := r.client.collection.Aggregate(ctx, mongo.Pipeline{matchStage, projectionStage})
 	if err != nil {
