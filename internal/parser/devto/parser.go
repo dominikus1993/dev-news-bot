@@ -12,6 +12,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
+
 type devtoresponse []struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
@@ -21,7 +23,7 @@ type devtoresponse []struct {
 func parseTag(ctx context.Context, client *http.Client, tag string) (*devtoresponse, error) {
 	url := fmt.Sprintf("https://dev.to/api/articles?tag=%s", tag)
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("User-Agent", fmt.Sprintf("dev-news-bot-%s", tag))
+	req.Header.Set("User-Agent", userAgent)
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

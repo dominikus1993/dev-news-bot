@@ -9,6 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
 const url = "https://www.echojs.com/"
 
 type echojsParser struct {
@@ -21,7 +22,7 @@ func NewEechoJsParser() *echojsParser {
 func (parser *echojsParser) Parse(ctx context.Context) model.ArticlesStream {
 	result := make(chan model.Article)
 	go func() {
-		c := colly.NewCollector()
+		c := colly.NewCollector(colly.Async(true), colly.UserAgent(userAgent))
 		c.OnHTML("article h2 a", func(e *colly.HTMLElement) {
 			title := e.Text
 			link := e.Attr("href")
