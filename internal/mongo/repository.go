@@ -23,10 +23,6 @@ func NewMongoArticlesRepository(client *MongoClient) *mongoArticlesRepository {
 	return &mongoArticlesRepository{client: client}
 }
 
-func (r *mongoArticlesRepository) getArticlesCollection() *mongo.Collection {
-	return r.client.collection
-}
-
 func getArticlesIds(articles []model.Article) []model.ArticleId {
 	result := make([]model.ArticleId, len(articles))
 
