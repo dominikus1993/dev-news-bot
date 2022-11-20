@@ -19,6 +19,39 @@ func NewMongoArticlesRepository(client *MongoClient) *mongoArticlesRepository {
 	return &mongoArticlesRepository{client: client}
 }
 
+func (r *mongoArticlesRepository) getArticlesCollection() *mongo.Collection {
+	return r.client.collection
+}
+
+//[{ "$match" : { "_id" : { "$in" : ["xDDD", "534ee62d-bd5d-5fa8-b384-73a70d8503b6"] } } }, { "$project" : { "_id" : "$_id" } }]
+
+func (r *mongoArticlesRepository) getIdsThatExistsInDatabase(ctx context.Context, articles ...model.Article) ([]model.ArticleId, error) {
+	matchStage := bson.D{
+		{"$group", bson.D{
+			{"_id", "$category"},
+			{"average_price", bson.D{
+				{"$avg", "$price"},
+			}},
+			{"type_total", bson.D{
+				{"$sum", 1},
+			}},
+		}}}
+	projectStage := bson.D{}
+	cursor, err := r.client.collection.Aggregate(ctx, mongo.Pipeline{matchStage, projectStage})
+	if err != nil {
+		return nil, err
+	}
+	var results []bson.M
+	if err = cursor.All(ctx, &results); err != nil {
+		return nil, err
+	}
+	result := make([]model.ArticleId, len(results))
+	for i, res := range results {
+		result[i] = res["_id"].(string)
+	}
+	return result, nil
+}
+
 func (r *mongoArticlesRepository) FilterNew(ctx context.Context, stream model.ArticlesStream) model.ArticlesStream {
 	result := make(chan model.Article)
 	go func() {

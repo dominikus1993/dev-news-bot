@@ -99,3 +99,66 @@ func TestIsNew(t *testing.T) {
 		assert.Equal(t, newArticle.GetID(), element.GetID())
 	})
 }
+
+func TestGetIdsThatExistsInDatabase(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test")
+	}
+	// Arrange
+	ctx := context.Background()
+	mongoC, err := integrationtestcontainers.StartMongoDbContainer(ctx, integrationtestcontainers.DefaultMongoContainerConfiguration)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer mongoC.Terminate(ctx)
+	client, err := NewClient(ctx, mongoC.ConnectionString, "Articles")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer client.Close(ctx)
+	repo := NewMongoArticlesRepository(client)
+
+	t.Run("Article not exists", func(t *testing.T) {
+		// Act
+		article := model.NewArticle("xd", "xDDDDD")
+
+		subject, err := repo.getIdsThatExistsInDatabase(context.TODO(), article)
+		assert.NoError(t, err)
+		assert.NotNil(t, subject)
+		assert.Empty(t, subject)
+	})
+
+	t.Run("Article exists in database", func(t *testing.T) {
+		// Act
+		article := model.NewArticle("testArticle", "http://test.com")
+		articles := []model.Article{article}
+		err := repo.Save(ctx, articles)
+
+		assert.Nil(t, err)
+
+		subject, err := repo.getIdsThatExistsInDatabase(context.TODO(), articles...)
+		assert.NoError(t, err)
+
+		// Test
+		assert.NotEmpty(t, subject)
+		assert.Len(t, subject, 1)
+	})
+
+	t.Run("Somearticle exists in database", func(t *testing.T) {
+		// Act
+		article := model.NewArticle("testArticle2222", "http://test.com22")
+		articles := []model.Article{article}
+		err := repo.Save(ctx, articles)
+		newArticle := model.NewArticle("testArticle2", "http://test.com2")
+		articles = append(articles, newArticle)
+
+		assert.NoError(t, err)
+		subject, err := repo.getIdsThatExistsInDatabase(context.TODO(), articles...)
+		// Test
+		assert.NoError(t, err)
+		assert.NotEmpty(t, subject)
+		assert.Len(t, subject, 1)
+		element := subject[0]
+		assert.Equal(t, newArticle.GetID(), element)
+	})
+}
