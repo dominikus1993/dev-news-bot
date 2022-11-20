@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/integrationtestcontainers-go"
 	"github.com/stretchr/testify/assert"
@@ -57,24 +58,44 @@ func TestIsNew(t *testing.T) {
 	t.Run("Article not exists", func(t *testing.T) {
 		// Act
 		article := model.NewArticle("xd", "xDDDDD")
-		isNew, err := repo.IsNew(ctx, article)
-
-		// Test
-		assert.Nil(t, err)
-		assert.True(t, isNew)
+		stream := channels.FromSlice(article)
+		res := repo.FilterNew(context.TODO(), stream)
+		subject := channels.ToSlice(res)
+		assert.NotNil(t, subject)
+		assert.NotEmpty(t, subject)
+		assert.Len(t, subject, 1)
 	})
 
 	t.Run("Article exists in database", func(t *testing.T) {
 		// Act
 		article := model.NewArticle("testArticle", "http://test.com")
-		err := repo.Save(ctx, []model.Article{article})
+		articles := []model.Article{article}
+		err := repo.Save(ctx, articles)
 
 		assert.Nil(t, err)
-
-		isNew, err := repo.IsNew(ctx, article)
-
+		stream := channels.FromSlice(articles...)
+		res := repo.FilterNew(context.TODO(), stream)
+		subject := channels.ToSlice(res)
 		// Test
+		assert.Empty(t, subject)
+	})
+
+	t.Run("Somearticle exists in database", func(t *testing.T) {
+		// Act
+		article := model.NewArticle("testArticle2222", "http://test.com22")
+		articles := []model.Article{article}
+		err := repo.Save(ctx, articles)
+		newArticle := model.NewArticle("testArticle2", "http://test.com2")
+		articles = append(articles, newArticle)
+
 		assert.Nil(t, err)
-		assert.False(t, isNew)
+		stream := channels.FromSlice(articles...)
+		res := repo.FilterNew(context.TODO(), stream)
+		subject := channels.ToSlice(res)
+		// Test
+		assert.NotEmpty(t, subject)
+		assert.Len(t, subject, 1)
+		element := subject[0]
+		assert.Equal(t, newArticle.GetID(), element.GetID())
 	})
 }

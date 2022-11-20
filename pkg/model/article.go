@@ -8,15 +8,17 @@ import (
 	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 )
 
+type ArticleId = string
+
 type Article struct {
-	id        string
+	id        ArticleId
 	title     string
 	content   string
 	link      string
 	crawledAt time.Time
 }
 
-func (article Article) GetID() string {
+func (article Article) GetID() ArticleId {
 	return article.id
 }
 

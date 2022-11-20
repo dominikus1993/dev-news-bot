@@ -19,12 +19,21 @@ func NewMongoArticlesRepository(client *MongoClient) *mongoArticlesRepository {
 	return &mongoArticlesRepository{client: client}
 }
 
-func (r *mongoArticlesRepository) IsNew(ctx context.Context, article model.Article) (bool, error) {
-	col := r.client.collection
-	opts := options.FindOne()
-	res := col.FindOne(ctx, bson.D{{Key: "_id", Value: article.GetID()}}, opts)
-	notexists := res.Err() == mongo.ErrNoDocuments
-	return notexists, nil
+func (r *mongoArticlesRepository) FilterNew(ctx context.Context, stream model.ArticlesStream) model.ArticlesStream {
+	result := make(chan model.Article)
+	go func() {
+		col := r.client.collection
+		opts := options.FindOne()
+		for article := range stream {
+			res := col.FindOne(ctx, bson.D{{Key: "_id", Value: article.GetID()}}, opts)
+			notexists := res.Err() == mongo.ErrNoDocuments
+			if notexists {
+				result <- article
+			}
+		}
+		close(result)
+	}()
+	return result
 }
 
 func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Article) error {

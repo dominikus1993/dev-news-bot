@@ -35,20 +35,37 @@ func (f *fakeParser2) Parse(ctx context.Context) model.ArticlesStream {
 }
 
 type fakeRepo struct {
-	articles []model.Article
+	articles map[model.ArticleId]model.Article
 }
 
-func (r *fakeRepo) IsNew(ctx context.Context, article model.Article) (bool, error) {
-	for _, a := range r.articles {
-		if a.GetTitle() == article.GetTitle() {
-			return false, nil
+func newFakeRepo() *fakeRepo {
+	return &fakeRepo{articles: make(map[string]model.Article)}
+}
+
+func (r *fakeRepo) FilterNew(ctx context.Context, stream model.ArticlesStream) model.ArticlesStream {
+	result := make(chan model.Article)
+	go func() {
+		for article := range stream {
+			if _, ok := r.articles[article.GetID()]; !ok {
+				result <- article
+			}
 		}
-	}
-	return true, nil
+		close(result)
+	}()
+	return result
 }
 
 func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesParams) (*repositories.Articles, error) {
 	return nil, nil
+}
+
+func (r *fakeRepo) Save(ctx context.Context, articles []model.Article) error {
+	for _, article := range articles {
+		if _, ok := r.articles[article.GetID()]; !ok {
+			r.articles[article.GetID()] = article
+		}
+	}
+	return nil
 }
 
 type fakeFilter struct {
@@ -59,7 +76,7 @@ func (f fakeFilter) Where(ctx context.Context, articles model.ArticlesStream) mo
 }
 
 func TestArticlesProvider(t *testing.T) {
-	articlesProvider := NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{}, &fakeParser2{})
+	articlesProvider := NewArticlesProvider(newFakeRepo(), &fakeFilter{}, &fakeParser{}, &fakeParser2{})
 	subject := channels.ToSlice(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 2)
 	assert.Equal(t, "test", subject[0].GetTitle())
@@ -67,7 +84,9 @@ func TestArticlesProvider(t *testing.T) {
 }
 
 func TestArticlesProviderWhenArticlesAlreadyExistsInDb(t *testing.T) {
-	articlesProvider := NewArticlesProvider(&fakeRepo{articles: []model.Article{model.NewArticle("test", "http://dad"), model.NewArticle("test", "http://dadsadad")}}, fakeFilter{}, &fakeParser{}, &fakeParser2{})
+	repo := newFakeRepo()
+	repo.Save(context.TODO(), []model.Article{model.NewArticle("test", "http://dad"), model.NewArticle("test", "http://dadsadad")})
+	articlesProvider := NewArticlesProvider(repo, fakeFilter{}, &fakeParser{}, &fakeParser2{})
 	subject := channels.ToSlice(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 0)
 }

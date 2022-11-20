@@ -36,16 +36,20 @@ func (f *fakeParser2) Parse(ctx context.Context) model.ArticlesStream {
 }
 
 type fakeRepo struct {
-	articles []model.Article
+	articles map[model.ArticleId]model.Article
 }
 
-func (r *fakeRepo) IsNew(ctx context.Context, article model.Article) (bool, error) {
-	for _, a := range r.articles {
-		if a.GetTitle() == article.GetTitle() {
-			return false, nil
+func (r *fakeRepo) FilterNew(ctx context.Context, stream model.ArticlesStream) model.ArticlesStream {
+	result := make(chan model.Article)
+	go func() {
+		for article := range stream {
+			if _, ok := r.articles[article.GetID()]; !ok {
+				result <- article
+			}
 		}
-	}
-	return true, nil
+		close(result)
+	}()
+	return result
 }
 
 func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesParams) (*repositories.Articles, error) {
@@ -53,8 +57,16 @@ func (r *fakeRepo) Read(ctx context.Context, params repositories.GetArticlesPara
 }
 
 func (r *fakeRepo) Save(ctx context.Context, articles []model.Article) error {
-	r.articles = append(r.articles, articles...)
+	for _, article := range articles {
+		if _, ok := r.articles[article.GetID()]; !ok {
+			r.articles[article.GetID()] = article
+		}
+	}
 	return nil
+}
+
+func newFakeRepo() *fakeRepo {
+	return &fakeRepo{articles: make(map[string]model.Article)}
 }
 
 type fakeNotifier struct {
@@ -74,8 +86,8 @@ func (f fakeFilter) Where(ctx context.Context, articles model.ArticlesStream) mo
 }
 
 func TestParseArticlesAndSendItUseCase(t *testing.T) {
-	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{}, &fakeParser2{})
-	repo := &fakeRepo{}
+	provider := providers.NewArticlesProvider(newFakeRepo(), &fakeFilter{}, &fakeParser{}, &fakeParser2{})
+	repo := newFakeRepo()
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
 
@@ -87,8 +99,8 @@ func TestParseArticlesAndSendItUseCase(t *testing.T) {
 }
 
 func TestParseArticlesAndSendItUseCaseWhenArticlesQuantityIsOne(t *testing.T) {
-	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{}, &fakeParser2{})
-	repo := &fakeRepo{}
+	provider := providers.NewArticlesProvider(newFakeRepo(), &fakeFilter{}, &fakeParser{}, &fakeParser2{})
+	repo := newFakeRepo()
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
 
@@ -100,8 +112,8 @@ func TestParseArticlesAndSendItUseCaseWhenArticlesQuantityIsOne(t *testing.T) {
 }
 
 func TestParseArticlesWhenArticlesAleradyExistsInDb(t *testing.T) {
-	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{}, &fakeParser2{})
-	repo := &fakeRepo{}
+	provider := providers.NewArticlesProvider(newFakeRepo(), &fakeFilter{}, &fakeParser{}, &fakeParser2{})
+	repo := newFakeRepo()
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
 
@@ -113,8 +125,8 @@ func TestParseArticlesWhenArticlesAleradyExistsInDb(t *testing.T) {
 }
 
 func TestParseArticlesAndSendItUseCaseWhenArticlesParserHasError(t *testing.T) {
-	provider := providers.NewArticlesProvider(&fakeRepo{}, &fakeFilter{}, &fakeParser{})
-	repo := &fakeRepo{}
+	provider := providers.NewArticlesProvider(newFakeRepo(), &fakeFilter{}, &fakeParser{})
+	repo := newFakeRepo()
 	notifier := &fakeNotifier{}
 	ucase := NewParseArticlesAndSendItUseCase(provider, repo, notifications.NewBroadcaster(notifier))
 

@@ -8,7 +8,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/parsers"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
-	log "github.com/sirupsen/logrus"
 )
 
 type ArticlesProvider interface {
@@ -23,17 +22,6 @@ type articlesProvider struct {
 
 func NewArticlesProvider(repository repositories.ArticlesReader, filter filters.ArticlesFilter, parsers ...parsers.ArticlesParser) *articlesProvider {
 	return &articlesProvider{parsers: parsers, repository: repository, filter: filter}
-}
-
-func (u *articlesProvider) filterNewArticles(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
-	return channels.Filter(ctx, articles, func(ctx context.Context, article model.Article) bool {
-		isNew, err := u.repository.IsNew(ctx, article)
-		if err != nil {
-			log.WithField("ArticleLink", article.GetLink()).WithError(err).WithContext(ctx).Error("error while checking if article exists")
-			return false
-		}
-		return isNew
-	})
 }
 
 func (u *articlesProvider) filterValid(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
@@ -51,6 +39,6 @@ func (f *articlesProvider) Provide(ctx context.Context) model.ArticlesStream {
 	validArticles := f.filterValid(ctx, articles)
 	uniqueArticles := model.UniqueArticles(validArticles)
 	filteredArticles := f.filter.Where(ctx, uniqueArticles)
-	newArticles := f.filterNewArticles(ctx, filteredArticles)
+	newArticles := f.repository.FilterNew(ctx, filteredArticles)
 	return newArticles
 }
