@@ -15,6 +15,7 @@ require (
 	github.com/pemistahl/lingua-go v1.0.5
 	github.com/sirupsen/logrus v1.9.0
 	github.com/stretchr/testify v1.8.1
+	github.com/urfave/cli/v2 v2.23.5
 	go.mongodb.org/mongo-driver v1.11.0
 	golang.org/x/sync v0.1.0
 )
@@ -66,7 +67,6 @@ require (
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/testcontainers/testcontainers-go v0.13.0 // indirect
-	github.com/urfave/cli/v2 v2.23.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.41.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
