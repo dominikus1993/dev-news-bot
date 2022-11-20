@@ -11,6 +11,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+var projectionStage = bson.D{{"$project", bson.D{{"_id", "$_id"}}}}
+
 type mongoArticlesRepository struct {
 	client *MongoClient
 }
@@ -25,19 +27,20 @@ func (r *mongoArticlesRepository) getArticlesCollection() *mongo.Collection {
 
 //[{ "$match" : { "_id" : { "$in" : ["xDDD", "534ee62d-bd5d-5fa8-b384-73a70d8503b6"] } } }, { "$project" : { "_id" : "$_id" } }]
 
+func getArticlesIds(articles []model.Article) []model.ArticleId {
+	result := make([]model.ArticleId, len(articles))
+
+	for i, article := range articles {
+		result[i] = article.GetID()
+	}
+
+	return result
+}
+
 func (r *mongoArticlesRepository) getIdsThatExistsInDatabase(ctx context.Context, articles ...model.Article) ([]model.ArticleId, error) {
-	matchStage := bson.D{
-		{"$group", bson.D{
-			{"_id", "$category"},
-			{"average_price", bson.D{
-				{"$avg", "$price"},
-			}},
-			{"type_total", bson.D{
-				{"$sum", 1},
-			}},
-		}}}
-	projectStage := bson.D{}
-	cursor, err := r.client.collection.Aggregate(ctx, mongo.Pipeline{matchStage, projectStage})
+	matchStage := bson.D{{"$match", bson.D{{"_id", bson.D{{"$in", getArticlesIds(articles)}}}}}}
+
+	cursor, err := r.client.collection.Aggregate(ctx, mongo.Pipeline{matchStage, projectionStage})
 	if err != nil {
 		return nil, err
 	}

@@ -11,6 +11,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/integration/mtest"
 )
 
+func TestGetIdStage(t *testing.T) {
+	article := model.NewArticle("testArticle", "http://test.com")
+	articles := []model.Article{article}
+	stage := getArticlesIds(articles)
+	assert.NotEmpty(t, stage)
+	assert.Equal(t, []model.ArticleId{"52c88c25-c646-5639-b444-a358092cc962"}, stage)
+}
+
 func TestSave(t *testing.T) {
 	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
 	defer mt.Close()
