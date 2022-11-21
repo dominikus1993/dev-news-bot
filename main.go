@@ -44,7 +44,7 @@ func main() {
 				EnvVars: []string{"TEAMS_WEBHOOK_URL"},
 			},
 		},
-		Name:  "parse"
+		Name:  "parse",
 		Action: cmd.Parse,
 	}
 
