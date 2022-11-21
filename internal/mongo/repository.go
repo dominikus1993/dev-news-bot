@@ -50,6 +50,16 @@ func contains(ids []mongoArticleId, el model.ArticleId) bool {
 	return false
 }
 
+func merge(ids []mongoArticleId, articles []model.Article) []articleExistence {
+	result := make([]articleExistence, len(articles))
+	for i, v := range articles {
+		var id model.ArticleId = v.GetID()
+		exists := contains(ids, id)
+		result[i] = articleExistence{article: v, existsInDb: exists}
+	}
+	return result
+}
+
 type articleExistence struct {
 	article    model.Article
 	existsInDb bool
@@ -57,10 +67,9 @@ type articleExistence struct {
 
 func toMap(ids []mongoArticleId, articles []model.Article) map[model.ArticleId]articleExistence {
 	result := make(map[model.ArticleId]articleExistence)
-	for _, v := range articles {
-		var id model.ArticleId = v.GetID()
-		exists := contains(ids, id)
-		result[id] = articleExistence{article: v, existsInDb: exists}
+	merged := merge(ids, articles)
+	for _, v := range merged {
+		result[v.article.GetID()] = v
 	}
 	return result
 }
@@ -100,22 +109,23 @@ func (r *mongoArticlesRepository) filterOldArticles(ctx context.Context, article
 }
 
 func (r *mongoArticlesRepository) FilterNew(ctx context.Context, stream model.ArticlesStream) model.ArticlesStream {
-	result := make(chan model.Article)
-	go func() {
-		batch := channels.Batch(ctx, stream, 10)
-		for articles := range batch {
-			newArticles, err := r.filterOldArticles(ctx, articles)
-			if err != nil {
-				log.WithError(err).Errorln("can't check mongo articles existence")
-				break
-			}
-			for i := 0; i < len(newArticles); i++ {
-				result <- newArticles[i]
-			}
+
+	result := channels.RunBatchInPararell(ctx, stream, 10, 20, func(ctx context.Context, t []model.Article) ([]model.Article, error) {
+		newArticles, err := r.filterOldArticles(ctx, t)
+		if err != nil {
+			return nil, err
 		}
-		close(result)
+		return newArticles, nil
+	})
+
+	stream, errors := result.Read()
+
+	go func() {
+		for err := range errors {
+			log.WithError(err).Errorln("can't check articles exietnce")
+		}
 	}()
-	return result
+	return stream
 }
 
 func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Article) error {

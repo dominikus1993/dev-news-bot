@@ -2,7 +2,43 @@ package channels
 
 import (
 	"context"
+	"sync"
 )
+
+type ErrorStream[T any] struct {
+	stream chan T
+	errors chan error
+}
+
+func NewErrorStream[T any](size int) *ErrorStream[T] {
+	return &ErrorStream[T]{
+		stream: make(chan T, size),
+		errors: make(chan error, size),
+	}
+}
+
+func (stream *ErrorStream[T]) Close() {
+	close(stream.stream)
+	close(stream.errors)
+}
+
+func (stream *ErrorStream[T]) SendError(err error) {
+	stream.errors <- err
+}
+
+func (stream *ErrorStream[T]) Send(el T) {
+	stream.stream <- el
+}
+
+func (stream *ErrorStream[T]) SendArr(elements []T) {
+	for _, v := range elements {
+		stream.stream <- v
+	}
+}
+
+func (stream *ErrorStream[T]) Read() (<-chan T, <-chan error) {
+	return stream.stream, stream.errors
+}
 
 func sendToChannel[T any](batches chan []T, batch []T) {
 	if len(batch) > 0 {
@@ -26,4 +62,27 @@ func Batch[T any](ctx context.Context, values <-chan T, maxItems int) chan []T {
 	}()
 
 	return batches
+}
+
+func RunBatchInPararell[T any](ctx context.Context, values <-chan T, maxItems, size int, f func(context.Context, []T) ([]T, error)) *ErrorStream[T] {
+	result := NewErrorStream[T](size)
+	go func() {
+		defer result.Close()
+		var wg sync.WaitGroup
+		for value := range Batch(ctx, values, maxItems) {
+			wg.Add(1)
+			arr := value
+			go func() {
+				defer wg.Done()
+				res, err := f(ctx, arr)
+				if err != nil {
+					result.SendError(err)
+				} else {
+					result.SendArr(res)
+				}
+			}()
+		}
+		wg.Wait()
+	}()
+	return result
 }

@@ -96,18 +96,15 @@ func TakeRandomArticles(stream ArticlesStream, take int) []Article {
 }
 
 func UniqueArticles(articles ArticlesStream) ArticlesStream {
-	res := make(chan Article, 20)
-	go func() {
+	return channels.Stream(articles, func(stream chan<- Article) {
 		seen := make(map[string]bool)
 		for v := range articles {
 			if !seen[v.id] {
 				seen[v.id] = true
-				res <- v
+				stream <- v
 			}
 		}
-		close(res)
-	}()
-	return res
+	}, 20)
 }
 
 func UniqueArticlesArray(articles []Article) []Article {

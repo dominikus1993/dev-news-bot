@@ -6,8 +6,12 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
+	"github.com/hashicorp/go-multierror"
+	"github.com/samber/lo"
 	log "github.com/sirupsen/logrus"
 )
+
+const discordMessageSizeLimit = 10
 
 type DiscordWebhookNotifier struct {
 	webhookID    string
@@ -48,8 +52,25 @@ func createDiscordEmbedsFromArticles(articles []model.Article) []*discordgo.Mess
 }
 
 func (not *DiscordWebhookNotifier) Notify(ctx context.Context, articles []model.Article) error {
+	var result error
 	log.Infoln("Notifying via discord")
-	msg := discordgo.WebhookParams{Content: "Witam serdecznie, oto nowe newsy", Embeds: createDiscordEmbedsFromArticles(articles)}
+	embeds := createDiscordEmbedsFromArticles(articles)
+	if len(embeds) <= discordMessageSizeLimit {
+		return not.send(ctx, embeds)
+	}
+
+	chunks := lo.Chunk(embeds, 10)
+	for _, chunk := range chunks {
+		err := not.send(ctx, chunk)
+		if err != nil {
+			result = multierror.Append(result, err)
+		}
+	}
+	return result
+}
+
+func (not *DiscordWebhookNotifier) send(ctx context.Context, embeds []*discordgo.MessageEmbed) error {
+	msg := discordgo.WebhookParams{Content: "Witam serdecznie, oto nowe newsy", Embeds: embeds}
 	_, err := not.client.WebhookExecute(not.webhookID, not.webhookToken, true, &msg)
 	if err != nil {
 		return fmt.Errorf("error while sending webhook: %w", err)
