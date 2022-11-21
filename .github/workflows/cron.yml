@@ -18,4 +18,4 @@ jobs:
       run: go build -v ./...
 
     - name: Go Run
-      run: go run . parse --discord-webhook-token="${{ secrets.DISCORD_WEBHOOK_TOKEN }}" --dicord-webhook-id="${{ secrets.DISCORD_WEBHOOK_ID }}" --mongo-connection-string="${{ secrets.MONGO_CONNECTION }}"  -teams-webhook-url="${{ secrets.TEAMS_WEBHOOK_URL }}"
+      run: go run . --discord-webhook-token "${{ secrets.DISCORD_WEBHOOK_TOKEN }}" --dicord-webhook-id "${{ secrets.DISCORD_WEBHOOK_ID }}" --mongo-connection-string "${{ secrets.MONGO_CONNECTION }}"  -teams-webhook-url "${{ secrets.TEAMS_WEBHOOK_URL }}"
