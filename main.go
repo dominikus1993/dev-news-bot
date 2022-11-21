@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"sort"
 
 	"github.com/dominikus1993/dev-news-bot/cmd"
 	log "github.com/sirupsen/logrus"
@@ -44,10 +45,10 @@ func main() {
 				EnvVars: []string{"TEAMS_WEBHOOK_URL"},
 			},
 		},
-		Name:  "parse",
 		Action: cmd.Parse,
 	}
-
+	sort.Sort(cli.FlagsByName(app.Flags))
+	sort.Sort(cli.CommandsByName(app.Commands))
 	if err := app.Run(os.Args); err != nil {
 		log.Fatalln(err)
 	}
