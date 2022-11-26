@@ -24,7 +24,7 @@ func NewBroadcaster(notifiers ...Notifier) *broadcaseter {
 }
 
 func (b *broadcaseter) Broadcast(ctx context.Context, articles []model.Article) error {
-	var wg errgroup.Group
+	wg, ctx := errgroup.WithContext(ctx)
 	for _, notifier := range b.notifiers {
 		not := notifier
 		wg.Go(func() error {
