@@ -11,7 +11,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/pemistahl/lingua-go v1.1.1
-	github.com/samber/lo v1.35.0
+	github.com/samber/lo v1.36.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/stretchr/testify v1.8.1
 	github.com/urfave/cli/v2 v2.23.5
