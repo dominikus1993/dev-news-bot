@@ -5,40 +5,41 @@ import (
 	"fmt"
 
 	goteamsnotify "github.com/atc0005/go-teams-notify/v2"
+	"github.com/atc0005/go-teams-notify/v2/messagecard"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	log "github.com/sirupsen/logrus"
 )
 
 type TeamsWebhookNotifier struct {
 	webhookUrl string
-	client     goteamsnotify.API
+	client     *goteamsnotify.TeamsClient
 }
 
 func NewDiscordWebhookNotifier(webhookUrl string) (*TeamsWebhookNotifier, error) {
-	client := goteamsnotify.NewClient()
+	client := goteamsnotify.NewTeamsClient()
 	return &TeamsWebhookNotifier{
 		webhookUrl: webhookUrl,
 		client:     client,
 	}, nil
 }
 
-func createDiscordEmbedsFromArticles(articles []model.Article) goteamsnotify.MessageCard {
-	msgCard := goteamsnotify.NewMessageCard()
+func createDiscordEmbedsFromArticles(articles []model.Article) *messagecard.MessageCard {
+	msgCard := messagecard.NewMessageCard()
 	msgCard.Title = "Witam serdecznie"
 	msgCard.Text = "Oto nowe newsy"
 	for _, article := range articles {
-		pa, _ := goteamsnotify.NewMessageCardPotentialAction(
-			goteamsnotify.PotentialActionOpenURIType,
+		pa, _ := messagecard.NewPotentialAction(
+			messagecard.PotentialActionOpenURIType,
 			article.GetTitle(),
 		)
-		pa.MessageCardPotentialActionOpenURI.Targets =
-			[]goteamsnotify.MessageCardPotentialActionOpenURITarget{
+		pa.PotentialActionOpenURI.Targets =
+			[]messagecard.PotentialActionOpenURITarget{
 				{
 					OS:  "default",
 					URI: article.GetLink(),
 				},
 			}
-		section := goteamsnotify.MessageCardSection{Title: article.GetTitle(), Text: article.GetContent()}
+		section := messagecard.Section{Title: article.GetTitle(), Text: article.GetContent()}
 		section.AddPotentialAction(pa)
 		msgCard.AddSection(&section)
 	}
