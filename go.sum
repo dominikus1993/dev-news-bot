@@ -621,8 +621,8 @@ github.com/opencontainers/selinux v1.8.2/go.mod h1:MUIHuUEvKB1wtJjQdOyYRgOnLD2xA
 github.com/opencontainers/selinux v1.10.0/go.mod h1:2i0OySw99QjzBBQByd1Gr9gSjvuho1lHsJxIJ3gGbJI=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
 github.com/pelletier/go-toml v1.8.1/go.mod h1:T2/BmBdy8dvIRq1a/8aqjN41wvWlN4lrapLU/GW4pbc=
-github.com/pemistahl/lingua-go v1.2.1 h1:C75/lZ7P+pMayO0SX7eDTk1BLQuyv/cL6L6g9xitQXE=
-github.com/pemistahl/lingua-go v1.2.1/go.mod h1:1mkOO+nGBFfylaRBoWjt2qTdWONtiOPgTkTVYh2nFRk=
+github.com/pemistahl/lingua-go v1.2.2 h1:oB35qXEiLgij6wrgBKPjd+0a9EgZgq78aqmFTOv6cQI=
+github.com/pemistahl/lingua-go v1.2.2/go.mod h1:1mkOO+nGBFfylaRBoWjt2qTdWONtiOPgTkTVYh2nFRk=
 github.com/peterbourgon/diskv v2.0.1+incompatible/go.mod h1:uqqh8zWWbv1HBMNONnaR/tNboyR3/BZd58JJSHlUSCU=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.8.1-0.20171018195549-f15c970de5b7/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
