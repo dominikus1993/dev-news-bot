@@ -1,16 +1,24 @@
-.PHONY: build clean deploy gomodgen
+output_file = dev-news-bot
+webhookToken = ${DISCORD_WEBHOOK_TOKEN} 
+webhookId = ${DISCORD_WEBHOOK_ID}
+mongoConnection = ${MONGO_CONNECTION}
+teamsWebhookUrl = ${TEAMS_WEBHOOK_URL}
+build:
+	go build -o $(output_file)
 
-build: gomodgen
-	export GO111MODULE=on
-	# env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/hello hello/main.go
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/parser serverless/parser/main.go
+test:
+	go test ./...
 
-clean:
-	rm -rf ./bin ./vendor go.sum
+vet: 
+	go vet ./...
+	
+buildandtest: build test
 
-deploy: clean build
-	sls deploy --verbose
+run:
+	go run .
 
-gomodgen:
-	chmod u+x gomod.sh
-	./gomod.sh
+upgrade:
+	go get -u
+	
+runbin: build
+	./$(output_file) --discord-webhook-token "$(strip $(webhookToken))" --dicord-webhook-id "$(strip $(webhookId))" --mongo-connection-string "$(strip $(mongoConnection))"  -teams-webhook-url "$(strip $(teamsWebhookUrl))"

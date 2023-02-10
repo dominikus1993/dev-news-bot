@@ -3,6 +3,13 @@ name: Run Bot
 on:
   schedule:
     - cron: "00 11 * * 1"
+
+env:
+  DISCORD_WEBHOOK_TOKEN: "${{ secrets.DISCORD_WEBHOOK_TOKEN }}"
+  DISCORD_WEBHOOK_ID: "${{ secrets.DISCORD_WEBHOOK_ID }}"
+  MONGO_CONNECTION: "${{ secrets.DISCORD_WEBHOOK_ID }}"
+  TEAMS_WEBHOOK_URL: "${{ secrets.TEAMS_WEBHOOK_URL }}"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,10 +19,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.19
-
-    - name: Build
-      run: go build -v ./...
+        go-version: '1.20'
 
     - name: Go Run
-      run: go run . --discord-webhook-token "${{ secrets.DISCORD_WEBHOOK_TOKEN }}" --dicord-webhook-id "${{ secrets.DISCORD_WEBHOOK_ID }}" --mongo-connection-string "${{ secrets.MONGO_CONNECTION }}"  -teams-webhook-url "${{ secrets.TEAMS_WEBHOOK_URL }}"
+      run: make runbin
