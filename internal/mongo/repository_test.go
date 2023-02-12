@@ -2,11 +2,12 @@ package mongo
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
-	"github.com/dominikus1993/integrationtestcontainers-go"
+	"github.com/dominikus1993/integrationtestcontainers-go/mongodb"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/mongo/integration/mtest"
 )
@@ -51,12 +52,21 @@ func TestIsNew(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := integrationtestcontainers.StartMongoDbContainer(ctx, integrationtestcontainers.DefaultMongoContainerConfiguration)
+	mongoC, err := mongodb.StartMongoDbContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer mongoC.Terminate(ctx)
-	client, err := NewClient(ctx, mongoC.ConnectionString, "Articles")
+	t.Cleanup(func() {
+		if err := mongoC.Terminate(ctx); err != nil {
+			t.Fatalf("failed to terminate container: %s", err)
+		}
+	})
+
+	connectionString, err := mongoC.ConnectionString(ctx)
+	if err != nil {
+		t.Fatal(fmt.Errorf("can't download mongo conectionstring, %w", err))
+	}
+	client, err := NewClient(ctx, connectionString, "Articles")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -114,16 +124,27 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := integrationtestcontainers.StartMongoDbContainer(ctx, integrationtestcontainers.DefaultMongoContainerConfiguration)
+	mongoC, err := mongodb.StartMongoDbContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer mongoC.Terminate(ctx)
-	client, err := NewClient(ctx, mongoC.ConnectionString, "Articles")
+	t.Cleanup(func() {
+		if err := mongoC.Terminate(ctx); err != nil {
+			t.Fatalf("failed to terminate container: %s", err)
+		}
+	})
+
+	connectionString, err := mongoC.ConnectionString(ctx)
+	if err != nil {
+		t.Fatal(fmt.Errorf("can't download mongo conectionstring, %w", err))
+	}
+	client, err := NewClient(ctx, connectionString, "Articles")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer client.Close(ctx)
+	t.Cleanup(func() {
+		client.Close(ctx)
+	})
 	repo := NewMongoArticlesRepository(client)
 
 	t.Run("Article not exists", func(t *testing.T) {
@@ -179,16 +200,28 @@ func TestFilterOldArticles(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := integrationtestcontainers.StartMongoDbContainer(ctx, integrationtestcontainers.DefaultMongoContainerConfiguration)
+	mongoC, err := mongodb.StartMongoDbContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer mongoC.Terminate(ctx)
-	client, err := NewClient(ctx, mongoC.ConnectionString, "Articles")
+	t.Cleanup(func() {
+		if err := mongoC.Terminate(ctx); err != nil {
+			t.Fatalf("failed to terminate container: %s", err)
+		}
+	})
+
+	connectionString, err := mongoC.ConnectionString(ctx)
+	if err != nil {
+		t.Fatal(fmt.Errorf("can't download mongo conectionstring, %w", err))
+	}
+	client, err := NewClient(ctx, connectionString, "Articles")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer client.Close(ctx)
+
+	t.Cleanup(func() {
+		client.Close(ctx)
+	})
 	repo := NewMongoArticlesRepository(client)
 
 	t.Run("Article not exists", func(t *testing.T) {
