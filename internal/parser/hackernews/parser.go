@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"net/http"
 	"time"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
+	"github.com/dominikus1993/go-toolkit/random"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -40,20 +40,7 @@ func getClient() *http.Client {
 }
 
 func takeRandomArticesIds(ids []int, take int) []int {
-	if take == 0 {
-		return make([]int, 0)
-	}
-	if take >= len(ids) {
-		return ids
-	}
-	r := rand.New(rand.NewSource(time.Now().Unix()))
-	randomIds := make([]int, 0, take)
-	for i := 0; i < take; i++ {
-		index := r.Intn(len(ids))
-		randomIds = append(randomIds, ids[index])
-	}
-
-	return randomIds
+	return random.TakeRandomFromSlice(ids, take)
 }
 
 func getTopArticlesIds(client *http.Client) ([]int, error) {

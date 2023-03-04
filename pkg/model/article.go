@@ -1,12 +1,13 @@
 package model
 
 import (
-	"math/rand"
 	"net/url"
 	"time"
 
 	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/dominikus1993/go-toolkit/crypto"
+	"github.com/dominikus1993/go-toolkit/random"
+	"github.com/samber/lo"
 )
 
 type ArticleId = string
@@ -79,21 +80,7 @@ func (a *Article) IsValid() bool {
 }
 
 func TakeRandomArticles(stream ArticlesStream, take int) []Article {
-	if take == 0 {
-		return make([]Article, 0)
-	}
-	articles := channels.ToSlice(stream)
-	if take >= len(articles) {
-		return articles
-	}
-	r := rand.New(rand.NewSource(time.Now().Unix()))
-	randomArticles := make([]Article, 0, take)
-	for i := 0; i < take; i++ {
-		index := r.Intn(len(articles))
-		randomArticles = append(randomArticles, articles[index])
-	}
-
-	return randomArticles
+	return random.TakeRandomToSlice(stream, take)
 }
 
 func UniqueArticles(articles ArticlesStream) ArticlesStream {
@@ -101,13 +88,7 @@ func UniqueArticles(articles ArticlesStream) ArticlesStream {
 }
 
 func UniqueArticlesArray(articles []Article) []Article {
-	res := make([]Article, 0)
-	seen := make(map[string]bool)
-	for _, v := range articles {
-		if !seen[v.id] {
-			seen[v.id] = true
-			res = append(res, v)
-		}
-	}
-	return res
+	return lo.UniqBy(articles, func(article Article) ArticleId {
+		return article.id
+	})
 }
