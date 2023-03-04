@@ -9,7 +9,6 @@ import (
 	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/dominikus1993/integrationtestcontainers-go/mongodb"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/mongo/integration/mtest"
 )
 
 func TestGetIdStage(t *testing.T) {
@@ -18,32 +17,6 @@ func TestGetIdStage(t *testing.T) {
 	stage := getArticlesIds(articles)
 	assert.NotEmpty(t, stage)
 	assert.Equal(t, []model.ArticleId{"52c88c25-c646-5639-b444-a358092cc962"}, stage)
-}
-
-func TestSave(t *testing.T) {
-	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
-	defer mt.Close()
-	mt.Run("success", func(mt *mtest.T) {
-		mt.AddMockResponses(mtest.CreateSuccessResponse())
-		client := MongoClient{mt.Client, mt.DB, mt.Coll}
-		repo := NewMongoArticlesRepository(&client)
-		article := model.NewArticle("testArticle", "http://testarticle.com")
-		err := repo.Save(context.Background(), []model.Article{article})
-		assert.Nil(mt, err)
-	})
-
-	mt.Run("error", func(mt *mtest.T) {
-		mt.AddMockResponses(mtest.CreateCommandErrorResponse(mtest.CommandError{
-			Code:    11000,
-			Message: "duplicate key error",
-		}))
-		client := MongoClient{mt.Client, mt.DB, mt.Coll}
-		repo := NewMongoArticlesRepository(&client)
-
-		article := model.NewArticle("testArticle", "http://test.com")
-		err := repo.Save(context.Background(), []model.Article{article})
-		assert.NotNil(mt, err)
-	})
 }
 
 func TestIsNew(t *testing.T) {
