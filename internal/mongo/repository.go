@@ -11,7 +11,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/x/bsonx"
 )
+
+const ttlSeconds = 60 * 60 * 24 * 365 // one year
 
 var projectionStage = bson.D{{Key: "$project", Value: bson.D{{Key: "_id", Value: "$_id"}}}}
 
@@ -132,6 +135,18 @@ func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Art
 	if len(articles) == 0 {
 		return errors.New("no articles to save")
 	}
+
+	index := mongo.IndexModel{
+		Keys:    bsonx.Doc{{Key: "CrawledAt", Value: bsonx.Int32(1)}},
+		Options: options.Index().SetExpireAfterSeconds(ttlSeconds), // Will be removed after 7 days
+	}
+
+	_, err := r.client.collection.Indexes().CreateOne(context.Background(), index)
+
+	if err != nil {
+		return err
+	}
+
 	session, err := r.client.mongo.StartSession()
 	if err != nil {
 		return err
