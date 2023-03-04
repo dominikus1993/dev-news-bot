@@ -1,6 +1,6 @@
 module github.com/dominikus1993/dev-news-bot
 
-go 1.19
+go 1.20
 
 require (
 	github.com/atc0005/go-teams-notify/v2 v2.7.0

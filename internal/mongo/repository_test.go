@@ -25,7 +25,7 @@ func TestIsNew(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := mongodb.StartMongoDbContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
+	mongoC, err := mongodb.StartContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,7 +97,7 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := mongodb.StartMongoDbContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
+	mongoC, err := mongodb.StartContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -173,7 +173,7 @@ func TestFilterOldArticles(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := mongodb.StartMongoDbContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
+	mongoC, err := mongodb.StartContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
 	if err != nil {
 		t.Fatal(err)
 	}
