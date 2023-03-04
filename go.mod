@@ -6,9 +6,8 @@ require (
 	github.com/atc0005/go-teams-notify/v2 v2.7.0
 	github.com/bwmarrin/discordgo v0.27.0
 	github.com/dominikus1993/go-toolkit v0.0.12
-	github.com/dominikus1993/integrationtestcontainers-go v0.0.4
+	github.com/dominikus1993/integrationtestcontainers-go v0.0.5
 	github.com/gocolly/colly/v2 v2.1.0
-	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/pemistahl/lingua-go v1.3.3
@@ -41,7 +40,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
@@ -63,7 +62,7 @@ require (
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
-	github.com/testcontainers/testcontainers-go v0.17.0 // indirect
+	github.com/testcontainers/testcontainers-go v0.18.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
