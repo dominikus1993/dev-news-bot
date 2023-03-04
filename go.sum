@@ -54,6 +54,8 @@ github.com/docker/go-connections v0.4.0/go.mod h1:Gbd7IOopHjR8Iph03tsViu4nIes5Xh
 github.com/docker/go-units v0.4.0/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDDbaIK4Dk=
 github.com/docker/go-units v0.5.0 h1:69rxXcBk27SvSaaxTtLh/8llcHD8vYHT7WSdRZ/jvr4=
 github.com/docker/go-units v0.5.0/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDDbaIK4Dk=
+github.com/dominikus1993/go-toolkit v0.0.10 h1:/Q836WoOMBhkoa0n1cObgOXnsYPXFIX9sC3MeOgQGZs=
+github.com/dominikus1993/go-toolkit v0.0.10/go.mod h1:Qw+kC/ZiXYiKUEADMwquWIMKAW6T8xiTlwOuQW8mdaQ=
 github.com/dominikus1993/integrationtestcontainers-go v0.0.4 h1:ib3KWohRc/jT2DtLig2S2Yg6qZsHGmWrChtZCueAxHI=
 github.com/dominikus1993/integrationtestcontainers-go v0.0.4/go.mod h1:OJV5hDH6FaVbUY06BG7ws9R015nG1qsSROgJeFl14+M=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=

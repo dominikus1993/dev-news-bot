@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
+	"github.com/dominikus1993/go-toolkit/crypto"
 )
 
 type ArticleId = string
@@ -41,7 +42,7 @@ func (article Article) GetCrawledAt() time.Time {
 type ArticlesStream <-chan Article
 
 func NewArticleWithContent(title, link, content string) Article {
-	id, _ := GenerateId(title, link)
+	id, _ := crypto.GenerateId(title, link)
 	return Article{
 		id:        id,
 		title:     title,
@@ -52,7 +53,7 @@ func NewArticleWithContent(title, link, content string) Article {
 }
 
 func NewArticle(title, link string) Article {
-	id, _ := GenerateId(title, link)
+	id, _ := crypto.GenerateId(title, link)
 	return Article{
 		id:        id,
 		title:     title,
