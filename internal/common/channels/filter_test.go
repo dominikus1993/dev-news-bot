@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +18,7 @@ func TestFilter(t *testing.T) {
 	}()
 
 	result := Filter(context.TODO(), numbers, func(ctx context.Context, element int) bool { return element%2 == 0 })
-	subject := ToSlice(result)
+	subject := channels.ToSlice(result)
 	assert.Len(t, subject, 4)
 	assert.ElementsMatch(t, []int{2, 4, 6, 8}, subject)
 }
@@ -33,6 +34,6 @@ func BenchmarkFilter(b *testing.B) {
 			close(numbers)
 		}()
 
-		ToSlice(Filter(ctx, numbers, func(ctx context.Context, element int) bool { return element%2 == 0 }))
+		channels.ToSlice(Filter(ctx, numbers, func(ctx context.Context, element int) bool { return element%2 == 0 }))
 	}
 }

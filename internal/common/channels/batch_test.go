@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +18,7 @@ func TestBatch(t *testing.T) {
 	}()
 
 	result := Batch(context.TODO(), numbers, 2)
-	subject := ToSlice(result)
+	subject := channels.ToSlice(result)
 	assert.Len(t, subject, 5)
 	assert.Equal(t, subject, [][]int{{1, 2}, {3, 4}, {5, 6}, {7, 8}, {9}})
 }
@@ -36,7 +37,7 @@ func TestRunInBatch(t *testing.T) {
 		return t, nil
 	})
 	stream, _ := result.Read()
-	subject := ToSlice(stream)
+	subject := channels.ToSlice(stream)
 	assert.Len(t, subject, len(arr))
 	assert.Equal(t, arr, subject)
 }
@@ -53,6 +54,6 @@ func BenchmarkBatcg(b *testing.B) {
 		}()
 
 		result := Batch(ctx, numbers, 2)
-		ToSlice(result)
+		channels.ToSlice(result)
 	}
 }

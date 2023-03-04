@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,7 +26,7 @@ func TestFanIn(t *testing.T) {
 	}()
 
 	result := FanIn(context.TODO(), numbers, numbers2)
-	subject := ToSlice(result)
+	subject := channels.ToSlice(result)
 	assert.Len(t, subject, 19)
 	assert.ElementsMatch(t, rangeInt(1, 20), subject)
 }
@@ -50,6 +51,6 @@ func BenchmarkFanIn(b *testing.B) {
 		}()
 
 		result := FanIn(ctx, numbers, numbers2)
-		ToSlice(result)
+		channels.ToSlice(result)
 	}
 }

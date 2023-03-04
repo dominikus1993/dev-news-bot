@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
+	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/dominikus1993/integrationtestcontainers-go/mongodb"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/mongo/integration/mtest"
@@ -76,7 +76,7 @@ func TestIsNew(t *testing.T) {
 	t.Run("Article not exists", func(t *testing.T) {
 		// Act
 		article := model.NewArticle("xd", "xDDDDD")
-		stream := channels.FromSlice(article)
+		stream := channels.FromSlice([]model.Article{article})
 		res := repo.FilterNew(context.TODO(), stream)
 		subject := channels.ToSlice(res)
 		assert.NotNil(t, subject)
@@ -91,7 +91,7 @@ func TestIsNew(t *testing.T) {
 		err := repo.Save(ctx, articles)
 
 		assert.Nil(t, err)
-		stream := channels.FromSlice(articles...)
+		stream := channels.FromSlice(articles)
 		res := repo.FilterNew(context.TODO(), stream)
 		subject := channels.ToSlice(res)
 		// Test
@@ -107,7 +107,7 @@ func TestIsNew(t *testing.T) {
 		articles = append(articles, newArticle)
 
 		assert.Nil(t, err)
-		stream := channels.FromSlice(articles...)
+		stream := channels.FromSlice(articles)
 		res := repo.FilterNew(context.TODO(), stream)
 		subject := channels.ToSlice(res)
 		// Test

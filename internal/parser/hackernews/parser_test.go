@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
+	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
+	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/dominikus1993/go-toolkit/crypto"
 )
 
@@ -97,15 +97,7 @@ func TakeRandomArticles(stream ArticlesStream, take int) []Article {
 }
 
 func UniqueArticles(articles ArticlesStream) ArticlesStream {
-	return channels.Stream(articles, func(stream chan<- Article) {
-		seen := make(map[string]bool)
-		for v := range articles {
-			if !seen[v.id] {
-				seen[v.id] = true
-				stream <- v
-			}
-		}
-	}, 20)
+	return channels.UniqBy(articles, func(el Article) ArticleId { return el.id }, 10)
 }
 
 func UniqueArticlesArray(articles []Article) []Article {
