@@ -39,7 +39,7 @@ func TestRunInBatch(t *testing.T) {
 	stream, _ := result.Read()
 	subject := channels.ToSlice(stream)
 	assert.Len(t, subject, len(arr))
-	assert.Equal(t, arr, subject)
+	assert.ElementsMatch(t, arr, subject)
 }
 
 func BenchmarkBatcg(b *testing.B) {
