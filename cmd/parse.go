@@ -89,7 +89,7 @@ func Parse(ctx *cli.Context) error {
 		return cli.Exit("can't create mongodb client", 1)
 	}
 	defer mongodbClient.Close(ctx.Context)
-	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops", "rust", "aws"})
+	devtoParser := devto.NewDevToParser([]string{"dotnet", "csharp", "fsharp", "golang", "python", "node", "javascript", "devops", "rust", "aws", "vlang", "typescript", "react"})
 	hackernewsParser := hackernews.NewHackerNewsArticleParser(50)
 	dotnetomaniakParser := dotnetomaniak.NewDotnetoManiakParser()
 	echojsp := echojs.NewEechoJsParser()

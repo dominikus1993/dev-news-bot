@@ -20,8 +20,12 @@ type devtoresponse []struct {
 	URL         string `json:"url"`
 }
 
+func getTagUrl(tag string) string {
+	return fmt.Sprintf("https://dev.to/api/articles?tag=%s", tag)
+}
+
 func parseTag(ctx context.Context, client *http.Client, tag string) (*devtoresponse, error) {
-	url := fmt.Sprintf("https://dev.to/api/articles?tag=%s", tag)
+	url := getTagUrl(tag)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("User-Agent", userAgent)
 	resp, err := client.Do(req)
