@@ -12,7 +12,7 @@ import (
 )
 
 func TestGetIdStage(t *testing.T) {
-	article := model.NewArticle("testArticle", "http://test.com")
+	article := model.NewArticle("testArticle", "http://test.com", "reddit")
 	articles := []model.Article{article}
 	stage := getArticlesIds(articles)
 	assert.NotEmpty(t, stage)
@@ -48,7 +48,7 @@ func TestIsNew(t *testing.T) {
 
 	t.Run("Article not exists", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("xd", "xDDDDD")
+		article := model.NewArticle("xd", "xDDDDD", "reddit")
 		stream := channels.FromSlice([]model.Article{article})
 		res := repo.FilterNew(context.TODO(), stream)
 		subject := channels.ToSlice(res)
@@ -59,7 +59,7 @@ func TestIsNew(t *testing.T) {
 
 	t.Run("Article exists in database", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("testArticle", "http://test.com")
+		article := model.NewArticle("testArticle", "http://test.com", "reddit")
 		articles := []model.Article{article}
 		err := repo.Save(ctx, articles)
 
@@ -73,10 +73,10 @@ func TestIsNew(t *testing.T) {
 
 	t.Run("Somearticle exists in database", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("testArticle2222", "http://test.com22")
+		article := model.NewArticle("testArticle2222", "http://test.com22", "reddit")
 		articles := []model.Article{article}
 		err := repo.Save(ctx, articles)
-		newArticle := model.NewArticle("testArticle2", "http://test.com2")
+		newArticle := model.NewArticle("testArticle2", "http://test.com2", "reddit")
 		articles = append(articles, newArticle)
 
 		assert.Nil(t, err)
@@ -122,7 +122,7 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 
 	t.Run("Article not exists", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("xd", "xDDDDD")
+		article := model.NewArticle("xd", "xDDDDD", "reddit")
 
 		subject, err := repo.checkArticleExistence(context.TODO(), article)
 		assert.NoError(t, err)
@@ -133,7 +133,7 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 
 	t.Run("Article exists in database", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("testArticle", "http://test.com")
+		article := model.NewArticle("testArticle", "http://test.com", "reddit")
 		articles := []model.Article{article}
 		err := repo.Save(ctx, articles)
 
@@ -150,10 +150,10 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 
 	t.Run("Somearticle exists in database", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("testArticle2222", "http://test.com222222")
+		article := model.NewArticle("testArticle2222", "http://test.com222222", "reddit")
 		articles := []model.Article{article}
 		err := repo.Save(ctx, articles)
-		newArticle := model.NewArticle("testArticle2", "http://test.com222222")
+		newArticle := model.NewArticle("testArticle2", "http://test.com222222", "reddit")
 		articles = append(articles, newArticle)
 
 		assert.NoError(t, err)
@@ -199,7 +199,7 @@ func TestFilterOldArticles(t *testing.T) {
 
 	t.Run("Article not exists", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("xd", "xDDDDD")
+		article := model.NewArticle("xd", "xDDDDD", "reddit")
 
 		subject, err := repo.filterOldArticles(context.TODO(), []model.Article{article})
 		assert.NoError(t, err)
@@ -209,7 +209,7 @@ func TestFilterOldArticles(t *testing.T) {
 
 	t.Run("Article exists in database", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("testArticle", "http://test.com")
+		article := model.NewArticle("testArticle", "http://test.com", "reddit")
 		articles := []model.Article{article}
 		err := repo.Save(ctx, articles)
 
@@ -224,10 +224,10 @@ func TestFilterOldArticles(t *testing.T) {
 
 	t.Run("Somearticle exists in database", func(t *testing.T) {
 		// Act
-		article := model.NewArticle("testArticle2222", "http://test.com222222")
+		article := model.NewArticle("testArticle2222", "http://test.com222222", "reddit")
 		articles := []model.Article{article}
 		err := repo.Save(ctx, articles)
-		newArticle := model.NewArticle("testArticle2", "http://test.com222222")
+		newArticle := model.NewArticle("testArticle2", "http://test.com222222", "reddit")
 		articles = append(articles, newArticle)
 
 		assert.NoError(t, err)

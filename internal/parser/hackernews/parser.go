@@ -12,6 +12,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const source = "hackernews"
+
 type hackernewsArticle struct {
 	By          string `json:"by"`
 	Descendants int    `json:"descendants"`
@@ -101,7 +103,7 @@ func (p *hackerNewsArticleParser) Parse(ctx context.Context) model.ArticlesStrea
 				log.WithField("id", id).WithError(err).Error("error while parsing article by id")
 				continue
 			}
-			article := model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL)
+			article := model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL, source)
 			if article.IsValid() {
 				result <- article
 			}

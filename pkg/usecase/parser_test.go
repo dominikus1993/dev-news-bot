@@ -17,7 +17,7 @@ type fakeParser struct {
 func (f *fakeParser) Parse(ctx context.Context) model.ArticlesStream {
 	stream := make(chan model.Article)
 	go func() {
-		stream <- model.NewArticle("test", "http://dad")
+		stream <- model.NewArticle("test", "http://dad", "reddit")
 		close(stream)
 	}()
 	return stream
@@ -29,7 +29,7 @@ type fakeParser2 struct {
 func (f *fakeParser2) Parse(ctx context.Context) model.ArticlesStream {
 	stream := make(chan model.Article)
 	go func() {
-		stream <- model.NewArticle("test", "http://dadsadad")
+		stream <- model.NewArticle("test", "http://dadsadad", "reddit")
 		close(stream)
 	}()
 	return stream

@@ -21,7 +21,7 @@ func fromSlice[T any](s []T) chan T {
 }
 
 func TestGetArticleTitleAndContenWhenArticleHasNoContent(t *testing.T) {
-	article := model.NewArticle("77% of all developers are involved in DevOps", "https://dev.to/slashdatahq/77-of-all-developers-are-involved-in-devops-hao")
+	article := model.NewArticle("77% of all developers are involved in DevOps", "https://dev.to/slashdatahq/77-of-all-developers-are-involved-in-devops-hao", "reddit")
 	subject := getArticleTitleAndContent(article)
 	assert.NotNil(t, subject)
 	assert.NotEmpty(t, subject)
@@ -29,7 +29,7 @@ func TestGetArticleTitleAndContenWhenArticleHasNoContent(t *testing.T) {
 }
 
 func TestGetArticleTitleAndContenWhenArticleHasContent(t *testing.T) {
-	article := model.NewArticleWithContent("77% of all developers are involved in DevOps", "https://dev.to/slashdatahq/77-of-all-developers-are-involved-in-devops-hao", "Some Content")
+	article := model.NewArticleWithContent("77% of all developers are involved in DevOps", "https://dev.to/slashdatahq/77-of-all-developers-are-involved-in-devops-hao", "Some Content", "reddit")
 	subject := getArticleTitleAndContent(article)
 	assert.NotNil(t, subject)
 	assert.NotEmpty(t, subject)
@@ -39,9 +39,9 @@ func TestGetArticleTitleAndContenWhenArticleHasContent(t *testing.T) {
 func TestLanguageFilter(t *testing.T) {
 	filter := NewLanguageFilter()
 	articles := []model.Article{
-		model.NewArticle("77% of all developers are involved in DevOps", "https://dev.to/slashdatahq/77-of-all-developers-are-involved-in-devops-hao"),
-		model.NewArticle("Nauka w Pracy. Czy Programista Powinien Mieć Czas Na Naukę w Pracy? - Modest Programmer", "https://dotnetomaniak.pl/Nauka-w-Pracy-Czy-Programista-Powinien-Miec-Czas-Na-Nauke-w-Pracy-Modest-Programmer"),
-		model.NewArticle("Executando Tasks em paralelo em aplicações .Net com o SemaphoreSlim", "https://dev.to/marcosbelorio/executando-tasks-em-paralelo-em-aplicacoes-net-com-o-semaphoreslim-4e9n")}
+		model.NewArticle("77% of all developers are involved in DevOps", "https://dev.to/slashdatahq/77-of-all-developers-are-involved-in-devops-hao", "reddit"),
+		model.NewArticle("Nauka w Pracy. Czy Programista Powinien Mieć Czas Na Naukę w Pracy? - Modest Programmer", "https://dotnetomaniak.pl/Nauka-w-Pracy-Czy-Programista-Powinien-Miec-Czas-Na-Nauke-w-Pracy-Modest-Programmer", "reddit"),
+		model.NewArticle("Executando Tasks em paralelo em aplicações .Net com o SemaphoreSlim", "https://dev.to/marcosbelorio/executando-tasks-em-paralelo-em-aplicacoes-net-com-o-semaphoreslim-4e9n", "reddit")}
 	result := filter.Where(context.TODO(), fromSlice(articles))
 	subject := channels.ToSlice(result)
 	assert.NotNil(t, subject)

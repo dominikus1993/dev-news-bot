@@ -8,7 +8,7 @@ import (
 )
 
 func TestFromArticles(t *testing.T) {
-	articles := []model.Article{model.NewArticle("sdd", "dasas"), model.NewArticle("sdd", "dasas")}
+	articles := []model.Article{model.NewArticle("sdd", "dasas", "reddit"), model.NewArticle("sdd", "dasas", "reddit")}
 	subject := fromArticles(articles)
 	assert.NotNil(t, subject)
 	assert.Len(t, subject, 1)

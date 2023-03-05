@@ -8,44 +8,44 @@ import (
 )
 
 func TestArticleValidationWitContent(t *testing.T) {
-	article := NewArticleWithContent("test", "https://xd.pl", "content")
+	article := NewArticleWithContent("test", "https://xd.pl", "content", "reddit")
 	subject := article.IsValid()
 	assert.True(t, subject)
 }
 
 func TestArticleValidationWhenUrlIsEmptyt(t *testing.T) {
-	article := NewArticle("test", "")
+	article := NewArticle("test", "", "reddit")
 	subject := article.IsValid()
 	assert.False(t, subject)
 }
 
 func TestArticleValidationWhenUrlIsInCorrect(t *testing.T) {
-	article := NewArticle("test", "notlink")
+	article := NewArticle("test", "notlink", "reddit")
 	subject := article.IsValid()
 	assert.False(t, subject)
 }
 
 func TestArticleValidationWhenTileIsEmpty(t *testing.T) {
-	article := NewArticle("", "notlink")
+	article := NewArticle("", "notlink", "reddit")
 	subject := article.IsValid()
 	assert.False(t, subject)
 }
 
 func TestArticleValidationWhenLinkIsEmpty(t *testing.T) {
-	article := NewArticle("asdddddddd", "")
+	article := NewArticle("asdddddddd", "", "reddit")
 	subject := article.IsValid()
 	assert.False(t, subject)
 }
 
 func TestArticleValidationWhenUrlIsCorrect(t *testing.T) {
-	article := NewArticle("asdddddddd", "https://scienceintegritydigest.com/2020/12/20/paper-about-herbalife-related-patient-death-removed-after-company-threatens-to-sue-the-journal/")
+	article := NewArticle("asdddddddd", "https://scienceintegritydigest.com/2020/12/20/paper-about-herbalife-related-patient-death-removed-after-company-threatens-to-sue-the-journal/", "reddit")
 	subject := article.IsValid()
 	assert.True(t, subject)
 }
 
 func TestGetRandomArticlesWhenTakeIsZero(t *testing.T) {
 	articles := make(chan Article, 10)
-	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")} {
+	for _, a := range []Article{NewArticle("x", "2", "reddit"), NewArticle("d", "1", "reddit"), NewArticle("xd", "37", "reddit")} {
 		articles <- a
 	}
 	close(articles)
@@ -55,7 +55,7 @@ func TestGetRandomArticlesWhenTakeIsZero(t *testing.T) {
 
 func TestGetRandomArticlesWhenTakeIsGreaterThanLenOfArticlesArray(t *testing.T) {
 	articles := make(chan Article, 10)
-	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")} {
+	for _, a := range []Article{NewArticle("x", "2", "reddit"), NewArticle("d", "1", "reddit"), NewArticle("xd", "37", "reddit")} {
 		articles <- a
 	}
 	close(articles)
@@ -65,7 +65,7 @@ func TestGetRandomArticlesWhenTakeIsGreaterThanLenOfArticlesArray(t *testing.T) 
 
 func TestGetRandomArticlesWhenTakeIsSmallerThanLenOfArticlesArray(t *testing.T) {
 	articles := make(chan Article, 10)
-	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37")} {
+	for _, a := range []Article{NewArticle("x", "2", "reddit"), NewArticle("d", "1", "reddit"), NewArticle("xd", "37", "reddit")} {
 		articles <- a
 	}
 	close(articles)
@@ -77,10 +77,12 @@ func TestGetRandomArticlesWhenTakeIsSmallerThanLenOfArticlesArray(t *testing.T) 
 
 func TestGetUniqueArticlesFromStream(t *testing.T) {
 	articles := make(chan Article, 10)
-	for _, a := range []Article{NewArticle("x", "2"), NewArticle("d", "1"), NewArticle("xd", "37"), NewArticle("x", "2"), NewArticle("x", "3"), NewArticle("xd", "37")} {
-		articles <- a
-	}
-	close(articles)
+	go func() {
+		for _, a := range []Article{NewArticle("x", "2", "reddit"), NewArticle("d", "1", "reddit"), NewArticle("xd", "37", "reddit"), NewArticle("x", "2", "reddit"), NewArticle("x", "3", "reddit"), NewArticle("xd", "37", "reddit")} {
+			articles <- a
+		}
+		close(articles)
+	}()
 	uniqueArticles := UniqueArticles(articles)
 	subject := channels.ToSlice(uniqueArticles)
 	assert.Len(t, subject, 4)

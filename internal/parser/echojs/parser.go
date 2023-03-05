@@ -11,6 +11,7 @@ import (
 
 const userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
 const url = "https://www.echojs.com/"
+const source = "echo.js"
 
 type echojsParser struct {
 }
@@ -26,7 +27,7 @@ func (parser *echojsParser) Parse(ctx context.Context) model.ArticlesStream {
 		c.OnHTML("article h2 a", func(e *colly.HTMLElement) {
 			title := e.Text
 			link := e.Attr("href")
-			result <- model.NewArticle(title, link)
+			result <- model.NewArticle(title, link, source)
 		})
 		c.SetRequestTimeout(time.Second * 30)
 		c.UserAgent = "devnews-bot"

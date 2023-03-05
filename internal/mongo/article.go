@@ -11,6 +11,7 @@ type mongoArticle struct {
 	Title     string             `bson:"Title"`
 	Link      string             `bson:"Link"`
 	Content   string             `bson:"Content"`
+	Source    string             `bson:"Source"`
 	CrawledAt primitive.DateTime `bson:"CrawledAt"`
 }
 
@@ -20,6 +21,7 @@ func fromArticle(article *model.Article) mongo.WriteModel {
 		Title:     article.GetTitle(),
 		Link:      article.GetLink(),
 		Content:   article.GetContent(),
+		Source:    article.GetSource(),
 		CrawledAt: primitive.NewDateTimeFromTime(article.GetCrawledAt()),
 	})
 }
@@ -35,5 +37,5 @@ func fromArticles(articles []model.Article) []mongo.WriteModel {
 }
 
 func toArticle(article *mongoArticle) model.Article {
-	return model.NewArticleWithContent(article.Title, article.Link, article.Content)
+	return model.NewArticleWithContent(article.Title, article.Link, article.Content, article.Source)
 }

@@ -17,6 +17,7 @@ type Article struct {
 	title     string
 	content   string
 	link      string
+	source    string
 	crawledAt time.Time
 }
 
@@ -32,6 +33,10 @@ func (article Article) GetContent() string {
 	return article.content
 }
 
+func (article Article) GetSource() string {
+	return article.source
+}
+
 func (article Article) GetLink() string {
 	return article.link
 }
@@ -42,24 +47,26 @@ func (article Article) GetCrawledAt() time.Time {
 
 type ArticlesStream <-chan Article
 
-func NewArticleWithContent(title, link, content string) Article {
+func NewArticleWithContent(title, link, content, source string) Article {
 	id, _ := crypto.GenerateId(title, link)
 	return Article{
 		id:        id,
 		title:     title,
 		content:   content,
 		link:      link,
+		source:    source,
 		crawledAt: time.Now().UTC(),
 	}
 }
 
-func NewArticle(title, link string) Article {
+func NewArticle(title, link, source string) Article {
 	id, _ := crypto.GenerateId(title, link)
 	return Article{
 		id:        id,
 		title:     title,
 		content:   "",
 		link:      link,
+		source:    source,
 		crawledAt: time.Now().UTC(),
 	}
 }

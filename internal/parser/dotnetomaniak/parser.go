@@ -16,6 +16,7 @@ const (
 	userAgent               string = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
 	dotnetomaniakNewsURL    string = "dotnetomaniak.pl"
 	dotnetomaniakNewsScheme string = "https"
+	source                  string = "dotnetomaniak"
 )
 
 type dotnetoManiakParser struct {
@@ -44,7 +45,7 @@ func (p *dotnetoManiakParser) Parse(ctx context.Context) model.ArticlesStream {
 			title := e.ChildText(".title .taggedlink span")
 			link := geDotnetomaniakLink(e.ChildAttr(".title .taggedlink", "href"))
 			content := e.ChildText(".description p span")
-			result <- model.NewArticleWithContent(title, link, content)
+			result <- model.NewArticleWithContent(title, link, content, source)
 		})
 		c.SetRedirectHandler(func(req *http.Request, via []*http.Request) error {
 			log.Debugf("Redirecting to %s", req.URL.String())

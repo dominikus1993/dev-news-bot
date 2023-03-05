@@ -13,6 +13,7 @@ import (
 )
 
 const userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
+const source = "dev.to"
 
 type devtoresponse []struct {
 	Title       string `json:"title"`
@@ -68,7 +69,7 @@ func mapPostToArticle(sub *devtoresponse) []model.Article {
 	tag := *sub
 	articles := make([]model.Article, len(tag))
 	for i, post := range tag {
-		articles[i] = model.NewArticleWithContent(post.Title, post.URL, post.Description)
+		articles[i] = model.NewArticleWithContent(post.Title, post.URL, post.Description, source)
 	}
 	return articles
 }

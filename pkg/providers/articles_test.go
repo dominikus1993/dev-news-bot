@@ -16,7 +16,7 @@ type fakeParser struct {
 func (f *fakeParser) Parse(ctx context.Context) model.ArticlesStream {
 	stream := make(chan model.Article)
 	go func() {
-		stream <- model.NewArticle("test", "http://dad")
+		stream <- model.NewArticle("test", "http://dad", "reddit")
 		close(stream)
 	}()
 	return stream
@@ -28,7 +28,7 @@ type fakeParser2 struct {
 func (f *fakeParser2) Parse(ctx context.Context) model.ArticlesStream {
 	stream := make(chan model.Article)
 	go func() {
-		stream <- model.NewArticle("test", "http://dadsadad")
+		stream <- model.NewArticle("test", "http://dadsadad", "reddit")
 		close(stream)
 	}()
 	return stream
@@ -85,7 +85,7 @@ func TestArticlesProvider(t *testing.T) {
 
 func TestArticlesProviderWhenArticlesAlreadyExistsInDb(t *testing.T) {
 	repo := newFakeRepo()
-	repo.Save(context.TODO(), []model.Article{model.NewArticle("test", "http://dad"), model.NewArticle("test", "http://dadsadad")})
+	repo.Save(context.TODO(), []model.Article{model.NewArticle("test", "http://dad", "reddit"), model.NewArticle("test", "http://dadsadad", "reddit")})
 	articlesProvider := NewArticlesProvider(repo, fakeFilter{}, &fakeParser{}, &fakeParser2{})
 	subject := channels.ToSlice(articlesProvider.Provide(context.Background()))
 	assert.Len(t, subject, 0)
