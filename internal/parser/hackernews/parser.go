@@ -46,7 +46,7 @@ func takeRandomArticesIds(ids []int, take int) []int {
 }
 
 func getTopArticlesIds(client *http.Client) ([]int, error) {
-	url := "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
+	const url = "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("User-Agent", "dev-news-bot")
 	resp, err := client.Do(req)
