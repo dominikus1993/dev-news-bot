@@ -92,14 +92,20 @@ func (p *devtoParser) parseAll(ctx context.Context) chan []model.Article {
 }
 
 func flatten(stream chan []model.Article) model.ArticlesStream {
-	result := make(chan model.Article)
+	result := make(chan model.Article, 100)
 	go func() {
+		defer close(result)
+		var wg sync.WaitGroup
 		for articles := range stream {
-			for _, article := range articles {
-				result <- article
-			}
+			wg.Add(1)
+			go func(articless []model.Article, stream chan model.Article, wait *sync.WaitGroup) {
+				defer wait.Done()
+				for _, article := range articless {
+					stream <- article
+				}
+			}(articles, result, &wg)
 		}
-		close(result)
+		wg.Wait()
 	}()
 	return result
 }
