@@ -59,8 +59,8 @@ github.com/docker/go-units v0.5.0 h1:69rxXcBk27SvSaaxTtLh/8llcHD8vYHT7WSdRZ/jvr4
 github.com/docker/go-units v0.5.0/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDDbaIK4Dk=
 github.com/dominikus1993/go-toolkit v0.0.12 h1:glITyP8JHvxiRkTuyNBlu37+H0AEdJ8XqxP7XqDxujc=
 github.com/dominikus1993/go-toolkit v0.0.12/go.mod h1:Qw+kC/ZiXYiKUEADMwquWIMKAW6T8xiTlwOuQW8mdaQ=
-github.com/dominikus1993/integrationtestcontainers-go v0.0.6 h1:7lZd9B9bPORG8izgVvTalA97tgrZkegh5VodFLz4X1A=
-github.com/dominikus1993/integrationtestcontainers-go v0.0.6/go.mod h1:93LJCM07nvA0Ws5Yk/7kU7xJg/unD0qgQQQCWJoKbrw=
+github.com/dominikus1993/integrationtestcontainers-go v0.0.7 h1:vsVYzZmU3HujSxNi3EhSHSfO3KL9FPVpan28qlzXY/o=
+github.com/dominikus1993/integrationtestcontainers-go v0.0.7/go.mod h1:V6yEtjmBBZJnL9HcEgXgNhmLCmuXDwaB6AaZJwQ2vT8=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/frankban/quicktest v1.11.3/go.mod h1:wRf/ReqHper53s+kmmSZizM8NamnL3IM0I9ntUbOk+k=

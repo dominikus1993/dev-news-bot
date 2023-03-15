@@ -6,7 +6,7 @@ require (
 	github.com/atc0005/go-teams-notify/v2 v2.7.0
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/dominikus1993/go-toolkit v0.0.12
-	github.com/dominikus1993/integrationtestcontainers-go v0.0.6
+	github.com/dominikus1993/integrationtestcontainers-go v0.0.7
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/k0kubun/pp/v3 v3.2.0
