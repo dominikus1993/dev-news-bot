@@ -30,7 +30,7 @@ func (parser *echojsParser) Parse(ctx context.Context) model.ArticlesStream {
 			result <- model.NewArticle(title, link, source)
 		})
 		c.SetRequestTimeout(time.Second * 30)
-		c.UserAgent = "devnews-bot"
+		c.UserAgent = userAgent
 		err := c.Visit(url)
 		if err != nil {
 			log.WithError(err).Errorln("Error while parsing dotnetomaniak")

@@ -2,15 +2,17 @@ package hackernews
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/go-toolkit/random"
+	jsoniter "github.com/json-iterator/go"
 	log "github.com/sirupsen/logrus"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 const source = "hackernews"
 
