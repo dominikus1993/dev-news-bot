@@ -14,7 +14,7 @@ require (
 	github.com/pemistahl/lingua-go v1.3.3
 	github.com/samber/lo v1.38.1
 	github.com/sirupsen/logrus v1.9.0
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 	github.com/urfave/cli/v2 v2.25.3
 	go.mongodb.org/mongo-driver v1.11.6
 	golang.org/x/sync v0.2.0
