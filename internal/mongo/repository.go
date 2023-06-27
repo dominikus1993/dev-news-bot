@@ -11,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/x/bsonx"
 )
 
 const ttlSeconds = 60 * 60 * 24 * 365 // one year
@@ -137,7 +136,7 @@ func (r *mongoArticlesRepository) Save(ctx context.Context, articles []model.Art
 	}
 
 	index := mongo.IndexModel{
-		Keys:    bsonx.Doc{{Key: "CrawledAt", Value: bsonx.Int32(1)}},
+		Keys:    bson.D{{Key: "CrawledAt", Value: 1}},
 		Options: options.Index().SetExpireAfterSeconds(ttlSeconds), // Will be removed after 7 days
 	}
 
