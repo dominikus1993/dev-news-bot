@@ -3,7 +3,7 @@ module github.com/dominikus1993/dev-news-bot
 go 1.20
 
 require (
-	github.com/atc0005/go-teams-notify/v2 v2.7.1
+	github.com/atc0005/go-teams-notify/v2 v2.8.0
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/dominikus1993/go-toolkit v0.0.12
 	github.com/dominikus1993/integrationtestcontainers-go v0.0.9
@@ -16,7 +16,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v2 v2.25.7
-	go.mongodb.org/mongo-driver v1.12.0
+	go.mongodb.org/mongo-driver v1.12.1
 	golang.org/x/sync v0.3.0
 )
 
@@ -74,9 +74,9 @@ require (
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	golang.org/x/crypto v0.11.0 // indirect
-	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1 // indirect
+	golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b // indirect
 	golang.org/x/mod v0.11.0 // indirect
-	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/net v0.13.0 // indirect
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/tools v0.10.0 // indirect
