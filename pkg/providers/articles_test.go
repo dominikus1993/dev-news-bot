@@ -45,12 +45,12 @@ func newFakeRepo() *fakeRepo {
 func (r *fakeRepo) FilterNew(ctx context.Context, stream model.ArticlesStream) model.ArticlesStream {
 	result := make(chan model.Article)
 	go func() {
+		defer close(result)
 		for article := range stream {
 			if _, ok := r.articles[article.GetID()]; !ok {
 				result <- article
 			}
 		}
-		close(result)
 	}()
 	return result
 }

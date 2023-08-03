@@ -79,6 +79,7 @@ func mapPostToArticle(sub *devtoresponse) []model.Article {
 func (p *devtoParser) parseAll(ctx context.Context) chan []model.Article {
 	stream := make(chan []model.Article, 10)
 	go func() {
+		defer close(stream)
 		var wg sync.WaitGroup
 		for _, sub := range p.tags {
 			wg.Add(1)
@@ -93,7 +94,6 @@ func (p *devtoParser) parseAll(ctx context.Context) chan []model.Article {
 			}(sub, &wg)
 		}
 		wg.Wait()
-		close(stream)
 	}()
 	return stream
 }
