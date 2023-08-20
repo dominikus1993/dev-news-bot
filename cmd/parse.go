@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"log/slog"
+
 	"github.com/dominikus1993/dev-news-bot/internal/console"
 	"github.com/dominikus1993/dev-news-bot/internal/discord"
 	"github.com/dominikus1993/dev-news-bot/internal/language"
@@ -13,7 +15,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/notifications"
 	"github.com/dominikus1993/dev-news-bot/pkg/providers"
 	"github.com/dominikus1993/dev-news-bot/pkg/usecase"
-	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -82,10 +83,10 @@ func NewParseArgs(context *cli.Context) *ParseArgs {
 
 func Parse(ctx *cli.Context) error {
 	p := NewParseArgs(ctx)
-	log.Infoln("Parse Articles And Send It")
+	slog.InfoContext(ctx.Context, "Parse Articles And Send It")
 	mongodbClient, err := mongo.NewClient(ctx.Context, p.mongoConnectionString, "Articles")
 	if err != nil {
-		log.WithError(err).Error("can't create mongodb client")
+		slog.ErrorContext(ctx.Context, "can't create mongodb client", "error", err)
 		return cli.Exit("can't create mongodb client", 1)
 	}
 	defer mongodbClient.Close(ctx.Context)
@@ -98,7 +99,7 @@ func Parse(ctx *cli.Context) error {
 	articlesProvider := providers.NewArticlesProvider(repo, languageFilter, hackernewsParser, dotnetomaniakParser, devtoParser, echojsp)
 	notifiers, err := createNotifiers(p)
 	if err != nil {
-		log.WithError(err).Error("can't create notifiers")
+		slog.ErrorContext(ctx.Context, "can't create notifiers", "error", err)
 		return cli.Exit("can't create notifiers", 1)
 	}
 	defer notifiers.close()
@@ -109,9 +110,9 @@ func Parse(ctx *cli.Context) error {
 	err = usecase.Execute(ctx.Context, p.quantity)
 
 	if err != nil {
-		log.WithError(err).Error("Error while parsing articles")
+		slog.ErrorContext(ctx.Context, "Error while parsing articles", "error", err)
 		return cli.Exit("Error while parsing articles", 0)
 	}
-	log.Infoln("Parsing articles finished")
+	slog.InfoContext(ctx.Context, "Parsing articles finished")
 	return nil
 }
