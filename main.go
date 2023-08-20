@@ -1,12 +1,12 @@
 package main
 
 import (
+	"log"
 	"os"
 	"sort"
 
 	"github.com/dominikus1993/dev-news-bot/cmd"
 	"github.com/urfave/cli/v2"
-	"golang.org/x/exp/slog"
 )
 
 func main() {
@@ -50,7 +50,7 @@ func main() {
 	sort.Sort(cli.FlagsByName(app.Flags))
 	sort.Sort(cli.CommandsByName(app.Commands))
 	if err := app.Run(os.Args); err != nil {
-		slog.Error("can't start app", err)
+		log.Fatal(err)
 		os.Exit(1)
 	}
 }
