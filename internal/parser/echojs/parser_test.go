@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHackerNews(t *testing.T) {
+func TestEchoJs(t *testing.T) {
 	parser := NewEechoJsParser()
 	result := parser.Parse(context.TODO())
 	subject := channels.ToSlice(result)

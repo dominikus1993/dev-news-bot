@@ -40,6 +40,7 @@ func geDotnetomaniakLink(link string) string {
 func (p *dotnetoManiakParser) Parse(ctx context.Context) model.ArticlesStream {
 	result := make(chan model.Article)
 	go func() {
+		defer close(result)
 		c := colly.NewCollector(colly.Async(true), colly.UserAgent(userAgent))
 		c.OnHTML(".article", func(e *colly.HTMLElement) {
 			title := e.ChildText(".title .taggedlink span")
@@ -59,10 +60,10 @@ func (p *dotnetoManiakParser) Parse(ctx context.Context) model.ArticlesStream {
 		c.UserAgent = "devnews-bot"
 		err := c.Visit(url)
 		if err != nil {
-			log.WithError(err).Errorln("Error while parsing dotnetomaniak")
+			log.WithError(err).Errorln("error while parsing dotnetomaniak")
 		}
 		c.Wait()
-		close(result)
+
 	}()
 	return result
 }
