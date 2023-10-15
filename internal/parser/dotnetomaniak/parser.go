@@ -49,7 +49,7 @@ func (p *dotnetoManiakParser) Parse(ctx context.Context) model.ArticlesStream {
 			result <- model.NewArticleWithContent(title, link, content, source)
 		})
 		c.SetRedirectHandler(func(req *http.Request, via []*http.Request) error {
-			log.Debugf("Redirecting to %s", req.URL.String())
+			log.WithField("url", req.URL.String()).Debugf("Redirecting to another site")
 			return nil
 		})
 		c.OnError(func(r *colly.Response, err error) {
