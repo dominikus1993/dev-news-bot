@@ -23,3 +23,9 @@ func TestParseInt(t *testing.T) {
 	subject := ParseInt(str, 1)
 	assert.Equal(t, 3, subject)
 }
+
+func TestParseIntWhenNegative(t *testing.T) {
+	str := "-3"
+	subject := ParseInt(str, 1)
+	assert.Equal(t, -3, subject)
+}
