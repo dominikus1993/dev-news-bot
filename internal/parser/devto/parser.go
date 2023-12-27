@@ -87,7 +87,7 @@ func (p *devtoParser) parseAll(ctx context.Context) chan []model.Article {
 				defer wg.Done()
 				res, err := parseTag(ctx, p.client, s)
 				if err != nil {
-					log.WithContext(ctx).WithError(err).WithField("tag", s).Errorf("Error while parsing tag")
+					log.WithContext(ctx).WithError(err).WithField("tag", s).Errorln("Error while parsing tag")
 				} else {
 					stream <- mapPostToArticle(res)
 				}

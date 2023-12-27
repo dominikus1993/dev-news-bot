@@ -102,7 +102,7 @@ func (p *hackerNewsArticleParser) Parse(ctx context.Context) model.ArticlesStrea
 		for _, id := range ids {
 			hackerNewsArticle, err := getArticle(id, p.client)
 			if err != nil {
-				log.WithField("id", id).WithError(err).Error("error while parsing article by id")
+				log.WithField("id", id).WithError(err).Errorln("error while parsing article by id")
 				continue
 			}
 			article := model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL, source)
