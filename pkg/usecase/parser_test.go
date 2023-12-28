@@ -29,8 +29,8 @@ type fakeParser2 struct {
 func (f *fakeParser2) Parse(ctx context.Context) model.ArticlesStream {
 	stream := make(chan model.Article)
 	go func() {
+		defer close(stream)
 		stream <- model.NewArticle("test", "http://dadsadad", "reddit")
-		close(stream)
 	}()
 	return stream
 }
