@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/dominikus1993/dev-news-bot/internal/parser/utils"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/go-toolkit/random"
 	jsoniter "github.com/json-iterator/go"
@@ -90,26 +91,25 @@ func getArticle(id int, client *http.Client) (*hackernewsArticle, error) {
 }
 
 func (p *hackerNewsArticleParser) Parse(ctx context.Context) model.ArticlesStream {
-	result := make(chan model.Article, 20)
-	go func() {
-		defer close(result)
-		ids, err := getTopArticlesIds(p.client)
+	return utils.Parse(ctx, p.parseArticles)
+}
+
+func (p *hackerNewsArticleParser) parseArticles(ctx context.Context, result chan<- model.Article) {
+	ids, err := getTopArticlesIds(p.client)
+	if err != nil {
+		log.WithContext(ctx).WithError(err).Errorln("Error while parsing hackernews top articles")
+		return
+	}
+	ids = takeRandomArticesIds(ids, p.maxArticlesQuantity)
+	for _, id := range ids {
+		hackerNewsArticle, err := getArticle(id, p.client)
 		if err != nil {
-			log.WithContext(ctx).WithError(err).Errorln("Error while parsing hackernews top articles")
-			return
+			log.WithField("id", id).WithError(err).Errorln("error while parsing article by id")
+			continue
 		}
-		ids = takeRandomArticesIds(ids, p.maxArticlesQuantity)
-		for _, id := range ids {
-			hackerNewsArticle, err := getArticle(id, p.client)
-			if err != nil {
-				log.WithField("id", id).WithError(err).Errorln("error while parsing article by id")
-				continue
-			}
-			article := model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL, source)
-			if article.IsValid() {
-				result <- article
-			}
+		article := model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL, source)
+		if article.IsValid() {
+			result <- article
 		}
-	}()
-	return result
+	}
 }
