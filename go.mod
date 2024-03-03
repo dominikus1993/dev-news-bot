@@ -15,7 +15,7 @@ require (
 	github.com/samber/lo v1.39.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
-	github.com/urfave/cli/v2 v2.27.1
+	github.com/urfave/cli/v2 v2.27.1git
 	go.mongodb.org/mongo-driver v1.14.0
 	golang.org/x/sync v0.6.0
 )
