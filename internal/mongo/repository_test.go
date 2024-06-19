@@ -7,8 +7,9 @@ import (
 
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/go-toolkit/channels"
-	"github.com/dominikus1993/integrationtestcontainers-go/mongodb"
 	"github.com/stretchr/testify/assert"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/modules/mongodb"
 )
 
 func TestGetIdStage(t *testing.T) {
@@ -25,17 +26,17 @@ func TestIsNew(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := mongodb.StartContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
+	mongodbContainer, err := mongodb.RunContainer(ctx, testcontainers.WithImage("mongo:6"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
-		if err := mongoC.Terminate(ctx); err != nil {
+		if err := mongodbContainer.Terminate(ctx); err != nil {
 			t.Fatalf("failed to terminate container: %s", err)
 		}
 	})
 
-	connectionString, err := mongoC.ConnectionString(ctx)
+	connectionString, err := mongodbContainer.ConnectionString(ctx)
 	if err != nil {
 		t.Fatal(fmt.Errorf("can't download mongo conectionstring, %w", err))
 	}
@@ -97,17 +98,17 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := mongodb.StartContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
+	mongodbContainer, err := mongodb.RunContainer(ctx, testcontainers.WithImage("mongo:6"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
-		if err := mongoC.Terminate(ctx); err != nil {
+		if err := mongodbContainer.Terminate(ctx); err != nil {
 			t.Fatalf("failed to terminate container: %s", err)
 		}
 	})
 
-	connectionString, err := mongoC.ConnectionString(ctx)
+	connectionString, err := mongodbContainer.ConnectionString(ctx)
 	if err != nil {
 		t.Fatal(fmt.Errorf("can't download mongo conectionstring, %w", err))
 	}
@@ -173,17 +174,17 @@ func TestFilterOldArticles(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongoC, err := mongodb.StartContainer(ctx, mongodb.NewMongoContainerConfigurationBuilder().Build())
+	mongodbContainer, err := mongodb.RunContainer(ctx, testcontainers.WithImage("mongo:6"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
-		if err := mongoC.Terminate(ctx); err != nil {
+		if err := mongodbContainer.Terminate(ctx); err != nil {
 			t.Fatalf("failed to terminate container: %s", err)
 		}
 	})
 
-	connectionString, err := mongoC.ConnectionString(ctx)
+	connectionString, err := mongodbContainer.ConnectionString(ctx)
 	if err != nil {
 		t.Fatal(fmt.Errorf("can't download mongo conectionstring, %w", err))
 	}
