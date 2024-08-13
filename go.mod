@@ -3,7 +3,7 @@ module github.com/dominikus1993/dev-news-bot
 go 1.22
 
 require (
-	github.com/atc0005/go-teams-notify/v2 v2.10.0
+	github.com/atc0005/go-teams-notify/v2 v2.11.0
 	github.com/bwmarrin/discordgo v0.28.1
 	github.com/dominikus1993/go-toolkit v0.0.15
 	github.com/dominikus1993/integrationtestcontainers-go v0.0.12
@@ -12,12 +12,12 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/pemistahl/lingua-go v1.4.0
-	github.com/samber/lo v1.39.0
+	github.com/samber/lo v1.47.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
-	github.com/urfave/cli/v2 v2.27.2
-	go.mongodb.org/mongo-driver v1.15.1
-	golang.org/x/sync v0.7.0
+	github.com/urfave/cli/v2 v2.27.4
+	go.mongodb.org/mongo-driver v1.16.1
+	golang.org/x/sync v0.8.0
 )
 
 require (
@@ -27,9 +27,9 @@ require (
 	github.com/Microsoft/hcsshim v0.11.4 // indirect
 	github.com/PuerkitoBio/goquery v1.9.2 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
-	github.com/antchfx/htmlquery v1.3.1 // indirect
-	github.com/antchfx/xmlquery v1.4.0 // indirect
-	github.com/antchfx/xpath v1.3.0 // indirect
+	github.com/antchfx/htmlquery v1.3.2 // indirect
+	github.com/antchfx/xmlquery v1.4.1 // indirect
+	github.com/antchfx/xpath v1.3.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/containerd/containerd v1.7.15 // indirect
 	github.com/containerd/log v0.1.0 // indirect
@@ -87,19 +87,19 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	github.com/youmark/pkcs8 v0.0.0-20240424034433-3c2c7870ae76 // indirect
+	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0 // indirect
 	go.opentelemetry.io/otel v1.24.0 // indirect
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
-	golang.org/x/crypto v0.24.0 // indirect
-	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
-	golang.org/x/mod v0.18.0 // indirect
-	golang.org/x/net v0.26.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
-	golang.org/x/tools v0.22.0 // indirect
+	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa // indirect
+	golang.org/x/mod v0.20.0 // indirect
+	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/sys v0.24.0 // indirect
+	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/tools v0.24.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231212172506-995d672761c0 // indirect
 	google.golang.org/grpc v1.60.1 // indirect
