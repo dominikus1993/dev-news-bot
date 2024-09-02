@@ -117,6 +117,8 @@ github.com/dominikus1993/go-toolkit v0.0.12 h1:glITyP8JHvxiRkTuyNBlu37+H0AEdJ8Xq
 github.com/dominikus1993/go-toolkit v0.0.12/go.mod h1:Qw+kC/ZiXYiKUEADMwquWIMKAW6T8xiTlwOuQW8mdaQ=
 github.com/dominikus1993/go-toolkit v0.0.15 h1:5vrmP71DpkP6HuLBXyLDsjOhecvMm5X2Jgq1x/FfkGI=
 github.com/dominikus1993/go-toolkit v0.0.15/go.mod h1:ORKz6XAw9z5z08dUKSBopzwfloxEwXyfzE8xf1lhMhY=
+github.com/dominikus1993/go-toolkit v0.0.18 h1:tcyUX+G4VgsrYkRfvlrBzF0dY8ZUWkqF78SFig9TJGo=
+github.com/dominikus1993/go-toolkit v0.0.18/go.mod h1:7CTdkEXteZPq1mxo9rlWtZE/F8/RGWRwQZS/44FFnrY=
 github.com/dominikus1993/integrationtestcontainers-go v0.0.11 h1:5h6DIeQWl+xXdQckBWZbupJ3NSiVdG2RUfSpYCOZGgo=
 github.com/dominikus1993/integrationtestcontainers-go v0.0.11/go.mod h1:EHSj7OjmyPW4lgIsaq96+vQzrvlfLMzYh7CO4wnFAVw=
 github.com/dominikus1993/integrationtestcontainers-go v0.0.12 h1:wFKMTWBTOwHrx2zFm87Ckpr8e99S12nu9jY7Yx+D60M=
@@ -466,6 +468,8 @@ golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 h1:yixxcjnhBmY0nkL253HFVIm0J
 golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8/go.mod h1:jj3sYF3dwk5D+ghuXyeI3r5MFf+NT2An6/9dOA95KSI=
 golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa h1:ELnwvuAXPNtPk1TJRuGkI9fDTwym6AYBu0qzT8AcHdI=
 golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa/go.mod h1:akd2r19cwCdwSwWeIdzYQGa/EZZyqcOdwWiwj5L5eKQ=
+golang.org/x/exp v0.0.0-20240823005443-9b4947da3948 h1:kx6Ds3MlpiUHKj7syVnbp57++8WpuKPcR5yjLBjvLEA=
+golang.org/x/exp v0.0.0-20240823005443-9b4947da3948/go.mod h1:akd2r19cwCdwSwWeIdzYQGa/EZZyqcOdwWiwj5L5eKQ=
 golang.org/x/lint v0.0.0-20181026193005-c67002cb31c3/go.mod h1:UVdnD1Gm6xHRNCYTkRU2/jEulfH38KcIWyp/GAMgvoE=
 golang.org/x/lint v0.0.0-20190227174305-5b3e6a55c961/go.mod h1:wehouNa3lNwaWXcvxsM5YxQ5yQlVC4a0KAMCusXpPoU=
 golang.org/x/lint v0.0.0-20190313153728-d0100b6bd8b3/go.mod h1:6SW0HCj/g11FgYtHlgUYUwCkIfeOF89ocIRzGO/8vkc=
