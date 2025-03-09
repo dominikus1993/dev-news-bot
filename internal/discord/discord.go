@@ -69,7 +69,7 @@ func (not *DiscordWebhookNotifier) Notify(ctx context.Context, articles []model.
 	return result
 }
 
-func (not *DiscordWebhookNotifier) send(ctx context.Context, embeds []*discordgo.MessageEmbed) error {
+func (not *DiscordWebhookNotifier) send(_ context.Context, embeds []*discordgo.MessageEmbed) error {
 	msg := discordgo.WebhookParams{Content: "Witam serdecznie, oto nowe newsy", Embeds: embeds}
 	_, err := not.client.WebhookExecute(not.webhookID, not.webhookToken, true, &msg)
 	if err != nil {
