@@ -8,9 +8,9 @@ import (
 
 func Parse(ctx context.Context, action func(ctx context.Context, stream chan<- model.Article)) model.ArticlesStream {
 	result := make(chan model.Article, 20)
-	go func() {
-		defer close(result)
-		action(ctx, result)
-	}()
+	go func(context context.Context, channel chan<- model.Article) {
+		defer close(channel)
+		action(context, channel)
+	}(ctx, result)
 	return result
 }
