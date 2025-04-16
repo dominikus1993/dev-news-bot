@@ -11,6 +11,7 @@ import (
 	"github.com/dominikus1993/go-toolkit/random"
 	jsoniter "github.com/json-iterator/go"
 	log "github.com/sirupsen/logrus"
+	"github.com/valyala/fasthttp"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
@@ -50,19 +51,24 @@ func takeRandomArticesIds(ids []int, take int) []int {
 
 func getTopArticlesIds(client *http.Client) ([]int, error) {
 	const url = "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("User-Agent", "dev-news-bot")
-	resp, err := client.Do(req)
+	req := fasthttp.AcquireRequest()
+	req.SetRequestURI(url)
+	req.Header.SetMethod(fasthttp.MethodGet)
+	req.Header.SetUserAgent("dev-news-bot")
+	resp := fasthttp.AcquireResponse()
+	err := fasthttp.Do(req, resp)
+	fasthttp.ReleaseRequest(req)
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("error while parsing hackernews top articless, status: %s", resp.Status)
-	}
+	defer fasthttp.ReleaseResponse(resp)
 
-	defer resp.Body.Close()
+	if resp.StatusCode() != 200 {
+		return nil, fmt.Errorf("error while parsing hackernews top articless, status: %d", resp.StatusCode())
+	}
+	body := resp.Body()
 	var res []int
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.Unmarshal(body, &res); err != nil {
 		return nil, err
 	}
 	l := len(res)
