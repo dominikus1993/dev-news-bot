@@ -49,7 +49,7 @@ func takeRandomArticesIds(ids []int, take int) []int {
 	return random.TakeRandomFromSlice(ids, take)
 }
 
-func getTopArticlesIds(client *http.Client) ([]int, error) {
+func getTopArticlesIds() ([]int, error) {
 	const url = "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI(url)
@@ -101,7 +101,7 @@ func (p *hackerNewsArticleParser) Parse(ctx context.Context) model.ArticlesStrea
 }
 
 func (p *hackerNewsArticleParser) parseArticles(ctx context.Context, result chan<- model.Article) {
-	ids, err := getTopArticlesIds(p.client)
+	ids, err := getTopArticlesIds()
 	if err != nil {
 		log.WithContext(ctx).WithError(err).Errorln("Error while parsing hackernews top articles")
 		return

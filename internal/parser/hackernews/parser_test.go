@@ -19,3 +19,9 @@ func TestHackerNews(t *testing.T) {
 		assert.True(t, article.IsValid())
 	}
 }
+
+func TestGetTopArticlesIds(t *testing.T) {
+	ids, err := getTopArticlesIds()
+	assert.Nil(t, err)
+	assert.NotEmpty(t, ids)
+}
