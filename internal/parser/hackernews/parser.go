@@ -3,8 +3,6 @@ package hackernews
 import (
 	"context"
 	"fmt"
-	"net/http"
-	"time"
 
 	"github.com/dominikus1993/dev-news-bot/internal/parser/utils"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
@@ -31,18 +29,11 @@ type hackernewsArticle struct {
 }
 
 type hackerNewsArticleParser struct {
-	client              *http.Client
 	maxArticlesQuantity int
 }
 
 func NewHackerNewsArticleParser(maxArticlesQuantity int) *hackerNewsArticleParser {
-	return &hackerNewsArticleParser{client: getClient(), maxArticlesQuantity: maxArticlesQuantity}
-}
-
-func getClient() *http.Client {
-	return &http.Client{
-		Timeout: time.Second * 10,
-	}
+	return &hackerNewsArticleParser{maxArticlesQuantity: maxArticlesQuantity}
 }
 
 func takeRandomArticesIds(ids []int, take int) []int {
@@ -76,21 +67,27 @@ func getTopArticlesIds() ([]int, error) {
 	return res, nil
 }
 
-func getArticle(id int, client *http.Client) (*hackernewsArticle, error) {
+func getArticle(id int) (*hackernewsArticle, error) {
 	url := fmt.Sprintf("https://hacker-news.firebaseio.com/v0/item/%d.json?print=pretty", id)
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("User-Agent", "dev-news-bot")
-	resp, err := client.Do(req)
+	req := fasthttp.AcquireRequest()
+	req.SetRequestURI(url)
+	req.Header.SetMethod(fasthttp.MethodGet)
+	req.Header.SetUserAgent("dev-news-bot")
+	resp := fasthttp.AcquireResponse()
+	err := fasthttp.Do(req, resp)
+	fasthttp.ReleaseRequest(req)
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("error while parsing hackernews article by id: %d, status: %s", id, resp.Status)
+	defer fasthttp.ReleaseResponse(resp)
+
+	if resp.StatusCode() != fasthttp.StatusOK {
+		return nil, fmt.Errorf("error while parsing hackernews article by id: %d, status: %d", id, resp.StatusCode())
 	}
 
-	defer resp.Body.Close()
+	body := resp.Body()
 	var res hackernewsArticle
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.Unmarshal(body, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -108,7 +105,7 @@ func (p *hackerNewsArticleParser) parseArticles(ctx context.Context, result chan
 	}
 	ids = takeRandomArticesIds(ids, p.maxArticlesQuantity)
 	for _, id := range ids {
-		hackerNewsArticle, err := getArticle(id, p.client)
+		hackerNewsArticle, err := getArticle(id)
 		if err != nil {
 			log.WithField("id", id).WithError(err).Errorln("error while parsing article by id")
 			continue
