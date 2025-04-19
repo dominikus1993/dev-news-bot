@@ -1,16 +1,17 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 	"sort"
 
 	"github.com/dominikus1993/dev-news-bot/cmd"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func main() {
-	app := &cli.App{
+	app := &cli.Command{
 		Flags: []cli.Flag{
 			&cli.IntFlag{
 				Name:  "quantity",
@@ -21,36 +22,34 @@ func main() {
 				Name:     "dicord-webhook-id",
 				Value:    "",
 				Usage:    "dicord-webhook-id",
-				EnvVars:  []string{"DISCORD_WEBHOOK_ID"},
+				Sources:  cli.EnvVars("DISCORD_WEBHOOK_ID"),
 				Required: true,
 			},
 			&cli.StringFlag{
 				Name:     "discord-webhook-token",
 				Value:    "",
 				Usage:    "discord-webhook-token",
-				EnvVars:  []string{"DISCORD_WEBHOOK_TOKEN"},
+				Sources:  cli.EnvVars("DISCORD_WEBHOOK_TOKEN"),
 				Required: true,
 			},
 			&cli.StringFlag{
 				Name:     "mongo-connection-string",
 				Value:    "",
 				Usage:    "mongo-connection-string",
-				EnvVars:  []string{"MONGO_CONNECTION"},
+				Sources:  cli.EnvVars("MONGO_CONNECTION"),
 				Required: true,
 			},
 			&cli.StringFlag{
 				Name:    "teams-webhook-url",
 				Value:   "",
 				Usage:   "teams-webhook-url",
-				EnvVars: []string{"TEAMS_WEBHOOK_URL"},
+				Sources: cli.EnvVars("TEAMS_WEBHOOK_URL"),
 			},
 		},
 		Action: cmd.Parse,
 	}
 	sort.Sort(cli.FlagsByName(app.Flags))
-	sort.Sort(cli.CommandsByName(app.Commands))
-	if err := app.Run(os.Args); err != nil {
+	if err := app.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
-		os.Exit(1)
 	}
 }
