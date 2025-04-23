@@ -16,6 +16,8 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
 	github.com/urfave/cli/v2 v2.27.6
+	github.com/urfave/cli/v3 v3.2.0
+	github.com/valyala/fasthttp v1.61.0
 	go.mongodb.org/mongo-driver v1.17.3
 	golang.org/x/sync v0.13.0
 )
@@ -86,9 +88,7 @@ require (
 	github.com/testcontainers/testcontainers-go/modules/mongodb v0.31.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.13 // indirect
 	github.com/tklauser/numcpus v0.7.0 // indirect
-	github.com/urfave/cli/v3 v3.1.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.60.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
