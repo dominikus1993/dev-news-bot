@@ -29,3 +29,20 @@ func TestParseIntWhenNegative(t *testing.T) {
 	subject := ParseInt(str, 1)
 	assert.Equal(t, -3, subject)
 }
+
+func FuzzParseInt(f *testing.F) {
+	f.Add("3", true)
+	f.Add("3.0", false)
+	f.Add("xDD", false)
+	f.Add("0", true)
+	f.Add("-3", true)
+
+	f.Fuzz(func(t *testing.T, str string, expected bool) {
+		subject := ParseInt(str, 1)
+		if expected {
+			assert.NotEqual(t, 1, subject)
+		} else {
+			assert.Equal(t, 1, subject)
+		}
+	})
+}
