@@ -26,7 +26,7 @@ func TestIsNew(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongodbContainer, err := mongodb.RunContainer(ctx, testcontainers.WithImage("mongo:6"))
+	mongodbContainer, err := mongodb.Run(ctx, "mongo:6")
 	if err != nil {
 		t.Fatal(err)
 	}
