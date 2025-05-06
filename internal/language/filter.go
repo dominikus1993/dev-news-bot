@@ -33,13 +33,19 @@ func (filter languageFilter) Where(ctx context.Context, articles model.ArticlesS
 	result := make(chan model.Article)
 	go func() {
 		for article := range articles {
-			if lang, exists := filter.detector.DetectLanguageOf(getArticleTitleAndContent(article)); exists {
-				if lang == lingua.English || lang == lingua.Polish {
-					result <- article
-				}
+			if filter.isPolishOrEnglish(article) {
+				result <- article
 			}
 		}
 		close(result)
 	}()
 	return result
+}
+
+func (filter *languageFilter) isPolishOrEnglish(article model.Article) bool {
+	articleContent := getArticleTitleAndContent(article)
+	if lang, exists := filter.detector.DetectLanguageOf(articleContent); exists {
+		return lang == lingua.English || lang == lingua.Polish
+	}
+	return false
 }
