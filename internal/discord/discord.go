@@ -3,6 +3,7 @@ package discord
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
@@ -34,7 +35,7 @@ func NewDiscordWebhookNotifier(webhookID, webhookToken string) (*DiscordWebhookN
 func (not *DiscordWebhookNotifier) Close() {
 	err := not.client.Close()
 	if err != nil {
-		log.WithError(err).Error("Error while closing discord session")
+		slog.Error("Error while closing discord session", slog.Any("error", err))
 	}
 }
 

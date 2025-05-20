@@ -2,8 +2,8 @@ package mongo
 
 import (
 	"context"
+	"log/slog"
 
-	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -40,6 +40,6 @@ func NewClient(ctx context.Context, connectionString, database string) (*MongoCl
 
 func (c *MongoClient) Close(ctx context.Context) {
 	if err := c.mongo.Disconnect(ctx); err != nil {
-		log.WithError(err).Error("Error when trying disconnect from mongo")
+		slog.ErrorContext(ctx, "Failed to disconnect from MongoDB", slog.Any("error", err))
 	}
 }

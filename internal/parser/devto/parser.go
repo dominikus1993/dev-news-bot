@@ -3,6 +3,7 @@ package devto
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"sync"
 	"time"
@@ -83,7 +84,7 @@ func (p *devtoParser) parseArticles(ctx context.Context, stream chan<- model.Art
 			defer wg.Done()
 			res, err := parseTag(ctx, p.client, s)
 			if err != nil {
-				log.WithContext(ctx).WithError(err).WithField("tag", s).Errorln("Error while parsing tag")
+				slog.ErrorContext(ctx, "Error while parsing tag", slog.String("tag", s), slog.Any("error", err))
 			} else {
 				streamArticles(res, result)
 			}
