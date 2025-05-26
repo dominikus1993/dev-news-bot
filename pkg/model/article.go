@@ -90,6 +90,9 @@ func (a *Article) IsValid() bool {
 }
 
 func TakeRandomArticles(stream ArticlesStream, take int) []Article {
+	if take == 0 {
+		return make([]Article, 0)
+	}
 	return takeRandomToSlice(stream, take)
 }
 
@@ -121,5 +124,8 @@ func takeRandomToSlice(s <-chan Article, take int) []Article {
 		i++
 	}
 
+	if i < take {
+		result = result[:i]
+	}
 	return result
 }
