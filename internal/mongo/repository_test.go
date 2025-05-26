@@ -8,7 +8,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/stretchr/testify/assert"
-	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/mongodb"
 )
 
@@ -98,7 +97,7 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongodbContainer, err := mongodb.RunContainer(ctx, testcontainers.WithImage("mongo:6"))
+	mongodbContainer, err := mongodb.Run(ctx, "mongo:6")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -174,7 +173,7 @@ func TestFilterOldArticles(t *testing.T) {
 	}
 	// Arrange
 	ctx := context.Background()
-	mongodbContainer, err := mongodb.RunContainer(ctx, testcontainers.WithImage("mongo:6"))
+	mongodbContainer, err := mongodb.Run(ctx, "mongo:6")
 	if err != nil {
 		t.Fatal(err)
 	}
