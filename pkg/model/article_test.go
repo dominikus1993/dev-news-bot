@@ -87,3 +87,10 @@ func TestGetUniqueArticlesFromStream(t *testing.T) {
 	subject := channels.ToSlice(uniqueArticles)
 	assert.Len(t, subject, 4)
 }
+
+func TestTakeRandomToSlice(t *testing.T) {
+	testArticles := []Article{NewArticle("x", "2", "reddit"), NewArticle("d", "1", "reddit"), NewArticle("xd", "37", "reddit"), NewArticle("x", "2", "reddit"), NewArticle("x", "3", "reddit"), NewArticle("xd", "37", "reddit")}
+
+	subject := takeRandomToSlice(channels.FromSlice(testArticles), 3)
+	assert.Len(t, subject, 3)
+}

@@ -1,16 +1,19 @@
 package model
 
 import (
+	"math/rand"
 	"net/url"
 	"time"
 
 	"github.com/dominikus1993/go-toolkit/channels"
 	"github.com/dominikus1993/go-toolkit/crypto"
-	"github.com/dominikus1993/go-toolkit/random"
 	"github.com/samber/lo"
 )
 
 type ArticleId = string
+
+var randWithSeed *rand.Rand = rand.New(
+	rand.NewSource(time.Now().UnixNano()))
 
 type Article struct {
 	id        ArticleId
@@ -87,7 +90,7 @@ func (a *Article) IsValid() bool {
 }
 
 func TakeRandomArticles(stream ArticlesStream, take int) []Article {
-	return random.TakeRandomToSlice(stream, take)
+	return takeRandomToSlice(stream, take)
 }
 
 func UniqueArticles(articles ArticlesStream) ArticlesStream {
@@ -98,4 +101,27 @@ func UniqueArticlesArray(articles []Article) []Article {
 	return lo.UniqBy(articles, func(article Article) ArticleId {
 		return article.id
 	})
+}
+
+// reservoir sampling
+func takeRandomToSlice(s <-chan Article, take int) []Article {
+
+	result := make([]Article, take)
+
+	func() {
+		var i int = 0
+		for el := range s {
+			if i < take {
+				result[i] = el
+			} else {
+				chance := randWithSeed.Intn(i)
+				if chance < take {
+					result[chance] = el
+				}
+			}
+			i++
+		}
+	}()
+
+	return result
 }

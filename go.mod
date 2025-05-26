@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/atc0005/go-teams-notify/v2 v2.13.0
-	github.com/bwmarrin/discordgo v0.28.1
+	github.com/bwmarrin/discordgo v0.29.0
 	github.com/dominikus1993/go-toolkit v0.0.18
 	github.com/gocolly/colly/v2 v2.2.0
 	github.com/hashicorp/go-multierror v1.1.1
