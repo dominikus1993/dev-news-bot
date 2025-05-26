@@ -108,20 +108,18 @@ func takeRandomToSlice(s <-chan Article, take int) []Article {
 
 	result := make([]Article, take)
 
-	func() {
-		var i int = 0
-		for el := range s {
-			if i < take {
-				result[i] = el
-			} else {
-				chance := randWithSeed.Intn(i)
-				if chance < take {
-					result[chance] = el
-				}
+	var i int = 0
+	for el := range s {
+		if i < take {
+			result[i] = el
+		} else {
+			chance := randWithSeed.Intn(i)
+			if chance < take {
+				result[chance] = el
 			}
-			i++
 		}
-	}()
+		i++
+	}
 
 	return result
 }
