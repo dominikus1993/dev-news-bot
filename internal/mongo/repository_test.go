@@ -50,7 +50,7 @@ func TestIsNew(t *testing.T) {
 		// Act
 		article := model.NewArticle("xd", "xDDDDD", "reddit")
 		stream := channels.FromSlice([]model.Article{article})
-		res := repo.FilterNew(context.TODO(), stream)
+		res := repo.FilterNew(t.Context(), stream)
 		subject := channels.ToSlice(res)
 		assert.NotNil(t, subject)
 		assert.NotEmpty(t, subject)
@@ -65,7 +65,7 @@ func TestIsNew(t *testing.T) {
 
 		assert.Nil(t, err)
 		stream := channels.FromSlice(articles)
-		res := repo.FilterNew(context.TODO(), stream)
+		res := repo.FilterNew(t.Context(), stream)
 		subject := channels.ToSlice(res)
 		// Test
 		assert.Empty(t, subject)
@@ -81,7 +81,7 @@ func TestIsNew(t *testing.T) {
 
 		assert.Nil(t, err)
 		stream := channels.FromSlice(articles)
-		res := repo.FilterNew(context.TODO(), stream)
+		res := repo.FilterNew(t.Context(), stream)
 		subject := channels.ToSlice(res)
 		// Test
 		assert.NotEmpty(t, subject)
@@ -124,7 +124,7 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 		// Act
 		article := model.NewArticle("xd", "xDDDDD", "reddit")
 
-		subject, err := repo.checkArticleExistence(context.TODO(), article)
+		subject, err := repo.checkArticleExistence(t.Context(), article)
 		assert.NoError(t, err)
 		assert.NotNil(t, subject)
 		assert.Len(t, subject, 1)
@@ -139,7 +139,7 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 
 		assert.Nil(t, err)
 
-		subject, err := repo.checkArticleExistence(context.TODO(), articles...)
+		subject, err := repo.checkArticleExistence(t.Context(), articles...)
 		assert.NoError(t, err)
 
 		// Test
@@ -157,7 +157,7 @@ func TestGetIdsThatExistsInDatabase(t *testing.T) {
 		articles = append(articles, newArticle)
 
 		assert.NoError(t, err)
-		subject, err := repo.checkArticleExistence(context.TODO(), articles...)
+		subject, err := repo.checkArticleExistence(t.Context(), articles...)
 		// Test
 		assert.NoError(t, err)
 		assert.NotEmpty(t, subject)
@@ -201,7 +201,7 @@ func TestFilterOldArticles(t *testing.T) {
 		// Act
 		article := model.NewArticle("xd", "xDDDDD", "reddit")
 
-		subject, err := repo.filterOldArticles(context.TODO(), []model.Article{article})
+		subject, err := repo.filterOldArticles(t.Context(), []model.Article{article})
 		assert.NoError(t, err)
 		assert.NotNil(t, subject)
 		assert.Len(t, subject, 1)
@@ -215,7 +215,7 @@ func TestFilterOldArticles(t *testing.T) {
 
 		assert.Nil(t, err)
 
-		subject, err := repo.filterOldArticles(context.TODO(), articles)
+		subject, err := repo.filterOldArticles(t.Context(), articles)
 		assert.NoError(t, err)
 
 		// Test
@@ -231,7 +231,7 @@ func TestFilterOldArticles(t *testing.T) {
 		articles = append(articles, newArticle)
 
 		assert.NoError(t, err)
-		subject, err := repo.filterOldArticles(context.TODO(), articles)
+		subject, err := repo.filterOldArticles(t.Context(), articles)
 		// Test
 		assert.NoError(t, err)
 		assert.NotEmpty(t, subject)
