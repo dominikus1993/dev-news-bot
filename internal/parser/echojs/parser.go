@@ -2,12 +2,12 @@ package echojs
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/dominikus1993/dev-news-bot/internal/parser/utils"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/gocolly/colly/v2"
-	log "github.com/sirupsen/logrus"
 )
 
 const userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
@@ -34,17 +34,17 @@ func (p *echojsParser) parseArticles(ctx context.Context, result chan<- model.Ar
 		if article.IsValid() {
 			result <- article
 		} else {
-			log.WithField("link", article.GetLink()).Warnln("echojs article is not valid")
+			slog.Warn("echojs article is not valid", slog.String("link", article.GetLink()))
 		}
 	})
 	c.OnError(func(r *colly.Response, err error) {
-		log.WithError(err).Errorln("can't parse echojs")
+		slog.Error("error while parsing echojs", slog.Any("error", err), slog.Int("status_code", r.StatusCode))
 	})
 	c.SetRequestTimeout(time.Second * 30)
 	c.UserAgent = userAgent
 	err := c.Visit(url)
 	if err != nil {
-		log.WithError(err).Errorln("error while parsing echojs")
+		slog.Error("error while parsing echojs, stopping parser", slog.Any("error", err))
 	}
 	c.Wait()
 }

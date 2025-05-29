@@ -8,8 +8,8 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/go-toolkit/random"
 	jsoniter "github.com/json-iterator/go"
-	log "github.com/sirupsen/logrus"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slog"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
@@ -63,7 +63,7 @@ func getTopArticlesIds() ([]int, error) {
 		return nil, err
 	}
 	l := len(res)
-	log.Infof("Parsed %d ids from hackernews", l)
+	slog.Info("Parsed ids from hackernews", slog.Int("count", l))
 	return res, nil
 }
 
@@ -100,14 +100,14 @@ func (p *hackerNewsArticleParser) Parse(ctx context.Context) model.ArticlesStrea
 func (p *hackerNewsArticleParser) parseArticles(ctx context.Context, result chan<- model.Article) {
 	ids, err := getTopArticlesIds()
 	if err != nil {
-		log.WithContext(ctx).WithError(err).Errorln("Error while parsing hackernews top articles")
+		slog.ErrorContext(ctx, "Error while parsing hackernews top articles, stopping parser", slog.Any("error", err))
 		return
 	}
 	ids = takeRandomArticesIds(ids, p.maxArticlesQuantity)
 	for _, id := range ids {
 		hackerNewsArticle, err := getArticle(id)
 		if err != nil {
-			log.WithField("id", id).WithError(err).Errorln("error while parsing article by id")
+			slog.ErrorContext(ctx, "Error while parsing hackernews article by id", slog.Int("id", id), slog.Any("error", err))
 			continue
 		}
 		article := model.NewArticle(hackerNewsArticle.Title, hackerNewsArticle.URL, source)
