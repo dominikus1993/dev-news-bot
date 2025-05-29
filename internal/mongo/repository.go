@@ -15,8 +15,6 @@ import (
 
 const ttlSeconds = 60 * 60 * 24 * 365 // one year
 
-var projectionStage = bson.D{{Key: "$project", Value: bson.D{{Key: "_id", Value: "$_id"}}}}
-
 type mongoArticlesRepository struct {
 	client *MongoClient
 }
@@ -82,9 +80,7 @@ func (r *mongoArticlesRepository) checkArticleExistence(ctx context.Context, art
 	if len(articles) == 0 {
 		return result, nil
 	}
-	matchStage := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: bson.D{{Key: "$in", Value: getArticlesIds(articles)}}}}}}
-
-	cursor, err := r.client.collection.Aggregate(ctx, mongo.Pipeline{matchStage, projectionStage})
+	cursor, err := r.client.collection.Find(ctx, bson.M{"_id": bson.M{"$in": getArticlesIds(articles)}})
 	if err != nil {
 		return nil, err
 	}
