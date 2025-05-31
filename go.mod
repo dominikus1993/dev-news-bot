@@ -18,7 +18,7 @@ require (
 	github.com/urfave/cli/v3 v3.3.3
 	github.com/valyala/fasthttp v1.62.0
 	go.mongodb.org/mongo-driver v1.17.3
-	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
+	golang.org/x/exp v0.0.0-20250531010427-b6e5de432a8b
 	golang.org/x/sync v0.14.0
 )
 
