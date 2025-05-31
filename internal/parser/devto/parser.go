@@ -4,14 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"net/http"
 	"sync"
-	"time"
 
 	"github.com/dominikus1993/dev-news-bot/internal/parser/utils"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	jsoniter "github.com/json-iterator/go"
 	log "github.com/sirupsen/logrus"
+	"github.com/valyala/fasthttp"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
@@ -29,21 +28,26 @@ func getTagUrl(tag string) string {
 	return fmt.Sprintf("https://dev.to/api/articles?tag=%s", tag)
 }
 
-func parseTag(ctx context.Context, client *http.Client, tag string) (*devtoresponse, error) {
+func parseTag(ctx context.Context, tag string) (*devtoresponse, error) {
 	url := getTagUrl(tag)
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("User-Agent", userAgent)
-	resp, err := client.Do(req)
+	req := fasthttp.AcquireRequest()
+	req.SetRequestURI(url)
+	req.Header.SetMethod(fasthttp.MethodGet)
+	req.Header.SetUserAgent(userAgent)
+	resp := fasthttp.AcquireResponse()
+	err := fasthttp.Do(req, resp)
+	fasthttp.ReleaseRequest(req)
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("error while parsing tag: %s, status: %s", tag, resp.Status)
-	}
+	defer fasthttp.ReleaseResponse(resp)
 
-	defer resp.Body.Close()
+	if resp.StatusCode() != 200 {
+		return nil, fmt.Errorf("error while parsing hackernews top articless, status: %d", resp.StatusCode())
+	}
+	body := resp.Body()
 	var sub devtoresponse
-	if err := json.NewDecoder(resp.Body).Decode(&sub); err != nil {
+	if err := json.Unmarshal(body, &sub); err != nil {
 		return nil, err
 	}
 	l := len(sub)
@@ -52,20 +56,12 @@ func parseTag(ctx context.Context, client *http.Client, tag string) (*devtorespo
 }
 
 type devtoParser struct {
-	client *http.Client
-	tags   []string
-}
-
-func getClient() *http.Client {
-	return &http.Client{
-		Timeout: time.Second * 10,
-	}
+	tags []string
 }
 
 func NewDevToParser(tags []string) *devtoParser {
 	return &devtoParser{
-		client: getClient(),
-		tags:   tags,
+		tags: tags,
 	}
 }
 
@@ -82,7 +78,7 @@ func (p *devtoParser) parseArticles(ctx context.Context, stream chan<- model.Art
 		wg.Add(1)
 		go func(s string, wait *sync.WaitGroup, result chan<- model.Article) {
 			defer wg.Done()
-			res, err := parseTag(ctx, p.client, s)
+			res, err := parseTag(ctx, s)
 			if err != nil {
 				slog.ErrorContext(ctx, "Error while parsing tag", slog.String("tag", s), slog.Any("error", err))
 			} else {
