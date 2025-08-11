@@ -12,17 +12,17 @@ func TestFanIn(t *testing.T) {
 	numbers := make(chan int, 10)
 	numbers2 := make(chan int, 10)
 	go func() {
+		defer close(numbers)
 		for _, a := range rangeInt(1, 10) {
 			numbers <- a
 		}
-		close(numbers)
 	}()
 
 	go func() {
+		defer close(numbers2)
 		for _, a := range rangeInt(10, 20) {
 			numbers2 <- a
 		}
-		close(numbers2)
 	}()
 
 	result := FanIn(context.TODO(), numbers, numbers2)
