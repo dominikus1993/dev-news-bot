@@ -70,17 +70,15 @@ func RunBatchInPararell[T any](ctx context.Context, values <-chan T, maxItems, s
 		defer result.Close()
 		var wg sync.WaitGroup
 		for value := range Batch(ctx, values, maxItems) {
-			wg.Add(1)
 			arr := value
-			go func() {
-				defer wg.Done()
+			wg.Go(func() {
 				res, err := f(ctx, arr)
 				if err != nil {
 					result.SendError(err)
 				} else {
 					result.SendArr(res)
 				}
-			}()
+			})
 		}
 		wg.Wait()
 	}()
