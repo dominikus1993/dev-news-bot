@@ -44,7 +44,7 @@ func TestRunInBatch(t *testing.T) {
 
 func BenchmarkBatcg(b *testing.B) {
 	ctx := context.TODO()
-	for n := 0; n < b.N; n++ {
+	for b.Loop() {
 		numbers := make(chan int, 10)
 		go func() {
 			for _, a := range rangeInt(1, 10) {
