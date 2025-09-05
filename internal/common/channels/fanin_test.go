@@ -33,7 +33,7 @@ func TestFanIn(t *testing.T) {
 
 func BenchmarkFanIn(b *testing.B) {
 	ctx := context.TODO()
-	for n := 0; n < b.N; n++ {
+	for b.Loop() {
 		numbers := make(chan int, 10)
 		numbers2 := make(chan int, 10)
 		go func() {
