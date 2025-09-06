@@ -8,6 +8,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func rangeInt(from, to int) []int {
+	res := make([]int, 0, to-from)
+	for i := from; i < to; i++ {
+		res = append(res, i)
+	}
+	return res
+}
+
 func TestBatch(t *testing.T) {
 	numbers := make(chan int, 10)
 	go func() {
