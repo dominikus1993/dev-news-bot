@@ -32,12 +32,12 @@ func getArticleTitleAndContent(article model.Article) string {
 func (filter languageFilter) Where(ctx context.Context, articles model.ArticlesStream) model.ArticlesStream {
 	result := make(chan model.Article)
 	go func() {
+		defer close(result)
 		for article := range articles {
 			if filter.isPolishOrEnglish(article) {
 				result <- article
 			}
 		}
-		close(result)
 	}()
 	return result
 }
