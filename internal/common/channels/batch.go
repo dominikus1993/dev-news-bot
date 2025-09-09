@@ -18,8 +18,8 @@ func NewErrorStream[T any](size int) *ErrorStream[T] {
 }
 
 func (stream *ErrorStream[T]) Close() {
-	close(stream.stream)
-	close(stream.errors)
+	defer close(stream.stream)
+	defer close(stream.errors)
 }
 
 func (stream *ErrorStream[T]) SendError(err error) {
