@@ -3,7 +3,6 @@ module github.com/dominikus1993/dev-news-bot
 go 1.25
 
 require (
-	github.com/atc0005/go-teams-notify/v2 v2.13.0
 	github.com/bwmarrin/discordgo v0.29.0
 	github.com/dominikus1993/go-toolkit v0.0.18
 	github.com/gocolly/colly/v2 v2.2.0
