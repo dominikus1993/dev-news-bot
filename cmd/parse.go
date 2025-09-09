@@ -7,7 +7,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/internal/console"
 	"github.com/dominikus1993/dev-news-bot/internal/discord"
 	"github.com/dominikus1993/dev-news-bot/internal/language"
-	"github.com/dominikus1993/dev-news-bot/internal/microsoftteams"
 	"github.com/dominikus1993/dev-news-bot/internal/mongo"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/devto"
 	"github.com/dominikus1993/dev-news-bot/internal/parser/dotnetomaniak"
@@ -22,7 +21,6 @@ import (
 type notifiers struct {
 	discord *discord.DiscordWebhookNotifier
 	pprint  *console.PPrintNotifier
-	teams   *microsoftteams.TeamsWebhookNotifier
 }
 
 func createNotifiers(cmd *ParseArgs) (notifiers, error) {
@@ -33,13 +31,6 @@ func createNotifiers(cmd *ParseArgs) (notifiers, error) {
 			return notifiers, err
 		}
 		notifiers.discord = discordn
-	}
-	if cmd.teamsWebhookUrl != "" {
-		teamsn, err := microsoftteams.NewDiscordWebhookNotifier(cmd.teamsWebhookUrl)
-		if err != nil {
-			return notifiers, err
-		}
-		notifiers.teams = teamsn
 	}
 	notifiers.pprint = console.NewPPrintNotifier()
 	return notifiers, nil
@@ -52,9 +43,6 @@ func (n notifiers) createBroadcaster() notifications.Broadcaster {
 	}
 	if n.pprint != nil {
 		notifiers = append(notifiers, n.pprint)
-	}
-	if n.teams != nil {
-		notifiers = append(notifiers, n.teams)
 	}
 	return notifications.NewBroadcaster(notifiers...)
 }
