@@ -1,6 +1,7 @@
 package common
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -45,4 +46,11 @@ func FuzzParseInt(f *testing.F) {
 			assert.Equal(t, 1, subject)
 		}
 	})
+}
+
+func TestGetEnvOrDefault(t *testing.T) {
+	env := "SOME_RANDOM_ENV_VAR_FOR_TESTS"
+	os.Setenv(env, "value")
+	subject := GetEnvOrDefault(env, "default")
+	assert.Equal(t, "value", subject)
 }
