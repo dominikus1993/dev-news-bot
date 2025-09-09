@@ -12,10 +12,10 @@ import (
 func fromSlice[T any](s []T) chan T {
 	res := make(chan T)
 	go func() {
+		defer close(res)
 		for _, v := range s {
 			res <- v
 		}
-		close(res)
 	}()
 	return res
 }
