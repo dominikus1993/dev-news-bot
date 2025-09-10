@@ -75,16 +75,15 @@ func streamArticles(sub *devtoresponse, stream chan<- model.Article) {
 func (p *devtoParser) parseArticles(ctx context.Context, stream chan<- model.Article) {
 	var wg sync.WaitGroup
 	for _, sub := range p.tags {
-		wg.Add(1)
-		go func(s string, wait *sync.WaitGroup, result chan<- model.Article) {
-			defer wg.Done()
+		s := sub
+		wg.Go(func() {
 			res, err := parseTag(ctx, s)
 			if err != nil {
 				slog.ErrorContext(ctx, "Error while parsing tag", slog.String("tag", s), slog.Any("error", err))
 			} else {
-				streamArticles(res, result)
+				streamArticles(res, stream)
 			}
-		}(sub, &wg, stream)
+		})
 	}
 	wg.Wait()
 }
