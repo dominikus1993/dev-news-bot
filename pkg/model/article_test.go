@@ -94,3 +94,10 @@ func TestTakeRandomToSlice(t *testing.T) {
 	subject := takeRandomToSlice(channels.FromSlice(testArticles), 3)
 	assert.Len(t, subject, 3)
 }
+
+func TestTakeRandomToSliceWhenTakeIsGreaterThanLengthOfSourceSlice(t *testing.T) {
+	testArticles := []Article{NewArticle("x", "2", "reddit")}
+
+	subject := takeRandomToSlice(channels.FromSlice(testArticles), 3)
+	assert.Len(t, subject, 1)
+}
