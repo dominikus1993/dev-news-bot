@@ -1,7 +1,6 @@
 package devto
 
 import (
-	"context"
 	"testing"
 
 	"github.com/dominikus1993/go-toolkit/channels"
@@ -10,7 +9,7 @@ import (
 
 func TestDevToParser(t *testing.T) {
 	parser := NewDevToParser([]string{"golang", "dotnet"})
-	stream := parser.Parse(context.TODO())
+	stream := parser.Parse(t.Context())
 	subject := channels.ToSlice(stream)
 	assert.NotEmpty(t, subject)
 }
