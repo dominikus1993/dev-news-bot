@@ -9,7 +9,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/internal/parser/utils"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	jsoniter "github.com/json-iterator/go"
-	log "github.com/sirupsen/logrus"
 	"github.com/valyala/fasthttp"
 )
 
@@ -51,7 +50,7 @@ func parseTag(ctx context.Context, tag string) (*devtoresponse, error) {
 		return nil, err
 	}
 	l := len(sub)
-	log.WithContext(ctx).Infof("Parsed %d posts from tag %s", l, tag)
+	slog.InfoContext(ctx, "Parsed posts from tag", slog.String("tag", tag), slog.Int("count", l))
 	return &sub, nil
 }
 
