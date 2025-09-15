@@ -108,7 +108,7 @@ func UniqueArticlesArray(articles []Article) []Article {
 }
 
 // reservoir sampling
-func takeRandomToSlice(ctx context.Context, s <-chan Article, take int) []Article {
+func takeRandomToSlice(_ context.Context, s <-chan Article, take int) []Article {
 
 	result := make([]Article, take)
 
