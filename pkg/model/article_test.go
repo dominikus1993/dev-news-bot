@@ -49,7 +49,7 @@ func TestGetRandomArticlesWhenTakeIsZero(t *testing.T) {
 		articles <- a
 	}
 	close(articles)
-	randomArticles := TakeRandomArticles(articles, 0)
+	randomArticles := TakeRandomArticles(t.Context(), articles, 0)
 	assert.Len(t, randomArticles, 0)
 }
 
@@ -59,7 +59,7 @@ func TestGetRandomArticlesWhenTakeIsGreaterThanLenOfArticlesArray(t *testing.T) 
 		articles <- a
 	}
 	close(articles)
-	randomArticles := TakeRandomArticles(articles, 5)
+	randomArticles := TakeRandomArticles(t.Context(), articles, 5)
 	assert.Len(t, randomArticles, 3)
 }
 
@@ -69,7 +69,7 @@ func TestGetRandomArticlesWhenTakeIsSmallerThanLenOfArticlesArray(t *testing.T) 
 		articles <- a
 	}
 	close(articles)
-	randomArticles := TakeRandomArticles(articles, 2)
+	randomArticles := TakeRandomArticles(t.Context(), articles, 2)
 	assert.Len(t, randomArticles, 2)
 }
 
@@ -91,13 +91,13 @@ func TestGetUniqueArticlesFromStream(t *testing.T) {
 func TestTakeRandomToSlice(t *testing.T) {
 	testArticles := []Article{NewArticle("x", "2", "reddit"), NewArticle("d", "1", "reddit"), NewArticle("xd", "37", "reddit"), NewArticle("x", "2", "reddit"), NewArticle("x", "3", "reddit"), NewArticle("xd", "37", "reddit")}
 
-	subject := takeRandomToSlice(channels.FromSlice(testArticles), 3)
+	subject := takeRandomToSlice(t.Context(), channels.FromSlice(testArticles), 3)
 	assert.Len(t, subject, 3)
 }
 
 func TestTakeRandomToSliceWhenTakeIsGreaterThanLengthOfSourceSlice(t *testing.T) {
 	testArticles := []Article{NewArticle("x", "2", "reddit")}
 
-	subject := takeRandomToSlice(channels.FromSlice(testArticles), 3)
+	subject := takeRandomToSlice(t.Context(), channels.FromSlice(testArticles), 3)
 	assert.Len(t, subject, 1)
 }

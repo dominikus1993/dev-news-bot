@@ -1,6 +1,7 @@
 package model
 
 import (
+	"context"
 	"math/rand"
 	"net/url"
 	"time"
@@ -89,11 +90,11 @@ func (a *Article) IsValid() bool {
 	return isUrl(a.link) && contentIsValid && titleIsValid
 }
 
-func TakeRandomArticles(stream ArticlesStream, take int) []Article {
+func TakeRandomArticles(ctx context.Context, stream ArticlesStream, take int) []Article {
 	if take == 0 {
 		return make([]Article, 0)
 	}
-	return takeRandomToSlice(stream, take)
+	return takeRandomToSlice(ctx, stream, take)
 }
 
 func UniqueArticles(articles ArticlesStream) ArticlesStream {
@@ -107,7 +108,7 @@ func UniqueArticlesArray(articles []Article) []Article {
 }
 
 // reservoir sampling
-func takeRandomToSlice(s <-chan Article, take int) []Article {
+func takeRandomToSlice(ctx context.Context, s <-chan Article, take int) []Article {
 
 	result := make([]Article, take)
 
@@ -127,5 +128,6 @@ func takeRandomToSlice(s <-chan Article, take int) []Article {
 	if i < take {
 		result = result[:i]
 	}
+
 	return result
 }
