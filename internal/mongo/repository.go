@@ -3,11 +3,11 @@ package mongo
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/dominikus1993/dev-news-bot/internal/common/channels"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/dominikus1993/dev-news-bot/pkg/repositories"
-	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -120,7 +120,7 @@ func (r *mongoArticlesRepository) FilterNew(ctx context.Context, stream model.Ar
 
 	go func() {
 		for err := range errors {
-			log.WithError(err).Errorln("can't check articles exietnce")
+			slog.ErrorContext(ctx, "can't check articles exietnce", "error", err)
 		}
 	}()
 	return stream

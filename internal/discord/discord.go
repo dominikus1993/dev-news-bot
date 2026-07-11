@@ -9,7 +9,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/hashicorp/go-multierror"
 	"github.com/samber/lo"
-	log "github.com/sirupsen/logrus"
 )
 
 const discordMessageSizeLimit = 10
@@ -54,7 +53,7 @@ func createDiscordEmbedsFromArticles(articles []model.Article) []*discordgo.Mess
 
 func (not *DiscordWebhookNotifier) Notify(ctx context.Context, articles []model.Article) error {
 	var result error
-	log.Infoln("Notifying via discord")
+	slog.InfoContext(ctx, "notifying via discord")
 	embeds := createDiscordEmbedsFromArticles(articles)
 	if len(embeds) <= discordMessageSizeLimit {
 		return not.send(ctx, embeds)

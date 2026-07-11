@@ -3,6 +3,7 @@ package dotnetomaniak
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"time"
@@ -10,7 +11,6 @@ import (
 	"github.com/dominikus1993/dev-news-bot/internal/parser/utils"
 	"github.com/dominikus1993/dev-news-bot/pkg/model"
 	"github.com/gocolly/colly/v2"
-	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -51,18 +51,18 @@ func (p *dotnetoManiakParser) parseArticles(ctx context.Context, result chan<- m
 		result <- model.NewArticleWithContent(title, link, content, source)
 	})
 	c.SetRedirectHandler(func(req *http.Request, via []*http.Request) error {
-		log.WithField("url", req.URL.String()).Debugln("Redirecting to another site")
+		slog.DebugContext(ctx, "Redirecting to another site", "url", req.URL.String())
 		return nil
 	})
 	c.OnError(func(r *colly.Response, err error) {
-		log.WithError(err).Errorln("can't parse dotnetomaniak")
+		slog.ErrorContext(ctx, "can't parse dotnetomaniak", "error", err)
 	})
 	url := fmt.Sprintf("%s://%s/", dotnetomaniakNewsScheme, dotnetomaniakNewsURL)
 	c.SetRequestTimeout(time.Second * 30)
 	c.UserAgent = "devnews-bot"
 	err := c.Visit(url)
 	if err != nil {
-		log.WithError(err).Errorln("error while parsing dotnetomaniak")
+		slog.ErrorContext(ctx, "error while parsing dotnetomaniak", "error", err)
 	}
 	c.Wait()
 }
