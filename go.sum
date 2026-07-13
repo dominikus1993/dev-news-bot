@@ -46,6 +46,8 @@ github.com/docker/go-units v0.5.0 h1:69rxXcBk27SvSaaxTtLh/8llcHD8vYHT7WSdRZ/jvr4
 github.com/docker/go-units v0.5.0/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDDbaIK4Dk=
 github.com/dominikus1993/go-toolkit v0.0.18 h1:tcyUX+G4VgsrYkRfvlrBzF0dY8ZUWkqF78SFig9TJGo=
 github.com/dominikus1993/go-toolkit v0.0.18/go.mod h1:7CTdkEXteZPq1mxo9rlWtZE/F8/RGWRwQZS/44FFnrY=
+github.com/dominikus1993/go-toolkit v0.0.19 h1:OZ/ntMMKygPoSRhrWn8HLdCDjqIbcB/H5FA9I4KwgrM=
+github.com/dominikus1993/go-toolkit v0.0.19/go.mod h1:Af9C6F6MB4LcRPiykWxW9NBVtfMrkZ3sYEPubAkL3cM=
 github.com/ebitengine/purego v0.8.2 h1:jPPGWs2sZ1UgOSgD2bClL0MJIqu58nOmIcBuXr62z1I=
 github.com/ebitengine/purego v0.8.2/go.mod h1:iIjxzd6CiRiOG0UyXP+V1+jWqUXVjPKLAI0mRfJZTmQ=
 github.com/felixge/httpsnoop v1.0.4 h1:NFTV2Zj1bL4mc9sqWACXbQFVBBg2W3GPvqp8/ESS2Wg=

@@ -4,7 +4,7 @@ go 1.26
 
 require (
 	github.com/bwmarrin/discordgo v0.29.0
-	github.com/dominikus1993/go-toolkit v0.0.18
+	github.com/dominikus1993/go-toolkit v0.0.19
 	github.com/gocolly/colly/v2 v2.3.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/json-iterator/go v1.1.12
